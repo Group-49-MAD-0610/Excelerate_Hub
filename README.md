@@ -18,7 +18,7 @@ Excelerate Hub is a cross-platform Flutter application designed to provide users
 
 ---
 
-## 🏗️ **Architecture**
+## **Architecture**
 
 This project follows **MVC (Model-View-Controller)** architecture pattern:
 1. **Login Screen** → User authentication  
@@ -99,24 +99,23 @@ lib/
 
 ## **Team**
 **Group 49 – MA&D 0610**
-**Oswa Zafar** - *Developer
-**Zain	Tahir** - * Snr Developer & Project Manager* 
-**Aleena  Tanveer** -*Developer*
-**Sylvester	Tettey**-*Snr Developer*
-**Jayadev Tripathi**-*UI/UX Lead Designer*
-**Vignesh Venkatesan**- *Team Lead* 
-**James Vashiri** - *Team Lead & Project Manager*  
+- **Oswa Zafar** - *Developer
+- **Zain	Tahir** - * Snr Developer & Project Manager* 
+- **Aleena  Tanveer** -*Developer*
+- **Sylvester	Tettey**-*Snr Developer*
+- **Jayadev Tripathi**-*UI/UX Lead Designer*
+- **Vignesh Venkatesan**- *Team Lead* 
+- **James Vashiri** - *Team Lead & Project Manager*  
 
 
 ## 🔗 **Links**
 
 - **Figma Wireframes:** [Design System](https://www.figma.com/design/UKKfcLktEPkRaWalkxqzOs/Wireframe-Designs_Xcelerate-Hub)
-- **Documentation:** [Coding Standards](CODING_STANDARDS.md)
+- **Documentation:** [Coding Standards](docs/CODING_STANDARDS.md)
 
 ---
 
 <div align="center">
-**Star this repository if you find it helpful!**
 
 Made with ❤️ by [**Group 49 – MA&D 0610**
 </div>  
@@ -140,8 +139,8 @@ This repository contains:
 ---
 
 ## **Project Link**
-**GitHub Repository:** https://github.com/31jay/Excelerate_Flutter_Mobile_Application_Development_Internship/edit/main/README.md
-**Figma Wireframes:** https://www.figma.com/design/UKKfcLktEPkRaWalkxqzOs/Wireframe-Designs_Xcelerate-Hub?node-id=0-1&p=f&t=0gtzVMZDXl0lwZhP-0
+- **GitHub Repository:** https://github.com/31jay/Excelerate_Flutter_Mobile_Application_Development_Internship/edit/main/README.md
+- **Figma Wireframes:** https://www.figma.com/design/UKKfcLktEPkRaWalkxqzOs/Wireframe-Designs_Xcelerate-Hub?node-id=0-1&p=f&t=0gtzVMZDXl0lwZhP-0
 
 ---
 
