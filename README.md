@@ -1,10 +1,10 @@
-# 🚀 Excelerate Hub - Flutter Application
+#  Excelerate Hub - Flutter Application
 
 > **A comprehensive Flutter application for program management and user engagement, built with MVC architecture and modern development practices.**
 
 ---
 
-## 📱 **About Excelerate Hub**
+##  **About Excelerate Hub**
 
 Excelerate Hub is a cross-platform Flutter application designed to provide users with seamless access to educational programs, feedback systems, and interactive dashboards. Built with scalability, maintainability, and user experience in mind.
 
@@ -36,7 +36,7 @@ lib/
 
 ---
 
-## 🛠️ **Technology Stack**
+## **Technology Stack**
 
 | Category | Technology |
 |----------|------------|
@@ -50,7 +50,7 @@ lib/
 
 ---
 
-## 🚀 **Getting Started**
+## **Getting Started**
 
 ### **Prerequisites**
 - Flutter SDK ≥ 3.16.0
@@ -78,7 +78,7 @@ lib/
 
 ---
 
-## 📋 **Development Guidelines**
+## **Development Guidelines**
 
 - Follow [Coding Standards](CODING_STANDARDS.md)
 - Use MVC architecture pattern
@@ -87,7 +87,7 @@ lib/
 
 ---
 
-## 🤝 **Contributing**
+## **Contributing**
 
 1. Fork the repository
 2. Create a feature branch
@@ -97,27 +97,28 @@ lib/
 
 ---
 
-## 👥 **Team**
-
-**James Vashiri** - *Team Lead & Project Manager*  
-📧 [jvashiri@grinefalcon.com](mailto:jvashiri@grinefalcon.com)  
-🌐 [GitHub: vashirij](https://github.com/vashirij)
-
+## **Team**
 **Group 49 – MA&D 0610**
+**Oswa Zafar** - *Developer
+**Zain	Tahir** - * Snr Developer & Project Manager* 
+**Aleena  Tanveer** -*Developer*
+**Sylvester	Tettey**-*Snr Developer*
+**Jayadev Tripathi**-*UI/UX Lead Designer*
+**Vignesh Venkatesan**- *Team Lead* 
+**James Vashiri** - *Team Lead & Project Manager*  
 
----
 
 ## 🔗 **Links**
 
-- 🎨 **Figma Wireframes:** [Design System](https://www.figma.com/design/UKKfcLktEPkRaWalkxqzOs/Wireframe-Designs_Xcelerate-Hub)
-- 📚 **Documentation:** [Coding Standards](CODING_STANDARDS.md)
+- **Figma Wireframes:** [Design System](https://www.figma.com/design/UKKfcLktEPkRaWalkxqzOs/Wireframe-Designs_Xcelerate-Hub)
+- **Documentation:** [Coding Standards](CODING_STANDARDS.md)
 
 ---
 
 <div align="center">
-**⭐ Star this repository if you find it helpful!**
+**Star this repository if you find it helpful!**
 
-Made with ❤️ by [James Vashiri](https://github.com/vashirij) and contributors
+Made with ❤️ by [**Group 49 – MA&D 0610**
 </div>  
 
 ---
@@ -139,8 +140,8 @@ This repository contains:
 ---
 
 ## **Project Link**
-📱 **GitHub Repository:** https://github.com/31jay/Excelerate_Flutter_Mobile_Application_Development_Internship/edit/main/README.md
-🎨 **Figma Wireframes:** https://www.figma.com/design/UKKfcLktEPkRaWalkxqzOs/Wireframe-Designs_Xcelerate-Hub?node-id=0-1&p=f&t=0gtzVMZDXl0lwZhP-0
+**GitHub Repository:** https://github.com/31jay/Excelerate_Flutter_Mobile_Application_Development_Internship/edit/main/README.md
+**Figma Wireframes:** https://www.figma.com/design/UKKfcLktEPkRaWalkxqzOs/Wireframe-Designs_Xcelerate-Hub?node-id=0-1&p=f&t=0gtzVMZDXl0lwZhP-0
 
 ---
 
