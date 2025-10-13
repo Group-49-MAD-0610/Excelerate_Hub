@@ -1,11 +1,11 @@
-# 🧩 Excelerate Hub — Team Coding Standards
+# Excelerate Hub — Team Coding Standards
 
 > **Purpose:**  
 > To maintain clean, consistent, and scalable code across the Excelerate Hub Flutter project while ensuring collaborative efficiency, readability, and quality control.
 
 ---
 
-## 🧠 1️⃣ General Principles
+## 1 General Principles
 - Write **clean, readable, and reusable** code.
 - Prioritize **clarity over cleverness**.
 - Each function, class, or widget should have **one clear responsibility**.
@@ -13,7 +13,7 @@
 
 ---
 
-## 📦 2️⃣ Project Structure & Technical Requirements
+## 2 Project Structure & Technical Requirements
 
 ### Flutter/Dart Versions
 - **Flutter SDK:** ≥ 3.16.0
@@ -306,7 +306,7 @@ class _ProgramListScreenState extends State<ProgramListScreen> {
 
 ---
 
-## 💬 3️⃣ MVC Naming Conventions
+## 3 MVC Naming Conventions
 
 | Component | Type | Convention | Example |
 |-----------|------|-------------|----------|
@@ -323,9 +323,8 @@ class _ProgramListScreenState extends State<ProgramListScreen> {
 | | Private vars | `_camelCase` | `_isLoading`, `_programs` |
 | **Tests** | Files | `snake_case_test.dart` | `program_controller_test.dart` |
 
----
 
-## ⚙️ 4️⃣ Technical Standards
+## 4 Technical Standards
 
 ### Dependency Management
 - Keep `pubspec.yaml` organized with clear sections
@@ -398,7 +397,7 @@ class MyView extends StatelessWidget {
 
 ---
 
-## 💅 5️⃣ Code Formatting & Style
+## 5 Code Formatting & Style
 - **Indentation:** 2 spaces  
 - **Line Length:** 80–100 characters max  
 - **Use `const`** where possible for stateless widgets  
@@ -426,7 +425,7 @@ class MyView extends StatelessWidget {
 
 ---
 
-## 🏗️ 6️⃣ MVC Best Practices & Rules
+## 6 MVC Best Practices & Rules
 
 ### Controller Guidelines
 - Controllers should be **stateless** except for UI state (loading, error)
@@ -529,7 +528,7 @@ class _GoodProgramScreenState extends State<GoodProgramScreen> {
 
 ---
 
-## 🧱 7️⃣ Widget & Function Design
+## 7 Widget & Function Design
 
 ✅ **Do:**
 
@@ -559,7 +558,7 @@ Column(children: [
 
 ---
 
-## ⚙️ 8️⃣ Version Control (Git & GitHub)
+## 8 Version Control (Git & GitHub)
 
 ### 🔹 Branching Strategy
 
@@ -594,7 +593,7 @@ Before merging:
 
 ---
 
-## 🧪 9️⃣ Testing Standards
+## 9 Testing Standards
 
 ### Test Types & Structure
 - **Unit Tests:** Test individual functions, methods, and classes
@@ -684,7 +683,7 @@ testWidgets('complete login flow', (tester) async {
 
 ---
 
-## 🌐 🔟 API Integration & Data Management
+## 10 API Integration & Data Management
 
 ### API Standards
 - Use repository pattern to separate data access from business logic
@@ -762,7 +761,7 @@ class ProgramRepositoryImpl implements ProgramRepository {
 
 ---
 
-## 🧰 1️⃣1️⃣ Documentation & Comments
+## 11 Documentation & Comments
 
 - **File Header Example:**
   ```dart
@@ -777,7 +776,7 @@ class ProgramRepositoryImpl implements ProgramRepository {
 
 ---
 
-## 👥 1️⃣2️⃣ Peer Review Checklist
+## 12 Peer Review Checklist
 
 | Check | Description |
 |-------|-------------|
@@ -789,7 +788,7 @@ class ProgramRepositoryImpl implements ProgramRepository {
 
 ---
 
-## 🎨 1️⃣3️⃣ UI/UX & Accessibility Standards
+## 13 UI/UX & Accessibility Standards
 
 ### Design Consistency
 - Use consistent colors and typography via theme files
@@ -849,7 +848,7 @@ void dispose() {
 
 ---
 
-## 🔒 1️⃣4️⃣ Security Best Practices
+## 14 Security Best Practices
 
 ### Data Protection
 - Never commit API keys, passwords, or sensitive data to version control
@@ -883,7 +882,7 @@ String? validateEmail(String? value) {
 
 ---
 
-## 🧭 1️⃣5️⃣ Team Collaboration Rules
+## 15 Team Collaboration Rules
 
 | Rule | Description |
 |------|-------------|
@@ -895,7 +894,7 @@ String? validateEmail(String? value) {
 
 ---
 
-## 🚀 1️⃣6️⃣ CI/CD & Deployment Standards
+## 16 CI/CD & Deployment Standards
 
 ### Continuous Integration
 - Run automated tests on every pull request
@@ -956,7 +955,6 @@ Adhering to these comprehensive standards ensures:
 
 > "Consistency is what transforms average code into maintainable software." 💡
 
----
 
 **Document Version:** 3.0  
 **Last Updated:** October 13, 2025  
