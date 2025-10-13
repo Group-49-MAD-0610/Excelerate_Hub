@@ -1,4 +1,4 @@
-# 🤝 Contributing to Excelerate Hub
+#  Contributing to Excelerate Hub
 
 We love your input! We want to make contributing to Excelerate Hub as easy and transparent as possible, whether it's:
 
@@ -8,7 +8,7 @@ We love your input! We want to make contributing to Excelerate Hub as easy and t
 - Proposing new features
 - Becoming a maintainer
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Flutter SDK ≥ 3.16.0
@@ -45,7 +45,7 @@ We love your input! We want to make contributing to Excelerate Hub as easy and t
    flutter test
    ```
 
-## 📋 How to Contribute
+## How to Contribute
 
 ### 1. **Create an Issue**
 Before starting work, create an issue to discuss:
@@ -82,7 +82,7 @@ refactor/widget-structure
    ```
 
 2. **Make changes**
-   - Follow [Coding Standards](CODING_STANDARDS.md)
+   - Follow [Coding Standards](docs/CODING_STANDARDS.md)
    - Write tests for new features
    - Update documentation
 
@@ -115,7 +115,7 @@ refactor/widget-structure
    - Click "Compare & pull request"
    - Fill out the PR template
 
-## 📝 Coding Standards
+## Coding Standards
 
 ### **Code Style**
 - Follow [Coding Standards](CODING_STANDARDS.md)
@@ -176,7 +176,7 @@ Brief description of changes
 4. **Approval**: Get approval from maintainer
 5. **Merge**: Changes merged to main branch
 
-## 🐛 Bug Reports
+## Bug Reports
 
 ### **Before Submitting**
 - Check existing issues
@@ -206,7 +206,7 @@ Add screenshots if applicable
 - App version: [e.g. 1.0.0]
 ```
 
-## 💡 Feature Requests
+##  Feature Requests
 
 ### **Feature Request Template**
 ```markdown
@@ -226,7 +226,7 @@ Alternative solutions considered
 Screenshots, mockups, or examples
 ```
 
-## 🏷️ Commit Message Guidelines
+## Commit Message Guidelines
 
 ### **Format**
 ```
@@ -256,7 +256,7 @@ refactor(controllers): optimize state management
 test(unit): add tests for program repository
 ```
 
-## 🎯 Development Guidelines
+## Development Guidelines
 
 ### **MVC Architecture**
 - **Models**: Data handling and business logic
@@ -290,7 +290,7 @@ test(unit): add tests for program repository
 - Don't submit PRs without description
 - Don't include unrelated changes
 
-## 🏆 Recognition
+## Recognition
 
 Contributors will be:
 - Added to README contributors section
@@ -298,12 +298,12 @@ Contributors will be:
 - Credited in app about section
 - Featured on project documentation
 
-## 📞 Getting Help
+##  Getting Help
 
-- 💬 **GitHub Discussions**: For questions and general discussion
-- 🐛 **GitHub Issues**: For bug reports and feature requests
-- 📧 **Email**: [jvashiri@grinefalcon.com](mailto:jvashiri@grinefalcon.com)
-- 📚 **Documentation**: Check existing docs first
+-  **GitHub Discussions**: For questions and general discussion
+-  **GitHub Issues**: For bug reports and feature requests
+- **Email**: [grinefalcon2@gmail.com](mailto:grinefalcon2@gmail.com)
+-  **Documentation**: Check existing docs first
 
 ## 📄 License
 
