@@ -1,39 +1,124 @@
-# Xcelerate Hub  
-### Your Gateway to Learning, Feedback, and Growth  
+# 🚀 Excelerate Hub - Flutter Application
 
-**Project Vision:**  
-Xcelerate Hub is a mobile learning application that connects learners and administrators.  
-It allows learners to explore educational programs, read detailed descriptions, give feedback, and stay updated with announcements.  
-Administrators can publish new programs, review learner feedback, and post learning updates — all within one digital hub.
+> **A comprehensive Flutter application for program management and user engagement, built with MVC architecture and modern development practices.**
 
 ---
 
-## **Objectives**
-- To create a centralized platform for learners and administrators.  
-- To make learning program management easier and faster.  
-- To allow learners to give structured feedback.  
-- To display announcements and updates in real-time.  
-- To support continuous learning and engagement.  
+## 📱 **About Excelerate Hub**
+
+Excelerate Hub is a cross-platform Flutter application designed to provide users with seamless access to educational programs, feedback systems, and interactive dashboards. Built with scalability, maintainability, and user experience in mind.
+
+### **Key Features**
+- 🔐 **User Authentication** - Secure login and registration
+- 📊 **Dashboard** - Interactive program overview and analytics
+- 📋 **Program Management** - Browse, view, and manage educational programs
+- 💬 **Feedback System** - Submit and manage user feedback
+- 🎨 **Modern UI/UX** - Material Design 3 with responsive layouts
+- 🌐 **Cross-Platform** - Android, iOS, Web, Windows, macOS, Linux support
 
 ---
 
-## **Key Features**
-1. User Authentication (Login & Signup)  
-2. Home Screen showing featured programs and announcements  
-3. Program Listing and Details with search and filter options  
-4. Feedback Form for learners to share ratings and comments  
-5. Announcements Feed displaying updates and reminders  
-6. Profile Management for user information editing  
+## 🏗️ **Architecture**
 
----
-
-## **Navigation Flow**
+This project follows **MVC (Model-View-Controller)** architecture pattern:
 1. **Login Screen** → User authentication  
-2. **Home Screen** → Programs + Announcements  
-3. **Program Listing** → View all available programs  
-4. **Program Details** → Read descriptions and enroll  
-5. **Feedback Form** → Submit feedback  
-6. **Profile Screen** → Edit personal details  
+```
+lib/
+├── models/          # Data models, repositories, and services
+├── views/           # UI screens, widgets, and dialogs
+├── controllers/     # Business logic and state management
+└── core/           # App configuration, themes, and utilities
+```
+
+**State Management:** Provider with ChangeNotifier pattern  
+**Dependency Injection:** Constructor injection with Provider  
+**API Integration:** Repository pattern with HTTP client  
+
+---
+
+## 🛠️ **Technology Stack**
+
+| Category | Technology |
+|----------|------------|
+| **Framework** | Flutter 3.16+ |
+| **Language** | Dart 3.2+ |
+| **State Management** | Provider |
+| **Architecture** | MVC Pattern |
+| **Testing** | Unit, Widget, Integration tests |
+| **CI/CD** | GitHub Actions |
+| **Code Quality** | Flutter Lints, Custom Rules |
+
+---
+
+## 🚀 **Getting Started**
+
+### **Prerequisites**
+- Flutter SDK ≥ 3.16.0
+- Dart SDK ≥ 3.2.0
+- Android Studio / VS Code
+- Git
+
+### **Installation**
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/vashirij/Excelerate_Hub.git
+   cd Excelerate_Hub
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Run the application:**
+   ```bash
+   flutter run
+   ```
+
+---
+
+## 📋 **Development Guidelines**
+
+- Follow [Coding Standards](CODING_STANDARDS.md)
+- Use MVC architecture pattern
+- Write comprehensive tests
+- Follow Flutter/Dart naming conventions
+
+---
+
+## 🤝 **Contributing**
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+---
+
+## 👥 **Team**
+
+**James Vashiri** - *Team Lead & Project Manager*  
+📧 [jvashiri@grinefalcon.com](mailto:jvashiri@grinefalcon.com)  
+🌐 [GitHub: vashirij](https://github.com/vashirij)
+
+**Group 49 – MA&D 0610**
+
+---
+
+## 🔗 **Links**
+
+- 🎨 **Figma Wireframes:** [Design System](https://www.figma.com/design/UKKfcLktEPkRaWalkxqzOs/Wireframe-Designs_Xcelerate-Hub)
+- 📚 **Documentation:** [Coding Standards](CODING_STANDARDS.md)
+
+---
+
+<div align="center">
+**⭐ Star this repository if you find it helpful!**
+
+Made with ❤️ by [James Vashiri](https://github.com/vashirij) and contributors
+</div>  
 
 ---
 
