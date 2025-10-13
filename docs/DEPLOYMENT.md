@@ -1,8 +1,8 @@
-# 🚀 Deployment Guide
+#  Deployment Guide
 
 This guide covers deploying Excelerate Hub to various platforms.
 
-## 📋 Table of Contents
+## Table of Contents
 - [Prerequisites](#prerequisites)
 - [Android Deployment](#android-deployment)
 - [iOS Deployment](#ios-deployment)
@@ -10,7 +10,7 @@ This guide covers deploying Excelerate Hub to various platforms.
 - [Desktop Deployment](#desktop-deployment)
 - [CI/CD Pipeline](#cicd-pipeline)
 
-## 🔧 Prerequisites
+##  Prerequisites
 
 ### **Development Environment**
 - Flutter SDK ≥ 3.16.0
@@ -23,7 +23,7 @@ This guide covers deploying Excelerate Hub to various platforms.
 - Environment variables configured
 - API keys and secrets
 
-## 📱 Android Deployment
+##  Android Deployment
 
 ### **Setup Android Signing**
 
@@ -95,7 +95,7 @@ flutter build apk --split-per-abi
    - Configure release notes
    - Set rollout percentage
 
-## 🍎 iOS Deployment
+## iOS Deployment
 
 ### **Setup iOS Signing**
 
@@ -142,7 +142,7 @@ flutter build ipa --release
    - Upload screenshots
    - Submit for review
 
-## 🌐 Web Deployment
+##  Web Deployment
 
 ### **Build for Web**
 
@@ -204,7 +204,7 @@ flutter build web --release
 firebase deploy
 ```
 
-## 🖥️ Desktop Deployment
+## Desktop Deployment
 
 ### **Windows**
 
@@ -239,7 +239,7 @@ flutter build linux --release
 # Configure packaging scripts
 ```
 
-## 🔄 CI/CD Pipeline
+## CI/CD Pipeline
 
 ### **GitHub Actions Workflow**
 
@@ -330,7 +330,7 @@ jobs:
           publish_dir: ./build/web
 ```
 
-## 🔐 Environment Configuration
+## Environment Configuration
 
 ### **Environment Variables**
 
@@ -362,7 +362,7 @@ class Environment {
 }
 ```
 
-## 📊 Monitoring & Analytics
+## Monitoring & Analytics
 
 ### **Crash Reporting**
 
@@ -395,7 +395,7 @@ class AnalyticsService {
 }
 ```
 
-## 🚀 Deployment Checklist
+## Deployment Checklist
 
 ### **Pre-deployment**
 - [ ] All tests pass
@@ -418,7 +418,7 @@ class AnalyticsService {
 - [ ] Update version tags
 - [ ] Notify stakeholders
 
-## 🆘 Troubleshooting
+## Troubleshooting
 
 ### **Common Issues**
 
@@ -438,11 +438,10 @@ class AnalyticsService {
    - Optimize images and assets
 
 ### **Getting Help**
-- 📚 [Flutter Documentation](https://docs.flutter.dev/)
-- 💬 [GitHub Discussions](https://github.com/vashirij/Excelerate_Hub/discussions)
-- 📧 [Support Email](mailto:jvashiri@grinefalcon.com)
+-  [Flutter Documentation](https://docs.flutter.dev/)
+-  [GitHub Discussions](https://github.com/vashirij/Excelerate_Hub/discussions)
+-  [Support Email](mailto:jvashiri@grinefalcon.com)
 
 ---
 
 **Last Updated:** October 13, 2025  
-**Maintained by:** James Vashiri
