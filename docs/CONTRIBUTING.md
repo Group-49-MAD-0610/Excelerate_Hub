@@ -305,14 +305,14 @@ Contributors will be:
 - **Email**: [grinefalcon2@gmail.com](mailto:grinefalcon2@gmail.com)
 -  **Documentation**: Check existing docs first
 
-## 📄 License
+## License
 
 By contributing, you agree that your contributions will be licensed under the MIT License.
 
 ---
 
-## 🙏 Thank You
+## Thank You
 
 Thank you for contributing to Excelerate Hub! Your efforts help make this project better for everyone.
 
-**Happy Coding!** 🚀
+**Happy Coding!**
