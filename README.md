@@ -80,7 +80,7 @@ lib/
 
 ## **Development Guidelines**
 
-- Follow [Coding Standards](CODING_STANDARDS.md)
+- Follow [Coding Standards](docs/CODING_STANDARDS.md)
 - Use MVC architecture pattern
 - Write comprehensive tests
 - Follow Flutter/Dart naming conventions
