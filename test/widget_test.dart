@@ -9,22 +9,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:excelerate/main.dart';
+import 'package:excelerate/models/services/storage_service.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('App launches smoke test', (WidgetTester tester) async {
+    // Initialize storage service for testing
+    final storageService = await StorageService.getInstance();
+
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(ExcelerateApp(storageService: storageService));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify that the app launches without crashing
+    await tester.pumpAndSettle();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // This test just ensures the app can be created without errors
+    expect(find.byType(MaterialApp), findsOneWidget);
   });
 }
