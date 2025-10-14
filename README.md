@@ -87,7 +87,7 @@ lib/
 
 ---
 
-## 🤝 **Contributing**
+## 🤝 **Moderation**
 
 1. Fork the repository
 2. Create a feature branch
@@ -117,7 +117,7 @@ lib/
 <div align="center">
 **⭐ Star this repository if you find it helpful!**
 
-Made with ❤️ by [James Vashiri](https://github.com/vashirij) and contributors
+Made with ❤️ by [James Vashiri](https://github.com/vashirij) and moderators
 </div>  
 
 ---

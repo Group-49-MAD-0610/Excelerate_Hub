@@ -292,8 +292,8 @@ test(unit): add tests for program repository
 
 ## 🏆 Recognition
 
-Contributors will be:
-- Added to README contributors section
+Moderators will be:
+- Added to README moderators section
 - Mentioned in release notes
 - Credited in app about section
 - Featured on project documentation
