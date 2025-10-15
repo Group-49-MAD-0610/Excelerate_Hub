@@ -1,3 +1,4 @@
+import 'package:excelerate/core/constants/theme_constants.dart';
 import 'package:excelerate/core/routes/app_routes.dart';
 import 'package:excelerate/views/screens/home/profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,6 @@ import '../../widgets/specific/program_card.dart';
 import '../programs/program_list_screen.dart';
 import 'dashboard_screen.dart';
 
-// This is the main screen with the bottom navigation.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
   static const String routeName = '/home';
@@ -20,9 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0; // 'Home' is the first tab
-
-  // Here we list the actual screens for each tab.
+  int _selectedIndex = 0;
   static const List<Widget> _pages = <Widget>[
     HomeContent(),
     ProgramListScreen(),
@@ -41,7 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: SafeArea(child: _pages.elementAt(_selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Programs'),
@@ -53,14 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Colors.grey,
       ),
     );
   }
 }
 
-// This is the specific UI for the 'Home' tab content.
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
 
@@ -77,75 +71,27 @@ class HomeContent extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(ThemeConstants.spacing16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(context, controller),
-            const SizedBox(height: 16),
+            const SizedBox(height: ThemeConstants.spacing8),
             if (controller.achievements != null)
-              _buildAchievementsCard(controller.achievements!),
-            const SizedBox(height: 24),
-            Center(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          _buildDash(),
-                          const SizedBox(height: 4),
-                          _buildDash(),
-                          const SizedBox(height: 4),
-                          _buildDash(),
-                        ],
-                      ),
-                      const SizedBox(width: 8),
-                      ShaderMask(
-                        blendMode: BlendMode.srcIn,
-                        shaderCallback: (bounds) =>
-                            const LinearGradient(
-                              colors: [Colors.orange, Colors.pink],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                            ).createShader(
-                              Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-                            ),
-                        child: const Text(
-                          'Xcelerate',
-                          style: TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Learn. Engage. Grow.',
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 24),
+              _buildAchievementsCard(context, controller.achievements!),
+            const SizedBox(height: ThemeConstants.spacing8),
+            _buildLogo(context),
+            const SizedBox(height: ThemeConstants.spacing8),
             _buildProgramCarousel(
               context: context,
               title: 'Your Experiences',
               programs: controller.experiences,
             ),
-            const SizedBox(height: 24),
             _buildProgramCarousel(
               context: context,
               title: 'Favorites',
               programs: controller.favorites,
             ),
-            const SizedBox(height: 24),
             _buildProgramCarousel(
               context: context,
               title: 'Upcoming',
@@ -158,6 +104,7 @@ class HomeContent extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context, HomeController controller) {
+    final textTheme = Theme.of(context).textTheme;
     return Row(
       children: [
         CircleAvatar(
@@ -165,17 +112,22 @@ class HomeContent extends StatelessWidget {
           backgroundImage: controller.user?.avatar != null
               ? NetworkImage(controller.user!.avatar!)
               : null,
-          backgroundColor: Colors.grey.shade300,
+          backgroundColor: Theme.of(
+            context,
+          ).colorScheme.surfaceContainerHighest,
           child: controller.user?.avatar == null
               ? const Icon(Icons.person, size: 28)
               : null,
         ),
-        const SizedBox(width: 12),
-        Text(
-          'Hi, ${controller.user?.name ?? 'User'}!',
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        const SizedBox(width: ThemeConstants.spacing12),
+        Expanded(
+          child: Text(
+            'Hi, ${controller.user?.name ?? 'User'}!',
+            style: textTheme.titleLarge,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
         ),
-        const Spacer(),
         IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
         IconButton(
           onPressed: () {},
@@ -186,33 +138,42 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  Widget _buildAchievementsCard(AchievementsModel achievements) {
+  Widget _buildAchievementsCard(
+    BuildContext context,
+    AchievementsModel achievements,
+  ) {
+    final textTheme = Theme.of(context).textTheme;
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 2,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(ThemeConstants.spacing8),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               "You've Achieved",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: Colors.pink,
+              style: textTheme.titleLarge?.copyWith(
+                color: ThemeConstants.errorColor,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: ThemeConstants.spacing16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildStatColumn(achievements.enrolled.toString(), 'Enrolled'),
                 _buildStatColumn(
+                  context,
+                  achievements.enrolled.toString(),
+                  'Enrolled',
+                ),
+                _buildStatColumn(
+                  context,
                   achievements.completed.toString(),
                   'Completed',
                 ),
-                _buildStatColumn(achievements.badges.toString(), 'Badges'),
+                _buildStatColumn(
+                  context,
+                  achievements.badges.toString(),
+                  'Badges',
+                ),
               ],
             ),
           ],
@@ -221,19 +182,69 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  Widget _buildStatColumn(String value, String label) {
+  Widget _buildStatColumn(BuildContext context, String value, String label) {
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
-        Text(
-          value,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-        ),
+        Text(value, style: textTheme.titleLarge),
+        const SizedBox(height: ThemeConstants.spacing4),
+        Text(label, style: textTheme.titleSmall),
       ],
+    );
+  }
+
+  Widget _buildLogo(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Center(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  _buildDash(),
+                  const SizedBox(height: 4),
+                  _buildDash(),
+                  const SizedBox(height: 4),
+                  _buildDash(),
+                ],
+              ),
+              const SizedBox(width: 1),
+              ShaderMask(
+                blendMode: BlendMode.srcIn,
+                shaderCallback: (bounds) =>
+                    const LinearGradient(
+                      colors: [
+                        ThemeConstants.tertiaryColor,
+                        ThemeConstants.errorColor,
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ).createShader(
+                      Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                    ),
+                child: Text('Xcelerate', style: textTheme.displaySmall),
+              ),
+            ],
+          ),
+          const SizedBox(height: ThemeConstants.spacing4),
+          Text('Learn. Engage. Grow.', style: textTheme.bodySmall),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDash() {
+    return Container(
+      height: 6,
+      width: 25,
+      decoration: BoxDecoration(
+        color: ThemeConstants.tertiaryColor,
+        borderRadius: BorderRadius.circular(2),
+      ),
     );
   }
 
@@ -242,18 +253,17 @@ class HomeContent extends StatelessWidget {
     required String title,
     required List<ProgramModel> programs,
   }) {
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-            color: Colors.pink,
+          style: textTheme.titleLarge?.copyWith(
+            color: ThemeConstants.errorColor,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: ThemeConstants.spacing8),
         SizedBox(
           height: 200,
           child: ListView.builder(
@@ -271,18 +281,6 @@ class HomeContent extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  // --- THIS IS THE NEW HELPER METHOD FOR THE LOGO ---
-  Widget _buildDash() {
-    return Container(
-      height: 3,
-      width: 25,
-      decoration: BoxDecoration(
-        color: Colors.orange,
-        borderRadius: BorderRadius.circular(2),
-      ),
     );
   }
 }

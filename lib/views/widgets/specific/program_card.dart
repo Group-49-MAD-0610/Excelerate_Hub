@@ -41,7 +41,6 @@ class ProgramCard extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 4),
             Text(
               program.instructorName,
               style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
