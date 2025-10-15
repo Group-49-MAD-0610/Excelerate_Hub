@@ -3,9 +3,11 @@ import 'package:provider/provider.dart';
 import 'core/routes/app_routes.dart';
 import 'core/themes/app_theme.dart';
 import 'controllers/auth_controller.dart';
+import 'controllers/program_controller.dart';
 import 'models/services/auth_service.dart';
 import 'models/services/api_service.dart';
 import 'models/services/storage_service.dart';
+import 'models/repositories/program_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +35,14 @@ class ExcelerateApp extends StatelessWidget {
             ),
           ),
         ),
+        ChangeNotifierProvider(
+          create: (_) => ProgramController(
+            programRepository: ProgramRepository(
+              apiService: ApiService(storageService: storageService),
+              storageService: storageService,
+            ),
+          ),
+        ),
       ],
       child: MaterialApp(
         title: 'Excelerate Hub',
@@ -40,7 +50,7 @@ class ExcelerateApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
         onGenerateRoute: AppRoutes.generateRoute,
-        initialRoute: AppRoutes.login,
+        initialRoute: AppRoutes.splash, // Changed to splash to test feature directly
         debugShowCheckedModeBanner: false,
       ),
     );
