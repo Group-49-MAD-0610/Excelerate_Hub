@@ -6,10 +6,7 @@ import '../../../core/constants/theme_constants.dart';
 class ProgramCurriculum extends StatelessWidget {
   final List<CurriculumWeek> curriculum;
 
-  const ProgramCurriculum({
-    super.key,
-    required this.curriculum,
-  });
+  const ProgramCurriculum({super.key, required this.curriculum});
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +15,10 @@ class ProgramCurriculum extends StatelessWidget {
         padding: const EdgeInsets.all(ThemeConstants.spacing16),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
-          border: Border.all(
-            color: Colors.grey.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(
+            ThemeConstants.borderRadiusMedium,
           ),
+          border: Border.all(color: Colors.grey.withOpacity(0.3)),
         ),
         child: const Center(
           child: Text(
@@ -39,9 +36,7 @@ class ProgramCurriculum extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
-        border: Border.all(
-          color: Colors.grey.withOpacity(0.3),
-        ),
+        border: Border.all(color: Colors.grey.withOpacity(0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,16 +79,15 @@ class ProgramCurriculum extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // Curriculum List
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.all(ThemeConstants.spacing16),
             itemCount: curriculum.length,
-            separatorBuilder: (context, index) => const SizedBox(
-              height: ThemeConstants.spacing12,
-            ),
+            separatorBuilder: (context, index) =>
+                const SizedBox(height: ThemeConstants.spacing12),
             itemBuilder: (context, index) {
               final week = curriculum[index];
               return _buildCurriculumWeek(context, week, index + 1);
@@ -104,16 +98,20 @@ class ProgramCurriculum extends StatelessWidget {
     );
   }
 
-  Widget _buildCurriculumWeek(BuildContext context, CurriculumWeek week, int weekNumber) {
+  Widget _buildCurriculumWeek(
+    BuildContext context,
+    CurriculumWeek week,
+    int weekNumber,
+  ) {
     return Container(
       padding: const EdgeInsets.all(ThemeConstants.spacing16),
       decoration: BoxDecoration(
-        color: week.isCompleted 
+        color: week.isCompleted
             ? Colors.green.withOpacity(0.1)
             : Colors.grey.withOpacity(0.05),
         borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusSmall),
         border: Border.all(
-          color: week.isCompleted 
+          color: week.isCompleted
               ? Colors.green.withOpacity(0.3)
               : Colors.grey.withOpacity(0.3),
         ),
@@ -128,18 +126,14 @@ class ProgramCurriculum extends StatelessWidget {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: week.isCompleted 
-                      ? Colors.green 
+                  color: week.isCompleted
+                      ? Colors.green
                       : ThemeConstants.primaryColor,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Center(
                   child: week.isCompleted
-                      ? const Icon(
-                          Icons.check,
-                          color: Colors.white,
-                          size: 18,
-                        )
+                      ? const Icon(Icons.check, color: Colors.white, size: 18)
                       : Text(
                           weekNumber.toString(),
                           style: const TextStyle(
@@ -181,7 +175,9 @@ class ProgramCurriculum extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: Colors.green,
-                    borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusSmall),
+                    borderRadius: BorderRadius.circular(
+                      ThemeConstants.borderRadiusSmall,
+                    ),
                   ),
                   child: const Text(
                     'Completed',
@@ -194,7 +190,7 @@ class ProgramCurriculum extends StatelessWidget {
                 ),
             ],
           ),
-          
+
           // Week Description
           if (week.description.isNotEmpty) ...[
             const SizedBox(height: ThemeConstants.spacing8),
@@ -206,7 +202,7 @@ class ProgramCurriculum extends StatelessWidget {
               ),
             ),
           ],
-          
+
           // Topics
           if (week.topics.isNotEmpty) ...[
             const SizedBox(height: ThemeConstants.spacing12),
@@ -222,7 +218,9 @@ class ProgramCurriculum extends StatelessWidget {
             Wrap(
               spacing: ThemeConstants.spacing8,
               runSpacing: ThemeConstants.spacing4,
-              children: week.topics.map((topic) => _buildTopicChip(topic)).toList(),
+              children: week.topics
+                  .map((topic) => _buildTopicChip(topic))
+                  .toList(),
             ),
           ],
         ],
@@ -239,9 +237,7 @@ class ProgramCurriculum extends StatelessWidget {
       decoration: BoxDecoration(
         color: ThemeConstants.primaryColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusSmall),
-        border: Border.all(
-          color: ThemeConstants.primaryColor.withOpacity(0.3),
-        ),
+        border: Border.all(color: ThemeConstants.primaryColor.withOpacity(0.3)),
       ),
       child: Text(
         topic,

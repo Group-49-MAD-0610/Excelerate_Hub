@@ -21,9 +21,7 @@ class InstructorInfo extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
-        border: Border.all(
-          color: Colors.grey.withOpacity(0.3),
-        ),
+        border: Border.all(color: Colors.grey.withOpacity(0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,9 +45,9 @@ class InstructorInfo extends StatelessWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: ThemeConstants.spacing16),
-          
+
           // Instructor Details
           Row(
             children: [
@@ -57,7 +55,7 @@ class InstructorInfo extends StatelessWidget {
               CircleAvatar(
                 radius: 32,
                 backgroundColor: ThemeConstants.primaryColor.withOpacity(0.1),
-                backgroundImage: instructorAvatar != null 
+                backgroundImage: instructorAvatar != null
                     ? NetworkImage(instructorAvatar!)
                     : null,
                 child: instructorAvatar == null
@@ -71,9 +69,9 @@ class InstructorInfo extends StatelessWidget {
                       )
                     : null,
               ),
-              
+
               const SizedBox(width: ThemeConstants.spacing16),
-              
+
               // Instructor Info
               Expanded(
                 child: Column(
@@ -96,7 +94,7 @@ class InstructorInfo extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: ThemeConstants.spacing8),
-                    
+
                     // Placeholder for instructor stats
                     Row(
                       children: [
@@ -110,9 +108,9 @@ class InstructorInfo extends StatelessWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: ThemeConstants.spacing16),
-          
+
           // View Profile Button
           SizedBox(
             width: double.infinity,
@@ -132,7 +130,9 @@ class InstructorInfo extends StatelessWidget {
                   vertical: ThemeConstants.spacing12,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
+                  borderRadius: BorderRadius.circular(
+                    ThemeConstants.borderRadiusMedium,
+                  ),
                 ),
               ),
               child: const Text(

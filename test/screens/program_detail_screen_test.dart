@@ -24,7 +24,9 @@ void main() {
         apiService: apiService,
         storageService: storageService,
       );
-      programController = ProgramController(programRepository: programRepository);
+      programController = ProgramController(
+        programRepository: programRepository,
+      );
     });
 
     tearDown(() async {
@@ -40,7 +42,9 @@ void main() {
       );
     }
 
-    testWidgets('should show loading indicator initially', (WidgetTester tester) async {
+    testWidgets('should show loading indicator initially', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       const programId = 'test-program-123';
 
@@ -53,7 +57,9 @@ void main() {
       expect(find.text('Loading program details...'), findsOneWidget);
     });
 
-    testWidgets('should show error message when program loading fails', (WidgetTester tester) async {
+    testWidgets('should show error message when program loading fails', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       const programId = 'invalid-program-id';
 
@@ -68,7 +74,9 @@ void main() {
       expect(find.text('Retry'), findsOneWidget);
     });
 
-    testWidgets('should show retry button and allow retrying', (WidgetTester tester) async {
+    testWidgets('should show retry button and allow retrying', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       const programId = 'invalid-program-id';
 
@@ -80,7 +88,7 @@ void main() {
       // Find and tap retry button
       final retryButton = find.text('Retry');
       expect(retryButton, findsOneWidget);
-      
+
       await tester.tap(retryButton);
       await tester.pump();
 
@@ -88,7 +96,9 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('should display app bar with correct title', (WidgetTester tester) async {
+    testWidgets('should display app bar with correct title', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       const programId = 'test-program';
 
@@ -100,7 +110,9 @@ void main() {
       expect(find.byType(AppBar), findsOneWidget);
     });
 
-    testWidgets('should show share and favorite buttons in app bar', (WidgetTester tester) async {
+    testWidgets('should show share and favorite buttons in app bar', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       const programId = 'test-program';
 
@@ -114,7 +126,9 @@ void main() {
       expect(find.byIcon(Icons.favorite_border), findsOneWidget);
     });
 
-    testWidgets('should show coming soon message when share button is tapped', (WidgetTester tester) async {
+    testWidgets('should show coming soon message when share button is tapped', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       const programId = 'test-program';
 
@@ -131,31 +145,36 @@ void main() {
       expect(find.text('Share feature coming soon!'), findsOneWidget);
     });
 
-    testWidgets('should show coming soon message when favorite button is tapped', (WidgetTester tester) async {
+    testWidgets(
+      'should show coming soon message when favorite button is tapped',
+      (WidgetTester tester) async {
+        // Arrange
+        const programId = 'test-program';
+
+        // Act
+        await tester.pumpWidget(createTestWidget(programId: programId));
+        await tester.pump();
+        await tester.pump(const Duration(seconds: 2));
+
+        // Tap favorite button
+        await tester.tap(find.byIcon(Icons.favorite_border));
+        await tester.pump();
+
+        // Assert
+        expect(find.text('Favorite feature coming soon!'), findsOneWidget);
+      },
+    );
+
+    testWidgets('should display tab bar with correct tabs', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       const programId = 'test-program';
 
       // Act
       await tester.pumpWidget(createTestWidget(programId: programId));
       await tester.pump();
-      await tester.pump(const Duration(seconds: 2));
 
-      // Tap favorite button
-      await tester.tap(find.byIcon(Icons.favorite_border));
-      await tester.pump();
-
-      // Assert
-      expect(find.text('Favorite feature coming soon!'), findsOneWidget);
-    });
-
-    testWidgets('should display tab bar with correct tabs', (WidgetTester tester) async {
-      // Arrange
-      const programId = 'test-program';
-
-      // Act
-      await tester.pumpWidget(createTestWidget(programId: programId));
-      await tester.pump();
-      
       // Wait for potential program load (will fail but we can still test UI)
       await tester.pump(const Duration(seconds: 2));
 
@@ -164,7 +183,9 @@ void main() {
       expect(find.byType(TabBar), findsNothing);
     });
 
-    testWidgets('should handle basic widget structure', (WidgetTester tester) async {
+    testWidgets('should handle basic widget structure', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       const programId = 'test-program';
 
@@ -177,7 +198,9 @@ void main() {
       expect(find.byType(Consumer), findsOneWidget);
     });
 
-    testWidgets('should handle error state correctly', (WidgetTester tester) async {
+    testWidgets('should handle error state correctly', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       const programId = 'test-program';
 
@@ -191,7 +214,9 @@ void main() {
       expect(find.text('Retry'), findsOneWidget);
     });
 
-    testWidgets('should show loading state initially', (WidgetTester tester) async {
+    testWidgets('should show loading state initially', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       const programId = 'test-program';
 
@@ -204,7 +229,9 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('should handle missing program data gracefully', (WidgetTester tester) async {
+    testWidgets('should handle missing program data gracefully', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       const programId = 'missing-program';
 
@@ -218,7 +245,9 @@ void main() {
     });
 
     group('ProgramController Integration', () {
-      testWidgets('should load program on screen initialization', (WidgetTester tester) async {
+      testWidgets('should load program on screen initialization', (
+        WidgetTester tester,
+      ) async {
         // Arrange
         const programId = 'integration-test-program';
 
@@ -230,7 +259,9 @@ void main() {
         expect(programController.isLoading, isTrue);
       });
 
-      testWidgets('should handle controller state changes', (WidgetTester tester) async {
+      testWidgets('should handle controller state changes', (
+        WidgetTester tester,
+      ) async {
         // Arrange
         const programId = 'state-test-program';
 

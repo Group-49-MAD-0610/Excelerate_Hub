@@ -38,7 +38,9 @@ class ProgramHeader extends StatelessWidget {
           // Program Image
           if (program.imageUrl != null)
             ClipRRect(
-              borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
+              borderRadius: BorderRadius.circular(
+                ThemeConstants.borderRadiusMedium,
+              ),
               child: Image.network(
                 program.imageUrl!,
                 height: 200,
@@ -62,17 +64,15 @@ class ProgramHeader extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
+                borderRadius: BorderRadius.circular(
+                  ThemeConstants.borderRadiusMedium,
+                ),
               ),
-              child: const Icon(
-                Icons.school,
-                size: 64,
-                color: Colors.grey,
-              ),
+              child: const Icon(Icons.school, size: 64, color: Colors.grey),
             ),
-          
+
           const SizedBox(height: ThemeConstants.spacing16),
-          
+
           // Program Title
           Text(
             program.title,
@@ -82,9 +82,9 @@ class ProgramHeader extends StatelessWidget {
               fontFamily: ThemeConstants.primaryFontFamily,
             ),
           ),
-          
+
           const SizedBox(height: ThemeConstants.spacing8),
-          
+
           // Program Category and Level
           Row(
             children: [
@@ -103,9 +103,9 @@ class ProgramHeader extends StatelessWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: ThemeConstants.spacing12),
-          
+
           // Rating and Enrollment Info
           Row(
             children: [
@@ -132,9 +132,9 @@ class ProgramHeader extends StatelessWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: ThemeConstants.spacing16),
-          
+
           // Price and Duration
           Row(
             children: [
@@ -143,7 +143,9 @@ class ProgramHeader extends StatelessWidget {
                 style: TextStyle(
                   fontSize: ThemeConstants.headlineSmallFontSize,
                   fontWeight: FontWeight.bold,
-                  color: program.isFree ? Colors.green : ThemeConstants.primaryColor,
+                  color: program.isFree
+                      ? Colors.green
+                      : ThemeConstants.primaryColor,
                 ),
               ),
               const Spacer(),
@@ -166,9 +168,9 @@ class ProgramHeader extends StatelessWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: ThemeConstants.spacing16),
-          
+
           // Progress bar (if enrolled)
           if (program.isEnrolled && program.progress != null) ...[
             Row(
@@ -187,28 +189,32 @@ class ProgramHeader extends StatelessWidget {
               value: (program.progress ?? 0) / 100,
               backgroundColor: Colors.grey[300],
               valueColor: AlwaysStoppedAnimation<Color>(
-                program.isCompleted ? Colors.green : ThemeConstants.primaryColor,
+                program.isCompleted
+                    ? Colors.green
+                    : ThemeConstants.primaryColor,
               ),
             ),
             const SizedBox(height: ThemeConstants.spacing16),
           ],
-          
+
           // Enrollment Button
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: isLoading 
-                  ? null 
+              onPressed: isLoading
+                  ? null
                   : (program.isEnrolled ? onUnenrollPressed : onEnrollPressed),
               style: ElevatedButton.styleFrom(
-                backgroundColor: program.isEnrolled 
-                    ? Colors.grey[600] 
+                backgroundColor: program.isEnrolled
+                    ? Colors.grey[600]
                     : ThemeConstants.primaryColor,
                 padding: const EdgeInsets.symmetric(
                   vertical: ThemeConstants.spacing16,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
+                  borderRadius: BorderRadius.circular(
+                    ThemeConstants.borderRadiusMedium,
+                  ),
                 ),
               ),
               child: isLoading
@@ -235,7 +241,12 @@ class ProgramHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildChip(BuildContext context, String label, IconData icon, Color color) {
+  Widget _buildChip(
+    BuildContext context,
+    String label,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: ThemeConstants.spacing12,
@@ -249,11 +260,7 @@ class ProgramHeader extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            size: ThemeConstants.iconSizeSmall,
-            color: color,
-          ),
+          Icon(icon, size: ThemeConstants.iconSizeSmall, color: color),
           const SizedBox(width: ThemeConstants.spacing4),
           Text(
             label,

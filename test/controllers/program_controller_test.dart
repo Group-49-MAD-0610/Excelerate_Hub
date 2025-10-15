@@ -24,7 +24,9 @@ void main() {
     });
 
     setUp(() {
-      programController = ProgramController(programRepository: programRepository);
+      programController = ProgramController(
+        programRepository: programRepository,
+      );
     });
 
     tearDown(() async {
@@ -60,27 +62,39 @@ void main() {
       expect(programController.isLoading, false);
     });
 
-    test('should handle loadFeaturedPrograms when API is not available', () async {
-      // Act
-      await programController.loadFeaturedPrograms();
+    test(
+      'should handle loadFeaturedPrograms when API is not available',
+      () async {
+        // Act
+        await programController.loadFeaturedPrograms();
 
-      // Assert
-      expect(programController.featuredPrograms, isEmpty);
-      expect(programController.error, isNotNull);
-      expect(programController.error, contains('Failed to load featured programs'));
-      expect(programController.isLoading, false);
-    });
+        // Assert
+        expect(programController.featuredPrograms, isEmpty);
+        expect(programController.error, isNotNull);
+        expect(
+          programController.error,
+          contains('Failed to load featured programs'),
+        );
+        expect(programController.isLoading, false);
+      },
+    );
 
-    test('should handle loadEnrolledPrograms when API is not available', () async {
-      // Act
-      await programController.loadEnrolledPrograms();
+    test(
+      'should handle loadEnrolledPrograms when API is not available',
+      () async {
+        // Act
+        await programController.loadEnrolledPrograms();
 
-      // Assert
-      expect(programController.enrolledPrograms, isEmpty);
-      expect(programController.error, isNotNull);
-      expect(programController.error, contains('Failed to load enrolled programs'));
-      expect(programController.isLoading, false);
-    });
+        // Assert
+        expect(programController.enrolledPrograms, isEmpty);
+        expect(programController.error, isNotNull);
+        expect(
+          programController.error,
+          contains('Failed to load enrolled programs'),
+        );
+        expect(programController.isLoading, false);
+      },
+    );
 
     test('should handle searchPrograms with empty query', () async {
       // Act
@@ -90,7 +104,10 @@ void main() {
       expect(programController.programs, isEmpty);
       expect(programController.searchQuery, '');
       expect(programController.isLoading, false);
-      expect(programController.error, isNull); // Should not error on empty query
+      expect(
+        programController.error,
+        isNull,
+      ); // Should not error on empty query
     });
 
     test('should handle searchPrograms with whitespace query', () async {
@@ -101,20 +118,26 @@ void main() {
       expect(programController.programs, isEmpty);
       expect(programController.searchQuery, '   ');
       expect(programController.isLoading, false);
-      expect(programController.error, isNull); // Should not error on whitespace query
+      expect(
+        programController.error,
+        isNull,
+      ); // Should not error on whitespace query
     });
 
-    test('should handle searchPrograms with valid query when API is not available', () async {
-      // Act
-      await programController.searchPrograms('flutter development');
+    test(
+      'should handle searchPrograms with valid query when API is not available',
+      () async {
+        // Act
+        await programController.searchPrograms('flutter development');
 
-      // Assert
-      expect(programController.programs, isEmpty);
-      expect(programController.searchQuery, 'flutter development');
-      expect(programController.error, isNotNull);
-      expect(programController.error, contains('Failed to search programs'));
-      expect(programController.isLoading, false);
-    });
+        // Assert
+        expect(programController.programs, isEmpty);
+        expect(programController.searchQuery, 'flutter development');
+        expect(programController.error, isNotNull);
+        expect(programController.error, contains('Failed to search programs'));
+        expect(programController.isLoading, false);
+      },
+    );
 
     test('should handle loadPrograms when API is not available', () async {
       // Act
@@ -132,16 +155,22 @@ void main() {
       expect(programController.isLoading, false);
     });
 
-    test('should handle loadProgramsByCategory when API is not available', () async {
-      // Act
-      await programController.loadProgramsByCategory('mobile development');
+    test(
+      'should handle loadProgramsByCategory when API is not available',
+      () async {
+        // Act
+        await programController.loadProgramsByCategory('mobile development');
 
-      // Assert
-      expect(programController.programs, isEmpty);
-      expect(programController.error, isNotNull);
-      expect(programController.error, contains('Failed to load programs by category'));
-      expect(programController.isLoading, false);
-    });
+        // Assert
+        expect(programController.programs, isEmpty);
+        expect(programController.error, isNotNull);
+        expect(
+          programController.error,
+          contains('Failed to load programs by category'),
+        );
+        expect(programController.isLoading, false);
+      },
+    );
 
     test('should handle getProgramProgress when API is not available', () async {
       // Act
@@ -153,15 +182,24 @@ void main() {
       // Just verify the result is null as expected
     });
 
-    test('should handle updateProgramProgress when API is not available', () async {
-      // Act
-      final result = await programController.updateProgramProgress('program123', 0.5);
+    test(
+      'should handle updateProgramProgress when API is not available',
+      () async {
+        // Act
+        final result = await programController.updateProgramProgress(
+          'program123',
+          0.5,
+        );
 
-      // Assert
-      expect(result, false);
-      expect(programController.error, isNotNull);
-      expect(programController.error, contains('Failed to update program progress'));
-    });
+        // Assert
+        expect(result, false);
+        expect(programController.error, isNotNull);
+        expect(
+          programController.error,
+          contains('Failed to update program progress'),
+        );
+      },
+    );
 
     test('should handle enrollInProgram', () async {
       // Act
@@ -206,13 +244,16 @@ void main() {
       expect(programController.programs, isEmpty);
     });
 
-    test('should handle refreshCurrentProgram when no current program', () async {
-      // Act
-      await programController.refreshCurrentProgram();
+    test(
+      'should handle refreshCurrentProgram when no current program',
+      () async {
+        // Act
+        await programController.refreshCurrentProgram();
 
-      // Assert - should not crash
-      expect(programController.currentProgram, isNull);
-    });
+        // Assert - should not crash
+        expect(programController.currentProgram, isNull);
+      },
+    );
 
     test('should handle loading state correctly during operations', () async {
       // Arrange
@@ -226,8 +267,14 @@ void main() {
       await programController.loadProgram('test-program');
 
       // Assert
-      expect(loadingStates, contains(true)); // Should have been loading at some point
-      expect(programController.isLoading, false); // Should not be loading at the end
+      expect(
+        loadingStates,
+        contains(true),
+      ); // Should have been loading at some point
+      expect(
+        programController.isLoading,
+        false,
+      ); // Should not be loading at the end
     });
 
     test('should notify listeners when state changes', () async {
@@ -268,7 +315,9 @@ void main() {
       expect(programController.error, isNotNull);
 
       // Act - perform another operation that clears error
-      await programController.searchPrograms(''); // This should clear error and not set new one
+      await programController.searchPrograms(
+        '',
+      ); // This should clear error and not set new one
 
       // Assert
       expect(programController.error, isNull);
@@ -309,8 +358,14 @@ void main() {
         await programController.loadFeaturedPrograms();
 
         // Assert - error should be cleared at start, new error may be set
-        expect(programController.error, isNotNull); // New error from featured programs
-        expect(programController.error, contains('featured programs')); // Specific to new operation
+        expect(
+          programController.error,
+          isNotNull,
+        ); // New error from featured programs
+        expect(
+          programController.error,
+          contains('featured programs'),
+        ); // Specific to new operation
       });
 
       test('should handle loading state transitions', () async {
@@ -322,10 +377,10 @@ void main() {
 
         // Act
         final future = programController.loadProgram('test-program');
-        
+
         // Should be loading immediately
         expect(programController.isLoading, true);
-        
+
         await future;
 
         // Assert
@@ -351,11 +406,16 @@ void main() {
 
       test('should handle program progress operations', () async {
         // Test getting progress for non-existent program
-        final progress1 = await programController.getProgramProgress('non-existent');
+        final progress1 = await programController.getProgramProgress(
+          'non-existent',
+        );
         expect(progress1, isNull);
 
         // Test updating progress
-        final updateResult = await programController.updateProgramProgress('test-program', 0.75);
+        final updateResult = await programController.updateProgramProgress(
+          'test-program',
+          0.75,
+        );
         expect(updateResult, false); // API not available
       });
     });

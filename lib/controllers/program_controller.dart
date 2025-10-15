@@ -7,7 +7,7 @@ class ProgramController extends BaseController {
   final ProgramRepository _programRepository;
 
   ProgramController({required ProgramRepository programRepository})
-      : _programRepository = programRepository;
+    : _programRepository = programRepository;
 
   // State variables
   ProgramModel? _currentProgram;

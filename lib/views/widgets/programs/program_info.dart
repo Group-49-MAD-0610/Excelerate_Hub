@@ -35,9 +35,9 @@ class ProgramInfo extends StatelessWidget {
             ),
           ),
         ),
-        
+
         const SizedBox(height: ThemeConstants.spacing24),
-        
+
         // Requirements Section
         if (requirements.isNotEmpty) ...[
           _buildSection(
@@ -46,14 +46,14 @@ class ProgramInfo extends StatelessWidget {
             icon: Icons.checklist,
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: requirements.map((requirement) => 
-                _buildListItem(requirement)
-              ).toList(),
+              children: requirements
+                  .map((requirement) => _buildListItem(requirement))
+                  .toList(),
             ),
           ),
           const SizedBox(height: ThemeConstants.spacing24),
         ],
-        
+
         // Outcomes Section
         if (outcomes.isNotEmpty) ...[
           _buildSection(
@@ -62,14 +62,19 @@ class ProgramInfo extends StatelessWidget {
             icon: Icons.emoji_events,
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: outcomes.map((outcome) => 
-                _buildListItem(outcome, icon: Icons.check_circle_outline)
-              ).toList(),
+              children: outcomes
+                  .map(
+                    (outcome) => _buildListItem(
+                      outcome,
+                      icon: Icons.check_circle_outline,
+                    ),
+                  )
+                  .toList(),
             ),
           ),
           const SizedBox(height: ThemeConstants.spacing24),
         ],
-        
+
         // Tags Section
         if (tags.isNotEmpty) ...[
           _buildSection(
@@ -98,9 +103,7 @@ class ProgramInfo extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
-        border: Border.all(
-          color: Colors.grey.withOpacity(0.3),
-        ),
+        border: Border.all(color: Colors.grey.withOpacity(0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,7 +137,7 @@ class ProgramInfo extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // Section Content
           Padding(
             padding: const EdgeInsets.all(ThemeConstants.spacing16),

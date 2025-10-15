@@ -28,7 +28,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    
+
     // Load program details when screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProgramController>().loadProgram(widget.programId);
@@ -47,17 +47,17 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen>
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Consumer<ProgramController>(
         builder: (context, programController, child) {
-          if (programController.isLoading && programController.currentProgram == null) {
+          if (programController.isLoading &&
+              programController.currentProgram == null) {
             return const Scaffold(
               body: Center(
-                child: LoadingIndicator(
-                  message: 'Loading program details...',
-                ),
+                child: LoadingIndicator(message: 'Loading program details...'),
               ),
             );
           }
 
-          if (programController.error != null && programController.currentProgram == null) {
+          if (programController.error != null &&
+              programController.currentProgram == null) {
             return Scaffold(
               appBar: AppBar(
                 title: const Text('Program Details'),
@@ -112,9 +112,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen>
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 elevation: 0,
               ),
-              body: const Center(
-                child: Text('Program not found'),
-              ),
+              body: const Center(child: Text('Program not found')),
             );
           }
 
@@ -161,7 +159,9 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen>
                 onPressed: () {
                   // TODO: Implement favorite functionality
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Favorite feature coming soon!')),
+                    const SnackBar(
+                      content: Text('Favorite feature coming soon!'),
+                    ),
                   );
                 },
               ),
@@ -179,19 +179,20 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen>
               program: program,
               isLoading: _isEnrollmentLoading,
               onEnrollPressed: () => _handleEnrollment(context, program, true),
-              onUnenrollPressed: () => _handleEnrollment(context, program, false),
+              onUnenrollPressed: () =>
+                  _handleEnrollment(context, program, false),
             ),
-            
+
             const SizedBox(height: ThemeConstants.spacing24),
-            
+
             // Tab Bar
             Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
-                border: Border.all(
-                  color: Colors.grey.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(
+                  ThemeConstants.borderRadiusMedium,
                 ),
+                border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
               ),
               child: TabBar(
                 controller: _tabController,
@@ -206,9 +207,9 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen>
                 ],
               ),
             ),
-            
+
             const SizedBox(height: ThemeConstants.spacing16),
-            
+
             // Tab Content
             SizedBox(
               height: 600, // Fixed height for tab content
@@ -224,14 +225,12 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen>
                       tags: program.tags,
                     ),
                   ),
-                  
+
                   // Curriculum Tab
                   SingleChildScrollView(
-                    child: ProgramCurriculum(
-                      curriculum: program.curriculum,
-                    ),
+                    child: ProgramCurriculum(curriculum: program.curriculum),
                   ),
-                  
+
                   // Instructor Tab
                   SingleChildScrollView(
                     child: InstructorInfo(
@@ -287,7 +286,9 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen>
       if (!success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to ${isEnrolling ? 'enroll in' : 'unenroll from'} program'),
+            content: Text(
+              'Failed to ${isEnrolling ? 'enroll in' : 'unenroll from'} program',
+            ),
             backgroundColor: Colors.red,
           ),
         );
