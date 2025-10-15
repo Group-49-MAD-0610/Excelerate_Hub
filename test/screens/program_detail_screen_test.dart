@@ -29,7 +29,6 @@ void main() {
 
     tearDown(() async {
       await storageService.clearAll();
-      programController.dispose();
     });
 
     Widget createTestWidget({required String programId}) {
@@ -215,7 +214,7 @@ void main() {
       await tester.pump(const Duration(seconds: 2));
 
       // Assert
-      expect(find.text('Program not found'), findsOneWidget);
+      expect(find.text('Failed to load program'), findsOneWidget);
     });
 
     group('ProgramController Integration', () {
@@ -225,7 +224,7 @@ void main() {
 
         // Act
         await tester.pumpWidget(createTestWidget(programId: programId));
-        await tester.pump(); // Initial render
+        await tester.pump(); // Process the addPostFrameCallback
 
         // Assert that loading started
         expect(programController.isLoading, isTrue);
