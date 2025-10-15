@@ -19,7 +19,6 @@ class HomeController extends BaseController {
   HomeController() {
     fetchHomePageData();
   }
-
   Future<void> fetchHomePageData() async {
     await handleAsync(() async {
       await Future.delayed(const Duration(seconds: 1));
@@ -40,6 +39,7 @@ class HomeController extends BaseController {
         badges: 4,
       );
 
+      // --- Original Dummy Programs ---
       final program1 = ProgramModel(
         id: 'prog-101',
         title: 'Machine Learning',
@@ -66,9 +66,37 @@ class HomeController extends BaseController {
         updatedAt: DateTime.now(),
       );
 
-      _experiences = [program1, program2];
-      _favorites = [program2, program1];
-      _upcoming = [program1, program2];
+      // --- New Dummy Programs ---
+      final program3 = ProgramModel(
+        id: 'prog-303',
+        title: 'App Development',
+        description: '',
+        category: 'Mobile',
+        duration: '10 Weeks',
+        level: 'Beginner',
+        instructorId: 'inst-303',
+        instructorName: 'Excelerate Inst.',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      final program4 = ProgramModel(
+        id: 'prog-404',
+        title: 'Graphic Design',
+        description: '',
+        category: 'Design',
+        duration: '6 Weeks',
+        level: 'Intermediate',
+        instructorId: 'inst-404',
+        instructorName: 'Design School',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      // --- Updated Lists with More Data ---
+      _experiences = [program1, program2, program3, program4];
+      _favorites = [program4, program2, program1, program3];
+      _upcoming = [program3, program1, program4, program2];
     });
   }
 }

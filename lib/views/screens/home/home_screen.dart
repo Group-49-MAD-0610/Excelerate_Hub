@@ -66,7 +66,6 @@ class HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the data from the controller.
     final controller = context.watch<HomeController>();
 
     if (controller.isLoading) {
@@ -88,16 +87,52 @@ class HomeContent extends StatelessWidget {
               _buildAchievementsCard(controller.achievements!),
             const SizedBox(height: 24),
             Center(
-              child: Text(
-                ':::Xcelerate',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                  color: Colors.orange.shade700,
-                  letterSpacing: 2,
-                ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          _buildDash(),
+                          const SizedBox(height: 4),
+                          _buildDash(),
+                          const SizedBox(height: 4),
+                          _buildDash(),
+                        ],
+                      ),
+                      const SizedBox(width: 8),
+                      ShaderMask(
+                        blendMode: BlendMode.srcIn,
+                        shaderCallback: (bounds) =>
+                            const LinearGradient(
+                              colors: [Colors.orange, Colors.pink],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ).createShader(
+                              Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                            ),
+                        child: const Text(
+                          'Xcelerate',
+                          style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Learn. Engage. Grow.',
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                  ),
+                ],
               ),
             ),
+
             const SizedBox(height: 24),
             _buildProgramCarousel(
               context: context,
@@ -236,6 +271,18 @@ class HomeContent extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  // --- THIS IS THE NEW HELPER METHOD FOR THE LOGO ---
+  Widget _buildDash() {
+    return Container(
+      height: 3,
+      width: 25,
+      decoration: BoxDecoration(
+        color: Colors.orange,
+        borderRadius: BorderRadius.circular(2),
+      ),
     );
   }
 }
