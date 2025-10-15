@@ -1,3 +1,4 @@
+import 'package:excelerate/core/routes/app_routes.dart';
 import 'package:excelerate/views/screens/home/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -228,7 +229,7 @@ class HomeContent extends StatelessWidget {
               return ProgramCard(
                 program: program,
                 onTap: () {
-                  // Navigation will be our next step.
+                  AppRoutes.toProgramDetail(context, program.id);
                 },
               );
             },

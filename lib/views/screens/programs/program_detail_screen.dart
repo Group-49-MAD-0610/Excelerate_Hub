@@ -5,6 +5,7 @@ class ProgramDetailScreen extends StatelessWidget {
   final String programId;
 
   const ProgramDetailScreen({super.key, required this.programId});
+  static const String routeName = '/program-detail';
 
   @override
   Widget build(BuildContext context) {
