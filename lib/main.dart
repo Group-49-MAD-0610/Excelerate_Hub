@@ -42,7 +42,7 @@ class ExcelerateApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
         onGenerateRoute: AppRoutes.generateRoute,
-        initialRoute: AppRoutes.login,
+        initialRoute: AppRoutes.home,
         debugShowCheckedModeBanner: false,
       ),
     );

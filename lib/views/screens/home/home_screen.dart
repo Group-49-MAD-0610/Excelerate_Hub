@@ -1,6 +1,7 @@
 import 'package:excelerate/core/constants/theme_constants.dart';
 import 'package:excelerate/core/routes/app_routes.dart';
 import 'package:excelerate/views/screens/home/profile_screen.dart';
+import 'package:excelerate/views/widgets/common/error_display_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +12,10 @@ import '../../widgets/specific/program_card.dart';
 import '../programs/program_list_screen.dart';
 import 'dashboard_screen.dart';
 
+/// The main screen of the application that contains the bottom navigation bar.
+///
+/// This widget acts as a shell, displaying the content of the currently
+/// selected tab.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
   static const String routeName = '/home';
@@ -21,6 +26,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+
   static const List<Widget> _pages = <Widget>[
     HomeContent(),
     ProgramListScreen(),
@@ -55,6 +61,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+/// Displays the primary content for the 'Home' tab.
+///
+/// This widget is responsible for showing the user greeting, achievements,
+/// and various program carousels.
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
 
@@ -65,8 +75,14 @@ class HomeContent extends StatelessWidget {
     if (controller.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
+
+    // --- THIS IS THE UPDATED BLOCK ---
     if (controller.error != null) {
-      return Center(child: Text('Error: ${controller.error}'));
+      return ErrorDisplayWidget(
+        message:
+            'Failed to load home screen data.', // A more user-friendly message
+        onRetry: controller.fetchHomePageData,
+      );
     }
 
     return SingleChildScrollView(
@@ -103,6 +119,7 @@ class HomeContent extends StatelessWidget {
     );
   }
 
+  /// Builds the header section with a user greeting and action icons.
   Widget _buildHeader(BuildContext context, HomeController controller) {
     final textTheme = Theme.of(context).textTheme;
     return Row(
@@ -128,16 +145,31 @@ class HomeContent extends StatelessWidget {
             maxLines: 1,
           ),
         ),
-        IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.notifications_outlined),
+
+        // --- ACCESSIBILITY WIDGETS ADDED ---
+        Semantics(
+          label: 'Search programs',
+          child: IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
         ),
-        IconButton(onPressed: () {}, icon: const Icon(Icons.settings_outlined)),
+        Semantics(
+          label: 'View notifications',
+          child: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.notifications_outlined),
+          ),
+        ),
+        Semantics(
+          label: 'Open settings',
+          child: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.settings_outlined),
+          ),
+        ),
       ],
     );
   }
 
+  /// Builds the card displaying the user's achievement statistics.
   Widget _buildAchievementsCard(
     BuildContext context,
     AchievementsModel achievements,
@@ -182,6 +214,7 @@ class HomeContent extends StatelessWidget {
     );
   }
 
+  /// Builds a single column for a statistic (e.g., '10 Enrolled').
   Widget _buildStatColumn(BuildContext context, String value, String label) {
     final textTheme = Theme.of(context).textTheme;
     return Column(
@@ -193,6 +226,7 @@ class HomeContent extends StatelessWidget {
     );
   }
 
+  /// Builds the stylized 'Xcelerate' logo and tagline.
   Widget _buildLogo(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Center(
@@ -237,6 +271,7 @@ class HomeContent extends StatelessWidget {
     );
   }
 
+  /// Builds a single horizontal dash for the logo graphic.
   Widget _buildDash() {
     return Container(
       height: 6,
@@ -248,6 +283,7 @@ class HomeContent extends StatelessWidget {
     );
   }
 
+  /// Builds a horizontally scrollable carousel of program cards.
   Widget _buildProgramCarousel({
     required BuildContext context,
     required String title,
