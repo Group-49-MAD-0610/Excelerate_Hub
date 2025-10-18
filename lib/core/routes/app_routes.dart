@@ -28,8 +28,9 @@ class AppRoutes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case splash:
+        // FOR TESTING: Go directly to Program Detail Screen
         return MaterialPageRoute(
-          builder: (_) => const HomeScreen(),
+          builder: (_) => ProgramDetailScreen(programId: 'test-program-123'),
           settings: settings,
         );
 
@@ -104,7 +105,9 @@ class AppRoutes {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(home, (route) => false),
+                onPressed: () => Navigator.of(
+                  context,
+                ).pushNamedAndRemoveUntil(home, (route) => false),
                 child: const Text('Go Home'),
               ),
             ],
