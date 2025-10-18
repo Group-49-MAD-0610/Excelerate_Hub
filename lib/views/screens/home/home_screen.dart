@@ -10,12 +10,9 @@ import '../../../models/entities/achievements_model.dart';
 import '../../../models/entities/program_model.dart';
 import '../../widgets/specific/program_card.dart';
 import '../programs/program_list_screen.dart';
-import 'dashboard_screen.dart';
+// Note: dashboard_screen.dart is no longer imported.
 
 /// The main screen of the application that contains the bottom navigation bar.
-///
-/// This widget acts as a shell, displaying the content of the currently
-/// selected tab.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
   static const String routeName = '/home';
@@ -25,13 +22,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
+  // --- CHANGES ARE IN THIS SECTION ---
 
+  // Default to the 'Home' tab, which is now at index 1.
+  int _selectedIndex = 1;
+
+  // The list of pages now has only three items.
   static const List<Widget> _pages = <Widget>[
-    HomeContent(),
-    ProgramListScreen(),
-    DashboardScreen(),
-    ProfileScreen(),
+    ProgramListScreen(), // Index 0
+    HomeContent(), // Index 1
+    ProfileScreen(), // Index 2
   ];
 
   void _onItemTapped(int index) {
@@ -44,27 +44,36 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(child: _pages.elementAt(_selectedIndex)),
+      // The BottomNavigationBar is now customized to match the design.
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Programs'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
+            icon: Icon(Icons.book_outlined),
+            label:
+                'Programs', // Label is required by the widget, but we hide it.
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'Profile',
+          ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+
+        // Styling adjustments to match the wireframe
+        selectedItemColor: ThemeConstants.errorColor, // Reddish-pink for active
+        unselectedItemColor:
+            ThemeConstants.onSurfaceVariantColor, // Gray for inactive
+        showSelectedLabels: false, // Hides the text label for the active item
+        showUnselectedLabels: false, // Hides the text labels for inactive items
+        type: BottomNavigationBarType.fixed, // Ensures consistent behavior
       ),
     );
   }
 }
 
-/// Displays the primary content for the 'Home' tab.
-///
-/// This widget is responsible for showing the user greeting, achievements,
-/// and various program carousels.
+// --- HomeContent and its methods below remain completely unchanged ---
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
 
@@ -76,11 +85,9 @@ class HomeContent extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
-    // --- THIS IS THE UPDATED BLOCK ---
     if (controller.error != null) {
       return ErrorDisplayWidget(
-        message:
-            'Failed to load home screen data.', // A more user-friendly message
+        message: 'Failed to load home screen data.',
         onRetry: controller.fetchHomePageData,
       );
     }
@@ -119,7 +126,6 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  /// Builds the header section with a user greeting and action icons.
   Widget _buildHeader(BuildContext context, HomeController controller) {
     final textTheme = Theme.of(context).textTheme;
     return Row(
@@ -145,8 +151,6 @@ class HomeContent extends StatelessWidget {
             maxLines: 1,
           ),
         ),
-
-        // --- ACCESSIBILITY WIDGETS ADDED ---
         Semantics(
           label: 'Search programs',
           child: IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
@@ -169,7 +173,6 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  /// Builds the card displaying the user's achievement statistics.
   Widget _buildAchievementsCard(
     BuildContext context,
     AchievementsModel achievements,
@@ -214,7 +217,6 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  /// Builds a single column for a statistic (e.g., '10 Enrolled').
   Widget _buildStatColumn(BuildContext context, String value, String label) {
     final textTheme = Theme.of(context).textTheme;
     return Column(
@@ -226,7 +228,6 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  /// Builds the stylized 'Xcelerate' logo and tagline.
   Widget _buildLogo(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Center(
@@ -271,7 +272,6 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  /// Builds a single horizontal dash for the logo graphic.
   Widget _buildDash() {
     return Container(
       height: 6,
@@ -283,7 +283,6 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  /// Builds a horizontally scrollable carousel of program cards.
   Widget _buildProgramCarousel({
     required BuildContext context,
     required String title,
