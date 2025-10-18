@@ -1,12 +1,11 @@
+import 'package:excelerate/core/routes/app_routes.dart';
+import 'package:excelerate/core/constants/theme_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../../controllers/auth_controller.dart';
-import '../../../core/utils/validators.dart';
+
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/custom_text_field.dart';
-import '../../widgets/common/loading_indicator.dart';
 
-/// Login screen for user authentication
+/// Login screen UI for the Week 2 prototype.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -15,7 +14,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
+  // We keep the controllers to allow the user to type in the fields.
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
@@ -29,121 +28,154 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // We can get theme data directly without needing a Consumer for this prototype.
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Consumer<AuthController>(
-            builder: (context, authController, child) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Logo/Title
-                  const Text(
-                    'Excelerate Hub',
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Welcome back! Please sign in to continue.',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 48),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(ThemeConstants.spacing24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // I've replaced the simple Text with the stylized logo we built for consistency.
+                _buildLogo(context),
+                const SizedBox(height: ThemeConstants.spacing16),
 
-                  // Login Form
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        // Email Field
-                        CustomTextField(
-                          controller: _emailController,
-                          label: 'Email',
-                          hint: 'Enter your email',
-                          keyboardType: TextInputType.emailAddress,
-                          validator: Validators.email,
-                          prefixIcon: Icons.email_outlined,
-                        ),
-                        const SizedBox(height: 16),
+                Text(
+                  'Welcome Back!',
+                  style: textTheme.headlineMedium,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: ThemeConstants.spacing8),
+                Text(
+                  'Learn. Engage. Grow.', // This matches the logo's tagline.
+                  style: textTheme.titleSmall,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: ThemeConstants.spacing48),
 
-                        // Password Field
-                        CustomTextField(
-                          controller: _passwordController,
-                          label: 'Password',
-                          hint: 'Enter your password',
-                          obscureText: _obscurePassword,
-                          validator: (value) =>
-                              Validators.required(value, 'Password'),
-                          prefixIcon: Icons.lock_outlined,
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 24),
+                // --- UI for Email and Password Fields ---
 
-                        // Login Button
-                        if (authController.isLoading)
-                          const LoadingIndicator()
-                        else
-                          CustomButton(
-                            text: 'Sign In',
-                            onPressed: () => _handleLogin(authController),
-                            isFullWidth: true,
-                          ),
-                      ],
+                // Email Field
+                CustomTextField(
+                  controller: _emailController,
+                  label: 'Email',
+                  hint: 'Enter your email',
+                  keyboardType: TextInputType.emailAddress,
+                  prefixIcon: Icons.email_outlined,
+                ),
+                const SizedBox(height: ThemeConstants.spacing16),
+
+                // Password Field
+                CustomTextField(
+                  controller: _passwordController,
+                  label: 'Password',
+                  hint: 'Enter your password',
+                  obscureText: _obscurePassword,
+                  prefixIcon: Icons.lock_outlined,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
                     ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
                   ),
+                ),
+                const SizedBox(height: ThemeConstants.spacing24),
 
-                  const SizedBox(height: 24),
+                // --- Sign In Button with Direct Navigation ---
+                CustomButton(
+                  text: 'Sign In',
+                  onPressed: () {
+                    // For Week 2, we just navigate directly to the home screen.
+                    // No need to check email or password.
+                    AppRoutes.toHome(context);
+                  },
+                  isFullWidth: true,
+                ),
+                const SizedBox(height: ThemeConstants.spacing24),
 
-                  // Register Link
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Don't have an account? "),
-                      GestureDetector(
-                        onTap: () => Navigator.pushNamed(context, '/register'),
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.w600,
-                          ),
+                // Register Link
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don't have an account? ",
+                      style: textTheme.bodyMedium,
+                    ),
+                    GestureDetector(
+                      onTap: () =>
+                          Navigator.pushNamed(context, AppRoutes.register),
+                      child: Text(
+                        'Sign Up',
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              );
-            },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Future<void> _handleLogin(AuthController authController) async {
-    if (_formKey.currentState?.validate() == true) {
-      final success = await authController.login(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      );
+  // Reusing the logo we built for the home screen for brand consistency.
+  Widget _buildLogo(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            _buildDash(),
+            const SizedBox(height: 5),
+            _buildDash(),
+            const SizedBox(height: 5),
+            _buildDash(),
+          ],
+        ),
+        const SizedBox(width: 8),
+        ShaderMask(
+          blendMode: BlendMode.srcIn,
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [ThemeConstants.tertiaryColor, ThemeConstants.errorColor],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ).createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
+          child: Text(
+            'xcelerate',
+            style: textTheme.displaySmall?.copyWith(fontSize: 38),
+          ),
+        ),
+      ],
+    );
+  }
 
-      if (success && mounted) {
-        Navigator.of(context).pushReplacementNamed('/home');
-      }
-    }
+  Widget _buildDash() {
+    return Container(
+      height: 5,
+      width: 40,
+      decoration: BoxDecoration(
+        color: ThemeConstants.tertiaryColor,
+        borderRadius: BorderRadius.circular(2),
+      ),
+    );
   }
 }
