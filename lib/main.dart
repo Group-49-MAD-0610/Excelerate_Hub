@@ -1,3 +1,4 @@
+import 'package:excelerate/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/routes/app_routes.dart';
@@ -27,6 +28,7 @@ class ExcelerateApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => HomeController()),
         ChangeNotifierProvider(
           create: (_) => AuthController(
             authService: AuthService(
@@ -50,8 +52,7 @@ class ExcelerateApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
         onGenerateRoute: AppRoutes.generateRoute,
-        initialRoute:
-            AppRoutes.splash, // Changed to splash to test feature directly
+        initialRoute: AppRoutes.home, // Use home screen with integrated navigation
         debugShowCheckedModeBanner: false,
       ),
     );

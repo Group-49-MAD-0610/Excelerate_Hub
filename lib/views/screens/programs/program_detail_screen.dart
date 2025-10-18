@@ -14,6 +14,7 @@ class ProgramDetailScreen extends StatefulWidget {
   final String programId;
 
   const ProgramDetailScreen({super.key, required this.programId});
+  static const String routeName = '/program-detail';
 
   @override
   State<ProgramDetailScreen> createState() => _ProgramDetailScreenState();
