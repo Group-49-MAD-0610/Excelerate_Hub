@@ -6,6 +6,7 @@ class ThemeConstants {
   static const Color primaryColor = Color(0xFF6C5CE7); // Purple
   static const Color secondaryColor = Color(0xFF00D2D3); // Teal
   static const Color tertiaryColor = Color(0xFFFEBC2E); // Yellow
+  static const Color brandOrangeColor = Color(0xFFFF6B6B); // Brand orange
 
   // Semantic Colors
   static const Color successColor = Color(0xFF00C896);

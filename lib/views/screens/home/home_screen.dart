@@ -55,6 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
         currentIndex: _selectedIndex,
+        selectedItemColor: ThemeConstants.brandOrangeColor,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
         onTap: _onItemTapped,
       ),
     );
