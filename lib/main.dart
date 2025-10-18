@@ -52,7 +52,8 @@ class ExcelerateApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
         onGenerateRoute: AppRoutes.generateRoute,
-        initialRoute: AppRoutes.home, // Use home screen with integrated navigation
+        initialRoute:
+            AppRoutes.home, // Use home screen with integrated navigation
         debugShowCheckedModeBanner: false,
       ),
     );

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../../controllers/program_controller.dart';
+import 'package:flutter/services.dart';
 import '../../../models/entities/program_model.dart';
 import '../../../core/constants/theme_constants.dart';
-import '../../widgets/common/loading_indicator.dart';
-import '../../widgets/programs/program_header.dart';
-import '../../widgets/programs/program_info.dart';
-import '../../widgets/programs/program_curriculum.dart';
-import '../../widgets/programs/instructor_info.dart';
 
-/// Program detail screen showing specific program information
+/// Modern Program Details Screen following Figma design specifications
+/// Implements Material Design 3 principles with enhanced UX patterns
+///
+/// This screen displays comprehensive program information including:
+/// - Program overview with title, duration, and institution
+/// - Detailed curriculum and learning objectives
+/// - Application deadlines and requirements
+/// - Rewards and recognition information
+/// - Enrollment capabilities with loading states
 class ProgramDetailScreen extends StatefulWidget {
   final String programId;
 
@@ -20,295 +22,866 @@ class ProgramDetailScreen extends StatefulWidget {
   State<ProgramDetailScreen> createState() => _ProgramDetailScreenState();
 }
 
-class _ProgramDetailScreenState extends State<ProgramDetailScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
+  // Constants
+  static const Color _primaryAccentColor = Color(0xFFF76169);
+  static const Color _backgroundGray = Color(0xFFD9D9D9);
+  static const double _iconSize = 18.0;
+  static const double _containerPadding = 8.0;
+  static const double _borderRadius = 12.0;
+  static const double _cardElevation = 4.0;
+  static const double _shadowBlurRadius = 8.0;
+  static const Offset _shadowOffset = Offset(0, 2);
+  static const double _titleVerticalMargin = 12.0;
+
+  // State variables
   bool _isEnrollmentLoading = false;
+  bool _isLiked = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-
-    // Load program details when screen initializes
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ProgramController>().loadProgram(widget.programId);
-    });
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // MAIN BUILD METHOD
+  // ═══════════════════════════════════════════════════════════════════════════════
 
   @override
   Widget build(BuildContext context) {
+    final program = _getDummyProgram();
+
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Consumer<ProgramController>(
-        builder: (context, programController, child) {
-          if (programController.isLoading &&
-              programController.currentProgram == null) {
-            return const Scaffold(
-              body: Center(
-                child: LoadingIndicator(message: 'Loading program details...'),
-              ),
-            );
-          }
+      backgroundColor: _backgroundGray,
+      body: _buildProgramContent(context, program),
+    );
+  }
 
-          if (programController.error != null &&
-              programController.currentProgram == null) {
-            return Scaffold(
-              appBar: AppBar(
-                title: const Text('Program Details'),
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                elevation: 0,
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // DATA METHODS
+  // ═══════════════════════════════════════════════════════════════════════════════
+
+  /// Creates dummy program data for Machine Learning program
+  ///
+  /// This method provides mock data that matches the Figma design specifications
+  /// for the Machine Learning internship program. In production, this would be
+  /// replaced with actual API calls or database queries.
+  ///
+  /// Returns a [ProgramModel] with complete program information including
+  /// curriculum, deadlines, and instructor details.
+  ProgramModel _getDummyProgram() {
+    final now = DateTime.now();
+    return ProgramModel(
+      id: 'ml-program-001',
+      title: 'Machine Learning',
+      description:
+          'Want to experience what it\'s like to manage projects in the real world? In this internship, you\'ll work as a project management trainee, guiding a project from initial planning through to delivery.',
+      category: 'Business & Management',
+      level: '',
+      duration: '4 weeks',
+      price: 0.0,
+      rating: 0.0,
+      reviewCount: 0,
+      enrollmentCount: 15847,
+      instructorId: 'instructor-slu',
+      instructorName: 'Saint Louis University',
+      instructorAvatar: '',
+      isEnrolled: false,
+      progress: null,
+      createdAt: now.subtract(const Duration(days: 15)),
+      updatedAt: now,
+      isFree: true,
+      outcomes: [
+        'Define goals and create a project charter',
+        'Develop a detailed schedule with milestones and Gantt charts',
+        'Identify stakeholders, resources, and communication needs',
+        'Solve real-world challenges such as low engagement and participation',
+        'Deliver a final project proposal and team presentation',
+        'Gain hands-on experience in project planning, scheduling, communication, and problem-solving',
+      ],
+      curriculum: [
+        CurriculumWeek(
+          week: 1,
+          title: 'Project Planning & Charter Development',
+          description:
+              'Define project goals, create a comprehensive project charter, and establish foundation for successful project execution',
+        ),
+        CurriculumWeek(
+          week: 2,
+          title: 'Scheduling & Milestone Planning',
+          description:
+              'Develop detailed project schedules with milestones and create Gantt charts for visual project tracking',
+        ),
+        CurriculumWeek(
+          week: 3,
+          title: 'Stakeholder & Resource Management',
+          description:
+              'Identify key stakeholders, allocate resources effectively, and establish communication protocols',
+        ),
+        CurriculumWeek(
+          week: 4,
+          title: 'Problem-Solving & Final Delivery',
+          description:
+              'Address real-world challenges like low engagement, finalize project proposal, and deliver team presentation',
+        ),
+      ],
+      tags: [
+        'Remote',
+        'Virtual',
+        'Project Management',
+        'Internship',
+        'Scholarship',
+        'Certificate',
+      ],
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // UI BUILDING METHODS
+  // ═══════════════════════════════════════════════════════════════════════════════
+
+  /// Builds the custom app bar with navigation and action buttons
+  ///
+  /// Features:
+  /// - Back navigation button with shadow
+  /// - Centered program title
+  /// - Like/Unlike functionality button
+  /// - White background with proper elevation
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    ProgramModel? program,
+  ) {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
+      toolbarHeight: kToolbarHeight,
+      leading: Center(
+        child: IconButton(
+          icon: _buildIconContainer(
+            icon: Icons.arrow_back_ios_new,
+            color: _primaryAccentColor,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      title: Container(
+        margin: const EdgeInsets.symmetric(vertical: _titleVerticalMargin),
+        child: Center(
+          child: Text(
+            program?.title ?? 'Program Details',
+            style: _buildContentTextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+      centerTitle: true,
+      titleSpacing: 0,
+      actions: [
+        Center(
+          child: IconButton(
+            icon: _buildIconContainer(
+              icon: _isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+              color: _primaryAccentColor,
+            ),
+            onPressed: () {
+              setState(() {
+                _isLiked = !_isLiked;
+              });
+              _showSnackBar(
+                context,
+                _isLiked ? 'Liked' : 'Like removed',
+                ThemeConstants.successColor,
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Builds the program information card header
+  ///
+  /// Contains:
+  /// - Program title with highlighted background
+  /// - Duration with clock icon
+  /// - Institution with school icon
+  /// - Apply button with primary action styling
+  Widget _buildProgramHeader(ProgramModel program) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: ThemeConstants.spacing20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Program Meta Info and Apply Button Card
+          Card(
+            elevation: _cardElevation,
+            shadowColor: Colors.black.withValues(alpha: 0.1),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                ThemeConstants.borderRadiusMedium,
               ),
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 64,
-                      color: Colors.grey[400],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(ThemeConstants.spacing16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Program Title
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            program.title,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: ThemeConstants.spacing12),
+                        // Duration
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.schedule_outlined,
+                              size: 16,
+                              color: _primaryAccentColor,
+                            ),
+                            const SizedBox(width: ThemeConstants.spacing4),
+                            Text(
+                              program.duration,
+                              style: _buildContentTextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: ThemeConstants.spacing8),
+                        // Instructor
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.school_outlined,
+                              size: 16,
+                              color: _primaryAccentColor,
+                            ),
+                            const SizedBox(width: ThemeConstants.spacing4),
+                            Text(
+                              program.instructorName,
+                              style: _buildContentTextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: ThemeConstants.spacing16),
-                    Text(
-                      'Failed to load program',
+                  ),
+                  // Apply Button
+                  ElevatedButton(
+                    onPressed: () => _handleEnrollment(context, program),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _primaryAccentColor,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: ThemeConstants.spacing20,
+                        vertical: ThemeConstants.spacing12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          ThemeConstants.borderRadiusMedium,
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'Apply',
                       style: TextStyle(
-                        fontSize: ThemeConstants.bodyLargeFontSize,
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
                         fontWeight: FontWeight.w600,
-                        color: Colors.grey[600],
+                        color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: ThemeConstants.spacing8),
-                    Text(
-                      programController.error ?? 'Unknown error occurred',
-                      style: TextStyle(
-                        fontSize: ThemeConstants.bodyMediumFontSize,
-                        color: Colors.grey[500],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: ThemeConstants.spacing24),
-                    ElevatedButton(
-                      onPressed: () {
-                        programController.loadProgram(widget.programId);
-                      },
-                      child: const Text('Retry'),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            );
-          }
-
-          final program = programController.currentProgram;
-          if (program == null) {
-            return Scaffold(
-              appBar: AppBar(
-                title: const Text('Program Details'),
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                elevation: 0,
-              ),
-              body: const Center(child: Text('Program not found')),
-            );
-          }
-
-          return _buildProgramDetails(context, program, programController);
-        },
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildProgramDetails(
-    BuildContext context,
-    ProgramModel program,
-    ProgramController programController,
-  ) {
-    return NestedScrollView(
-      headerSliverBuilder: (context, innerBoxIsScrolled) {
-        return [
-          SliverAppBar(
-            expandedHeight: 0,
-            floating: true,
-            pinned: true,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
-            elevation: 0,
-            title: Text(
-              program.title,
-              style: const TextStyle(
-                fontSize: ThemeConstants.bodyLargeFontSize,
-                fontWeight: FontWeight.w600,
+  Widget _buildProgramContent(BuildContext context, ProgramModel program) {
+    return CustomScrollView(
+      slivers: [
+        // Simple Header (replaces hero image)
+        SliverToBoxAdapter(
+          child: Container(
+            padding: const EdgeInsets.only(
+              top: 24,
+              left: ThemeConstants.spacing16,
+              right: ThemeConstants.spacing16,
+              bottom: ThemeConstants.spacing12,
+            ),
+            color: _backgroundGray,
+            child: Row(
+              children: [Expanded(child: _buildAppBar(context, program))],
+            ),
+          ),
+        ),
+
+        // Main Content
+        SliverToBoxAdapter(
+          child: Container(
+            decoration: const BoxDecoration(
+              color: _backgroundGray,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(ThemeConstants.borderRadiusLarge),
+                topRight: Radius.circular(ThemeConstants.borderRadiusLarge),
               ),
             ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.share),
-                onPressed: () {
-                  // TODO: Implement share functionality
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Share feature coming soon!')),
-                  );
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.favorite_border),
-                onPressed: () {
-                  // TODO: Implement favorite functionality
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Favorite feature coming soon!'),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: ThemeConstants.spacing24),
+
+                // Program Header
+                _buildProgramHeader(program),
+                const SizedBox(height: ThemeConstants.spacing16),
+
+                // Description
+                _buildDescription(program),
+                const SizedBox(height: ThemeConstants.spacing16),
+
+                // Internship Details
+                _buildInternshipDetails(),
+                const SizedBox(height: ThemeConstants.spacing16),
+
+                // Application Deadlines
+                _buildApplicationDeadlines(),
+                const SizedBox(height: ThemeConstants.spacing16),
+
+                // Rewards & Skills
+                _buildRewardsAndSkills(),
+                const SizedBox(height: ThemeConstants.spacing16),
+
+                // Enrollment Section
+                _buildEnrollmentSection(context, program),
+
+                const SizedBox(height: ThemeConstants.spacing24),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Hero section removed — replaced by a simple header in the slivers above.
+
+  /// Builds the program description section
+  ///
+  /// Features:
+  /// - Centered section title
+  /// - Left-aligned description text
+  /// - White background container with rounded corners
+  Widget _buildDescription(ProgramModel program) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: ThemeConstants.spacing20),
+      padding: const EdgeInsets.all(ThemeConstants.spacing20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'About This Internship',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(height: ThemeConstants.spacing12),
+          Text(
+            program.description,
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+              fontSize: 16,
+              fontFamily: 'Poppins',
+              color: Colors.black,
+              height: 1.6,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInternshipDetails() {
+    return _buildContentSection(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'What You\'ll Learn',
+            style: TextStyle(
+              fontSize: 16,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(height: ThemeConstants.spacing16),
+          ...[
+            'Define goals and create a project charter',
+            'Develop a detailed schedule with milestones and Gantt charts',
+            'Identify stakeholders, resources, and communication needs',
+            'Solve real-world challenges such as low engagement and participation',
+            'Deliver a final project proposal and team presentation',
+            'Gain hands-on experience in project planning, scheduling, communication, and problem-solving',
+          ].map(
+            (outcome) => Padding(
+              padding: const EdgeInsets.only(bottom: ThemeConstants.spacing12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 6),
+                    width: 6,
+                    height: 6,
+                    decoration: const BoxDecoration(
+                      color: ThemeConstants.primaryColor,
+                      shape: BoxShape.circle,
                     ),
-                  );
-                },
+                  ),
+                  const SizedBox(width: ThemeConstants.spacing12),
+                  Expanded(
+                    child: Text(
+                      outcome,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                        color: Colors.black,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildApplicationDeadlines() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: ThemeConstants.spacing20),
+      padding: const EdgeInsets.all(ThemeConstants.spacing20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.access_time_rounded,
+                color: ThemeConstants.warningColor,
+                size: 20,
+              ),
+              const SizedBox(width: ThemeConstants.spacing8),
+              const Text(
+                'Application Deadlines',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
             ],
           ),
-        ];
-      },
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(ThemeConstants.spacing16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Program Header
-            ProgramHeader(
-              program: program,
-              isLoading: _isEnrollmentLoading,
-              onEnrollPressed: () => _handleEnrollment(context, program, true),
-              onUnenrollPressed: () =>
-                  _handleEnrollment(context, program, false),
+          const SizedBox(height: ThemeConstants.spacing12),
+          _buildDeadlineItem('Early Application', 'February 15, 2024', true),
+          _buildDeadlineItem('Regular Application', 'March 15, 2024', false),
+          _buildDeadlineItem('Final Application', 'April 1, 2024', false),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDeadlineItem(String title, String date, bool isHighlighted) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: ThemeConstants.spacing8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
             ),
+          ),
+          Text(
+            date,
+            style: const TextStyle(
+              fontSize: 16,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-            const SizedBox(height: ThemeConstants.spacing24),
-
-            // Tab Bar
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(
-                  ThemeConstants.borderRadiusMedium,
+  Widget _buildRewardsAndSkills() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: ThemeConstants.spacing20),
+      padding: const EdgeInsets.all(ThemeConstants.spacing20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Rewards & Recognition',
+            style: TextStyle(
+              fontSize: 16,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(height: ThemeConstants.spacing16),
+          Row(
+            children: [
+              Expanded(
+                child: _buildRewardCard(
+                  Icons.card_giftcard_rounded,
+                  'Scholarship',
+                  'Up to \$2,000',
+                  ThemeConstants.successColor,
                 ),
-                border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
               ),
-              child: TabBar(
-                controller: _tabController,
-                labelColor: ThemeConstants.primaryColor,
-                unselectedLabelColor: Colors.grey[600],
-                indicatorColor: ThemeConstants.primaryColor,
-                indicatorSize: TabBarIndicatorSize.tab,
-                tabs: const [
-                  Tab(text: 'Overview'),
-                  Tab(text: 'Curriculum'),
-                  Tab(text: 'Instructor'),
-                ],
+              const SizedBox(width: ThemeConstants.spacing12),
+              Expanded(
+                child: _buildRewardCard(
+                  Icons.workspace_premium_rounded,
+                  'Certificate',
+                  'Completion',
+                  ThemeConstants.primaryColor,
+                ),
               ),
+            ],
+          ),
+          const SizedBox(height: ThemeConstants.spacing12),
+          Row(
+            children: [
+              Expanded(
+                child: _buildRewardCard(
+                  Icons.business_center_rounded,
+                  'Experience',
+                  'Real Project',
+                  ThemeConstants.infoColor,
+                ),
+              ),
+              const SizedBox(width: ThemeConstants.spacing12),
+              Expanded(
+                child: _buildRewardCard(
+                  Icons.groups_rounded,
+                  'Networking',
+                  'Industry Connect',
+                  ThemeConstants.warningColor,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRewardCard(
+    IconData icon,
+    String title,
+    String subtitle,
+    Color color,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(ThemeConstants.spacing16),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: ThemeConstants.spacing8),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
             ),
-
-            const SizedBox(height: ThemeConstants.spacing16),
-
-            // Tab Content
-            SizedBox(
-              height: 600, // Fixed height for tab content
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  // Overview Tab
-                  SingleChildScrollView(
-                    child: ProgramInfo(
-                      description: program.description,
-                      requirements: program.requirements,
-                      outcomes: program.outcomes,
-                      tags: program.tags,
-                    ),
-                  ),
-
-                  // Curriculum Tab
-                  SingleChildScrollView(
-                    child: ProgramCurriculum(curriculum: program.curriculum),
-                  ),
-
-                  // Instructor Tab
-                  SingleChildScrollView(
-                    child: InstructorInfo(
-                      instructorId: program.instructorId,
-                      instructorName: program.instructorName,
-                      instructorAvatar: program.instructorAvatar,
-                    ),
-                  ),
-                ],
-              ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: ThemeConstants.spacing4),
+          Text(
+            subtitle,
+            style: const TextStyle(
+              fontSize: 16,
+              fontFamily: 'Poppins',
+              color: Colors.black,
             ),
-          ],
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEnrollmentSection(BuildContext context, ProgramModel program) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: ThemeConstants.spacing20),
+      padding: const EdgeInsets.all(ThemeConstants.spacing24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Price and enrollment info
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Apply Now',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: ThemeConstants.spacing4),
+                    Text(
+                      'Early Application Open',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: ThemeConstants.spacing20),
+
+          // Apply Button
+          SizedBox(
+            height: 56,
+            child: ElevatedButton(
+              onPressed: _isEnrollmentLoading
+                  ? null
+                  : () => _handleEnrollment(context, program),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _primaryAccentColor,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    ThemeConstants.borderRadiusMedium,
+                  ),
+                ),
+              ),
+              child: _isEnrollmentLoading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                  : Text(
+                      program.isEnrolled
+                          ? 'Continue Internship'
+                          : 'Apply for Internship',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper Methods
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // HELPER METHODS
+  // ═══════════════════════════════════════════════════════════════════════════════
+
+  /// Creates a styled container for app bar icons with shadow and rounded corners
+  Widget _buildIconContainer({required IconData icon, required Color color}) {
+    return Container(
+      padding: const EdgeInsets.all(_containerPadding),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(_borderRadius),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: _shadowBlurRadius,
+            offset: _shadowOffset,
+          ),
+        ],
+      ),
+      child: Icon(icon, color: color, size: _iconSize),
+    );
+  }
+
+  /// Creates standardized text style for general content
+  TextStyle _buildContentTextStyle({
+    double fontSize = 16.0,
+    FontWeight fontWeight = FontWeight.normal,
+    Color color = Colors.black,
+  }) {
+    return TextStyle(
+      fontSize: fontSize,
+      fontFamily: 'Poppins',
+      fontWeight: fontWeight,
+      color: color,
+    );
+  }
+
+  /// Creates a standardized white content section container
+  Widget _buildContentSection({
+    required Widget child,
+    EdgeInsets? margin,
+    EdgeInsets? padding,
+  }) {
+    return Container(
+      margin:
+          margin ??
+          const EdgeInsets.symmetric(horizontal: ThemeConstants.spacing20),
+      padding: padding ?? const EdgeInsets.all(ThemeConstants.spacing20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
+      ),
+      child: child,
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // EVENT HANDLERS & UTILITY METHODS
+  // ═══════════════════════════════════════════════════════════════════════════════
+
+  /// Shows a styled SnackBar with the given message and color
+  void _showSnackBar(BuildContext context, String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: color,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusSmall),
         ),
       ),
     );
   }
 
+  /// Handles enrollment button press with loading state management
+  ///
+  /// Features:
+  /// - Loading state indication
+  /// - Success feedback via SnackBar
+  /// - Simulated API call with delay
+  /// - Error handling (to be implemented)
   Future<void> _handleEnrollment(
     BuildContext context,
     ProgramModel program,
-    bool isEnrolling,
   ) async {
+    if (program.isEnrolled) {
+      _showSnackBar(
+        context,
+        'Continue internship feature coming soon!',
+        ThemeConstants.infoColor,
+      );
+      return;
+    }
+
     setState(() {
       _isEnrollmentLoading = true;
     });
 
-    try {
-      final programController = context.read<ProgramController>();
-      bool success;
+    // Simulate application process with dummy data
+    await Future.delayed(const Duration(seconds: 1));
 
-      if (isEnrolling) {
-        success = await programController.enrollInProgram(program.id);
-        if (success && mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Successfully enrolled in ${program.title}'),
-              backgroundColor: Colors.green,
-            ),
+    if (mounted) {
+      setState(() {
+        _isEnrollmentLoading = false;
+      });
+
+      // Use a post-frame callback to safely show the snackbar
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _showSnackBar(
+            context,
+            'Application submitted successfully for ${program.title}!',
+            ThemeConstants.successColor,
           );
         }
-      } else {
-        success = await programController.unenrollFromProgram(program.id);
-        if (success && mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Successfully unenrolled from ${program.title}'),
-              backgroundColor: Colors.orange,
-            ),
-          );
-        }
-      }
-
-      if (!success && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Failed to ${isEnrolling ? 'enroll in' : 'unenroll from'} program',
-            ),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isEnrollmentLoading = false;
-        });
-      }
+      });
     }
   }
 }
