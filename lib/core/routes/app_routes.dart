@@ -105,7 +105,9 @@ class AppRoutes {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(home, (route) => false),
+                onPressed: () => Navigator.of(
+                  context,
+                ).pushNamedAndRemoveUntil(home, (route) => false),
                 child: const Text('Go Home'),
               ),
             ],

@@ -61,10 +61,7 @@ class ProgramDetailsTestScreen extends StatelessWidget {
           children: [
             const Text(
               'Program Details Screen Feature',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -88,7 +85,8 @@ class ProgramDetailsTestScreen extends StatelessWidget {
             _TestButton(
               title: 'Non-existent Program',
               subtitle: 'Test error handling',
-              onPressed: () => _navigateToProgram(context, 'non-existent-program'),
+              onPressed: () =>
+                  _navigateToProgram(context, 'non-existent-program'),
             ),
             const SizedBox(height: 12),
             _TestButton(
@@ -129,27 +127,19 @@ class _TestButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 4),
           Text(
             subtitle,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
           ),
         ],
       ),

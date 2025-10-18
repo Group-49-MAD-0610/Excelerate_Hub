@@ -50,7 +50,8 @@ class ExcelerateApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
         onGenerateRoute: AppRoutes.generateRoute,
-        initialRoute: AppRoutes.splash, // Changed to splash to test feature directly
+        initialRoute:
+            AppRoutes.splash, // Changed to splash to test feature directly
         debugShowCheckedModeBanner: false,
       ),
     );
