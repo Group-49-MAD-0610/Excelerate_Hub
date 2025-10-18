@@ -30,7 +30,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     // We can get theme data directly without needing a Consumer for this prototype.
     final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: SafeArea(
@@ -42,18 +41,14 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // I've replaced the simple Text with the stylized logo we built for consistency.
-                _buildLogo(context),
+                _buildLogoWithTagline(context),
                 const SizedBox(height: ThemeConstants.spacing16),
 
                 Text(
                   'Welcome Back!',
-                  style: textTheme.headlineMedium,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: ThemeConstants.spacing8),
-                Text(
-                  'Learn. Engage. Grow.', // This matches the logo's tagline.
-                  style: textTheme.titleSmall,
+                  style: textTheme.headlineMedium?.copyWith(
+                    color: ThemeConstants.accentColor,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: ThemeConstants.spacing48),
@@ -101,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     AppRoutes.toHome(context);
                   },
                   isFullWidth: true,
+                  backgroundColor: ThemeConstants.accentColor,
                 ),
                 const SizedBox(height: ThemeConstants.spacing24),
 
@@ -118,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         'Sign Up',
                         style: textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.primary,
+                          color: ThemeConstants.accentColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -133,36 +129,60 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Reusing the logo we built for the home screen for brand consistency.
-  Widget _buildLogo(BuildContext context) {
+  // Logo with tagline positioned from center to right
+  Widget _buildLogoWithTagline(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
       children: [
-        Column(
+        // Logo
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildDash(),
-            const SizedBox(height: 5),
-            _buildDash(),
-            const SizedBox(height: 5),
-            _buildDash(),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _buildDash(),
+                const SizedBox(height: 5),
+                _buildDash(),
+                const SizedBox(height: 5),
+                _buildDash(),
+              ],
+            ),
+            const SizedBox(width: 8),
+            ShaderMask(
+              blendMode: BlendMode.srcIn,
+              shaderCallback: (bounds) => const LinearGradient(
+                colors: [
+                  ThemeConstants.tertiaryColor,
+                  ThemeConstants.errorColor,
+                ],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ).createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
+              child: Text(
+                'xcelerate',
+                style: textTheme.displaySmall?.copyWith(fontSize: 38),
+              ),
+            ),
           ],
         ),
-        const SizedBox(width: 8),
-        ShaderMask(
-          blendMode: BlendMode.srcIn,
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [ThemeConstants.tertiaryColor, ThemeConstants.errorColor],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ).createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
-          child: Text(
-            'xcelerate',
-            style: textTheme.displaySmall?.copyWith(fontSize: 38),
-          ),
+        // Tagline positioned from center to right with minimal margin
+        const SizedBox(height: ThemeConstants.spacing4),
+        Row(
+          children: [
+            const Spacer(), // Takes up left half of the screen
+            Expanded(
+              child: Text(
+                'Learn. Engage. Grow.',
+                style: textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -170,11 +190,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildDash() {
     return Container(
-      height: 5,
-      width: 40,
+      height: 15, // Increased from 5 to 15 (*3)
+      width: 120, // Increased from 40 to 120 (*3)
       decoration: BoxDecoration(
         color: ThemeConstants.tertiaryColor,
-        borderRadius: BorderRadius.circular(2),
+        borderRadius: BorderRadius.circular(6), // Increased from 2 to 6 (*3)
       ),
     );
   }

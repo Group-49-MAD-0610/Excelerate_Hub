@@ -12,6 +12,7 @@ class ThemeConstants {
   static const Color warningColor = Color(0xFFFFAB00);
   static const Color errorColor = Color(0xFFFF5757);
   static const Color infoColor = Color(0xFF74B9FF);
+  static const Color accentColor = Color(0xFFF76169); // Red accent color
 
   // Neutral Colors
   static const Color backgroundColor = Color(0xFFF8F9FA);
