@@ -3,9 +3,11 @@ import '../../views/screens/auth/login_screen.dart';
 import '../../views/screens/auth/register_screen.dart';
 import '../../views/screens/home/home_screen.dart';
 import '../../views/screens/home/dashboard_screen.dart';
-import '../../views/screens/programs/program_list_screen.dart';
+import '../../views/screens/home/profile_screen_wrapper.dart';
 import '../../views/screens/programs/program_detail_screen.dart';
+import '../../views/screens/programs/programs_screen.dart';
 import '../../views/screens/feedback/feedback_screen.dart';
+import '../../views/widgets/common/main_app_scaffold.dart';
 
 /// Application route configuration
 class AppRoutes {
@@ -23,14 +25,22 @@ class AppRoutes {
   static const String feedback = '/feedback';
   static const String profile = '/profile';
   static const String settings = '/settings';
+  static const String main = '/main'; // Main app with bottom navigation
 
   /// Generate route based on route settings
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case splash:
-        // FOR TESTING: Go directly to Program Detail Screen
+        // FOR TESTING: Go directly to Main App with bottom navigation
         return MaterialPageRoute(
-          builder: (_) => ProgramDetailScreen(programId: 'test-program-123'),
+          builder: (_) => const MainAppScaffold(initialIndex: 1),
+          settings: settings,
+        );
+
+      case main:
+        final int initialIndex = settings.arguments as int? ?? 1;
+        return MaterialPageRoute(
+          builder: (_) => MainAppScaffold(initialIndex: initialIndex),
           settings: settings,
         );
 
@@ -52,15 +62,21 @@ class AppRoutes {
           settings: settings,
         );
 
-      case dashboard:
+      case programList:
         return MaterialPageRoute(
-          builder: (_) => const DashboardScreen(),
+          builder: (_) => const ProgramsScreen(),
           settings: settings,
         );
 
-      case programList:
+      case profile:
         return MaterialPageRoute(
-          builder: (_) => const ProgramListScreen(),
+          builder: (_) => const ProfileScreenWrapper(),
+          settings: settings,
+        );
+
+      case dashboard:
+        return MaterialPageRoute(
+          builder: (_) => const DashboardScreen(),
           settings: settings,
         );
 
@@ -123,9 +139,32 @@ class AppRoutes {
     Navigator.of(context).pushNamedAndRemoveUntil(login, (route) => false);
   }
 
-  /// Navigate to home screen
+  /// Navigate to home screen (using centralized navigation)
   static void toHome(BuildContext context) {
-    Navigator.of(context).pushNamedAndRemoveUntil(home, (route) => false);
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(main, (route) => false, arguments: 1);
+  }
+
+  /// Navigate to programs screen (using centralized navigation)
+  static void toPrograms(BuildContext context) {
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(main, (route) => false, arguments: 0);
+  }
+
+  /// Navigate to profile screen (using centralized navigation)
+  static void toProfile(BuildContext context) {
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(main, (route) => false, arguments: 2);
+  }
+
+  /// Navigate to main app with specific tab
+  static void toMainApp(BuildContext context, {int initialIndex = 1}) {
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(main, (route) => false, arguments: initialIndex);
   }
 
   /// Navigate to program detail screen

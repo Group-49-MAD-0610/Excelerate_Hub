@@ -13,39 +13,43 @@ class ProgramCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12.0),
       child: Container(
-        width: 160,
+        width: 200, // Increased width to accommodate row layout
         margin: const EdgeInsets.only(right: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              height: 125,
-              width: 160,
+              width: 49.34,
+              height: 49.34,
               decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(12.0),
+                shape: BoxShape.circle,
+                color: Colors.grey.shade400,
               ),
-              // I'll add the network image here later once we confirm the data flow.
-              child: Center(
-                child: Icon(
-                  Icons.image_outlined,
-                  color: Colors.grey.shade400,
-                  size: 40,
-                ),
+              child: Icon(Icons.image_outlined, color: Colors.white, size: 24),
+            ),
+            const SizedBox(width: 12), // Changed from height to width
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    program.title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    program.instructorName,
+                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              program.title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text(
-              program.instructorName,
-              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

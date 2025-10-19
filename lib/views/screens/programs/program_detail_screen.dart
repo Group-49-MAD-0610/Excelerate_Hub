@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../models/entities/program_model.dart';
 import '../../../core/constants/theme_constants.dart';
+import '../../../core/routes/app_routes.dart';
+import '../../widgets/common/app_bottom_navigation.dart';
 
 /// Modern Program Details Screen following Figma design specifications
 /// Implements Material Design 3 principles with enhanced UX patterns
@@ -25,7 +27,6 @@ class ProgramDetailScreen extends StatefulWidget {
 class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
   // Constants
   static const Color _primaryAccentColor = Color(0xFFF76169);
-  static const Color _backgroundGray = Color(0xFFD9D9D9);
   static const double _iconSize = 18.0;
   static const double _containerPadding = 8.0;
   static const double _borderRadius = 12.0;
@@ -47,8 +48,13 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
     final program = _getDummyProgram();
 
     return Scaffold(
-      backgroundColor: _backgroundGray,
+      backgroundColor: ThemeConstants.appBackgroundColor,
+      appBar: _buildAppBar(context, program),
       body: _buildProgramContent(context, program),
+      bottomNavigationBar: AppBottomNavigation(
+        currentIndex: 0, // Programs tab
+        onTap: (index) => _handleBottomNavigation(context, index),
+      ),
     );
   }
 
@@ -79,7 +85,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
       reviewCount: 0,
       enrollmentCount: 15847,
       instructorId: 'instructor-slu',
-      instructorName: 'Saint Louis University',
+      instructorName: 'St. Louis University',
       instructorAvatar: '',
       isEnrolled: false,
       progress: null,
@@ -139,6 +145,10 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
   ///
   /// Features:
   /// - Back navigation button with shadow
+  /// - Centered program title  /// Builds the custom app bar with navigation and action buttons
+  ///
+  /// Features:
+  /// - Back navigation button with shadow
   /// - Centered program title
   /// - Like/Unlike functionality button
   /// - White background with proper elevation
@@ -157,7 +167,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
             icon: Icons.arrow_back_ios_new,
             color: _primaryAccentColor,
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => _handleBackNavigation(context),
         ),
       ),
       title: Container(
@@ -267,29 +277,42 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                           ],
                         ),
                         const SizedBox(height: ThemeConstants.spacing8),
-                        // Instructor
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.school_outlined,
-                              size: 16,
-                              color: _primaryAccentColor,
-                            ),
-                            const SizedBox(width: ThemeConstants.spacing4),
-                            Text(
-                              program.instructorName,
-                              style: _buildContentTextStyle(
-                                fontWeight: FontWeight.w500,
+                        // Instructor - Clickable
+                        GestureDetector(
+                          onTap: () => _navigateToInstructorProfile(
+                            context,
+                            program.instructorId,
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.school_outlined,
+                                size: 16,
+                                color: _primaryAccentColor,
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: ThemeConstants.spacing4),
+                              Text(
+                                program.instructorName,
+                                style: _buildContentTextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: _primaryAccentColor,
+                                ),
+                              ),
+                              const SizedBox(width: ThemeConstants.spacing4),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: 12,
+                                color: _primaryAccentColor,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
                   // Apply Button
                   ElevatedButton(
-                    onPressed: () => _handleEnrollment(context, program),
+                    onPressed: () => _handleApplyNavigation(context, program),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _primaryAccentColor,
                       foregroundColor: Colors.white,
@@ -323,68 +346,36 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
   }
 
   Widget _buildProgramContent(BuildContext context, ProgramModel program) {
-    return CustomScrollView(
-      slivers: [
-        // Simple Header (replaces hero image)
-        SliverToBoxAdapter(
-          child: Container(
-            padding: const EdgeInsets.only(
-              top: 24,
-              left: ThemeConstants.spacing16,
-              right: ThemeConstants.spacing16,
-              bottom: ThemeConstants.spacing12,
-            ),
-            color: _backgroundGray,
-            child: Row(
-              children: [Expanded(child: _buildAppBar(context, program))],
-            ),
-          ),
-        ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(ThemeConstants.spacing16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Program Header
+          _buildProgramHeader(program),
+          const SizedBox(height: ThemeConstants.spacing16),
 
-        // Main Content
-        SliverToBoxAdapter(
-          child: Container(
-            decoration: const BoxDecoration(
-              color: _backgroundGray,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(ThemeConstants.borderRadiusLarge),
-                topRight: Radius.circular(ThemeConstants.borderRadiusLarge),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: ThemeConstants.spacing24),
+          // Description
+          _buildDescription(program),
+          const SizedBox(height: ThemeConstants.spacing16),
 
-                // Program Header
-                _buildProgramHeader(program),
-                const SizedBox(height: ThemeConstants.spacing16),
+          // Internship Details
+          _buildInternshipDetails(),
+          const SizedBox(height: ThemeConstants.spacing16),
 
-                // Description
-                _buildDescription(program),
-                const SizedBox(height: ThemeConstants.spacing16),
+          // Application Deadlines
+          _buildApplicationDeadlines(),
+          const SizedBox(height: ThemeConstants.spacing16),
 
-                // Internship Details
-                _buildInternshipDetails(),
-                const SizedBox(height: ThemeConstants.spacing16),
+          // Rewards & Skills
+          _buildRewardsAndSkills(),
+          const SizedBox(height: ThemeConstants.spacing16),
 
-                // Application Deadlines
-                _buildApplicationDeadlines(),
-                const SizedBox(height: ThemeConstants.spacing16),
-
-                // Rewards & Skills
-                _buildRewardsAndSkills(),
-                const SizedBox(height: ThemeConstants.spacing16),
-
-                // Enrollment Section
-                _buildEnrollmentSection(context, program),
-
-                const SizedBox(height: ThemeConstants.spacing24),
-              ],
-            ),
-          ),
-        ),
-      ],
+          // Enrollment Section
+          _buildEnrollmentSection(context, program),
+          const SizedBox(height: ThemeConstants.spacing24),
+        ],
+      ),
     );
   }
 
@@ -483,6 +474,40 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                     ),
                   ),
                 ],
+              ),
+            ),
+          ),
+          const SizedBox(height: ThemeConstants.spacing16),
+          // View Detailed Curriculum Button
+          Center(
+            child: OutlinedButton.icon(
+              onPressed: () =>
+                  _navigateToCurriculum(context, _getDummyProgram()),
+              icon: Icon(
+                Icons.visibility_outlined,
+                size: 16,
+                color: _primaryAccentColor,
+              ),
+              label: Text(
+                'View Detailed Curriculum',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w600,
+                  color: _primaryAccentColor,
+                ),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: _primaryAccentColor, width: 1.5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: ThemeConstants.spacing16,
+                  vertical: ThemeConstants.spacing8,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    ThemeConstants.borderRadiusMedium,
+                  ),
+                ),
               ),
             ),
           ),
@@ -727,7 +752,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
             child: ElevatedButton(
               onPressed: _isEnrollmentLoading
                   ? null
-                  : () => _handleEnrollment(context, program),
+                  : () => _handleApplyNavigation(context, program),
               style: ElevatedButton.styleFrom(
                 backgroundColor: _primaryAccentColor,
                 foregroundColor: Colors.white,
@@ -759,6 +784,83 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                       ),
                     ),
             ),
+          ),
+
+          const SizedBox(height: ThemeConstants.spacing16),
+
+          // Additional Action Buttons Row
+          Row(
+            children: [
+              // Feedback Button
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => _navigateToFeedback(context, program.id),
+                  icon: Icon(
+                    Icons.rate_review_outlined,
+                    size: 16,
+                    color: _primaryAccentColor,
+                  ),
+                  label: Text(
+                    'Reviews',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                      color: _primaryAccentColor,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: _primaryAccentColor.withValues(alpha: 0.3),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: ThemeConstants.spacing12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        ThemeConstants.borderRadiusMedium,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(width: ThemeConstants.spacing12),
+
+              // Share Button
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => _handleShare(context, program),
+                  icon: Icon(
+                    Icons.share_outlined,
+                    size: 16,
+                    color: _primaryAccentColor,
+                  ),
+                  label: Text(
+                    'Share',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                      color: _primaryAccentColor,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: _primaryAccentColor.withValues(alpha: 0.3),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: ThemeConstants.spacing12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        ThemeConstants.borderRadiusMedium,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -823,6 +925,102 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
   }
 
   // ═══════════════════════════════════════════════════════════════════════════════
+  // NAVIGATION METHODS
+  // ═══════════════════════════════════════════════════════════════════════════════
+
+  /// Handles bottom navigation bar tap events using centralized navigation
+  ///
+  /// Features:
+  /// - Routes to appropriate screens using AppRoutes
+  /// - Maintains navigation consistency across the app
+  /// - Uses centralized navigation system
+  void _handleBottomNavigation(BuildContext context, int index) {
+    switch (index) {
+      case 0: // Programs
+        AppRoutes.toPrograms(context);
+        break;
+      case 1: // Home
+        AppRoutes.toHome(context);
+        break;
+      case 2: // Profile
+        AppRoutes.toProfile(context);
+        break;
+    }
+  }
+
+  /// Handles back navigation with proper route management
+  ///
+  /// Features:
+  /// - Checks if navigation stack allows popping
+  /// - Fallback navigation to home screen if no previous route
+  /// - Proper route cleanup
+  void _handleBackNavigation(BuildContext context) {
+    if (AppRoutes.canPop(context)) {
+      AppRoutes.pop(context);
+    } else {
+      // If no previous route, navigate to home
+      AppRoutes.toHome(context);
+    }
+  }
+
+  /// Handles Apply button navigation to enrollment/application screen
+  ///
+  /// Features:
+  /// - Navigates to appropriate application form
+  /// - Passes program information as arguments
+  /// - Handles different program states (enrolled vs. new application)
+  void _handleApplyNavigation(BuildContext context, ProgramModel program) {
+    if (program.isEnrolled) {
+      // Navigate to program dashboard/continue learning
+      _showSnackBar(
+        context,
+        'Continue learning feature coming soon!',
+        ThemeConstants.infoColor,
+      );
+    } else {
+      // For now, show enrollment flow - in production this would navigate to application form
+      _handleEnrollment(context, program);
+    }
+  }
+
+  /// Navigate to instructor profile screen
+  ///
+  /// Features:
+  /// - Passes instructor ID for profile loading
+  /// - Handles navigation to instructor details
+  void _navigateToInstructorProfile(BuildContext context, String instructorId) {
+    // TODO: Implement navigation to instructor profile screen
+    _showSnackBar(
+      context,
+      'Instructor profile coming soon!',
+      ThemeConstants.infoColor,
+    );
+  }
+
+  /// Navigate to program curriculum detailed view
+  ///
+  /// Features:
+  /// - Opens detailed curriculum breakdown
+  /// - Allows deeper dive into course content
+  void _navigateToCurriculum(BuildContext context, ProgramModel program) {
+    // TODO: Implement navigation to detailed curriculum screen
+    _showSnackBar(
+      context,
+      'Detailed curriculum coming soon!',
+      ThemeConstants.infoColor,
+    );
+  }
+
+  /// Navigate to feedback/review screen
+  ///
+  /// Features:
+  /// - Opens program feedback form
+  /// - Allows users to submit reviews
+  void _navigateToFeedback(BuildContext context, String programId) {
+    AppRoutes.toFeedback(context, programId);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════════
   // EVENT HANDLERS & UTILITY METHODS
   // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -837,6 +1035,21 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
           borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusSmall),
         ),
       ),
+    );
+  }
+
+  /// Handles sharing program information
+  ///
+  /// Features:
+  /// - Share program details via system share sheet
+  /// - Formats program information for sharing
+  /// - Fallback message for development
+  void _handleShare(BuildContext context, ProgramModel program) {
+    // TODO: Implement actual sharing functionality
+    _showSnackBar(
+      context,
+      'Share feature coming soon! You can share "${program.title}" with others.',
+      ThemeConstants.infoColor,
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/constants/theme_constants.dart';
 
 /// Program list screen showing all available programs
 class ProgramListScreen extends StatelessWidget {
@@ -7,6 +8,7 @@ class ProgramListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ThemeConstants.appBackgroundColor,
       appBar: AppBar(title: const Text('Programs')),
       body: const Center(
         child: Text(

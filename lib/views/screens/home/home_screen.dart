@@ -1,7 +1,7 @@
 import 'package:excelerate/core/constants/theme_constants.dart';
 import 'package:excelerate/core/routes/app_routes.dart';
-import 'package:excelerate/views/screens/home/profile_screen.dart';
 import 'package:excelerate/views/widgets/common/error_display_widget.dart';
+import 'package:excelerate/views/widgets/common/main_app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,91 +9,54 @@ import '../../../controllers/home_controller.dart';
 import '../../../models/entities/achievements_model.dart';
 import '../../../models/entities/program_model.dart';
 import '../../widgets/specific/program_card.dart';
-import '../programs/program_list_screen.dart';
-// Note: dashboard_screen.dart is no longer imported.
 
-/// The main screen of the application that contains the bottom navigation bar.
-class HomeScreen extends StatefulWidget {
+/// Main home screen that uses the centralized navigation scaffold
+///
+/// This screen now delegates navigation to MainAppScaffold for consistency
+/// across the application.
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
   static const String routeName = '/home';
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  // --- CHANGES ARE IN THIS SECTION ---
-
-  // Default to the 'Home' tab, which is now at index 1.
-  int _selectedIndex = 1;
-
-  // The list of pages now has only three items.
-  static const List<Widget> _pages = <Widget>[
-    ProgramListScreen(), // Index 0
-    HomeContent(), // Index 1
-    ProfileScreen(), // Index 2
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(child: _pages.elementAt(_selectedIndex)),
-      // The BottomNavigationBar is now customized to match the design.
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book_outlined),
-            label:
-                'Programs', // Label is required by the widget, but we hide it.
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-
-        // Styling adjustments to match the wireframe
-        selectedItemColor: ThemeConstants.errorColor, // Reddish-pink for active
-        unselectedItemColor:
-            ThemeConstants.onSurfaceVariantColor, // Gray for inactive
-        showSelectedLabels: false, // Hides the text label for the active item
-        showUnselectedLabels: false, // Hides the text labels for inactive items
-        type: BottomNavigationBarType.fixed, // Ensures consistent behavior
-      ),
-    );
+    return const MainAppScaffold(initialIndex: 1); // Home tab
   }
 }
 
-// --- HomeContent and its methods below remain completely unchanged ---
+/// Home content widget displaying the main dashboard sections
+///
+/// Manages the display of user information, achievements, branding,
+/// and program carousels. Uses Provider pattern for state management.
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<HomeController>();
+    return Consumer<HomeController>(
+      builder: (context, controller, child) {
+        if (controller.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    if (controller.isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
+        if (controller.error != null) {
+          return ErrorDisplayWidget(
+            message: 'Failed to load home screen data.',
+            onRetry: controller.fetchHomePageData,
+          );
+        }
 
-    if (controller.error != null) {
-      return ErrorDisplayWidget(
-        message: 'Failed to load home screen data.',
-        onRetry: controller.fetchHomePageData,
-      );
-    }
+        return _buildContent(context, controller);
+      },
+    );
+  }
 
-    return SingleChildScrollView(
-      child: Padding(
+  /// Builds the main content layout
+  Widget _buildContent(BuildContext context, HomeController controller) {
+    return Container(
+      color: ThemeConstants.appBackgroundColor,
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(ThemeConstants.spacing16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,173 +68,280 @@ class HomeContent extends StatelessWidget {
             const SizedBox(height: ThemeConstants.spacing8),
             _buildLogo(context),
             const SizedBox(height: ThemeConstants.spacing8),
-            _buildProgramCarousel(
-              context: context,
-              title: 'Your Experiences',
-              programs: controller.experiences,
-            ),
-            _buildProgramCarousel(
-              context: context,
-              title: 'Favorites',
-              programs: controller.favorites,
-            ),
-            _buildProgramCarousel(
-              context: context,
-              title: 'Upcoming',
-              programs: controller.upcoming,
-            ),
+            ..._buildProgramCarousels(context, controller),
           ],
         ),
       ),
     );
   }
 
+  /// Builds all program carousels with proper spacing
+  List<Widget> _buildProgramCarousels(
+    BuildContext context,
+    HomeController controller,
+  ) {
+    final carousels = <Widget>[];
+
+    final carouselData = [
+      ('Your Experiences', controller.experiences),
+      ('Favorites', controller.favorites),
+      ('Upcoming', controller.upcoming),
+    ];
+
+    for (int i = 0; i < carouselData.length; i++) {
+      if (i > 0) {
+        carousels.add(const SizedBox(height: ThemeConstants.spacing8));
+      }
+      carousels.add(
+        _buildProgramCarousel(
+          context: context,
+          title: carouselData[i].$1,
+          programs: carouselData[i].$2,
+        ),
+      );
+    }
+
+    return carousels;
+  }
+
+  /// Builds the header section with user info and action buttons
+  ///
+  /// Displays user avatar, greeting, and action buttons for search,
+  /// notifications, and settings.
   Widget _buildHeader(BuildContext context, HomeController controller) {
     final textTheme = Theme.of(context).textTheme;
-    return Row(
-      children: [
-        CircleAvatar(
-          radius: 24,
-          backgroundImage: controller.user?.avatar != null
-              ? NetworkImage(controller.user!.avatar!)
-              : null,
-          backgroundColor: Theme.of(
-            context,
-          ).colorScheme.surfaceContainerHighest,
-          child: controller.user?.avatar == null
-              ? const Icon(Icons.person, size: 28)
-              : null,
-        ),
-        const SizedBox(width: ThemeConstants.spacing12),
-        Expanded(
-          child: Text(
-            'Hi, ${controller.user?.name ?? 'User'}!',
-            style: textTheme.titleLarge,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
-        ),
-        Semantics(
-          label: 'Search programs',
-          child: IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-        ),
-        Semantics(
-          label: 'View notifications',
-          child: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_outlined),
-          ),
-        ),
-        Semantics(
-          label: 'Open settings',
-          child: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.settings_outlined),
-          ),
-        ),
-      ],
-    );
-  }
 
-  Widget _buildAchievementsCard(
-    BuildContext context,
-    AchievementsModel achievements,
-  ) {
-    final textTheme = Theme.of(context).textTheme;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(ThemeConstants.spacing8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "You've Achieved",
-              style: textTheme.titleLarge?.copyWith(
-                color: ThemeConstants.errorColor,
-              ),
-            ),
-            const SizedBox(height: ThemeConstants.spacing16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildStatColumn(
-                  context,
-                  achievements.enrolled.toString(),
-                  'Enrolled',
-                ),
-                _buildStatColumn(
-                  context,
-                  achievements.completed.toString(),
-                  'Completed',
-                ),
-                _buildStatColumn(
-                  context,
-                  achievements.badges.toString(),
-                  'Badges',
-                ),
-              ],
-            ),
-          ],
+    return Container(
+      padding: const EdgeInsets.all(ThemeConstants.spacing12),
+      decoration: BoxDecoration(
+        color: ThemeConstants.appBackgroundColor,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(ThemeConstants.borderRadiusMedium),
         ),
       ),
-    );
-  }
-
-  Widget _buildStatColumn(BuildContext context, String value, String label) {
-    final textTheme = Theme.of(context).textTheme;
-    return Column(
-      children: [
-        Text(value, style: textTheme.titleLarge),
-        const SizedBox(height: ThemeConstants.spacing4),
-        Text(label, style: textTheme.titleSmall),
-      ],
-    );
-  }
-
-  Widget _buildLogo(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Center(
-      child: Column(
+      child: Row(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  _buildDash(),
-                  const SizedBox(height: 4),
-                  _buildDash(),
-                  const SizedBox(height: 4),
-                  _buildDash(),
-                ],
-              ),
-              const SizedBox(width: 1),
-              ShaderMask(
-                blendMode: BlendMode.srcIn,
-                shaderCallback: (bounds) =>
-                    const LinearGradient(
-                      colors: [
-                        ThemeConstants.tertiaryColor,
-                        ThemeConstants.errorColor,
-                      ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ).createShader(
-                      Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-                    ),
-                child: Text('Xcelerate', style: textTheme.displaySmall),
-              ),
-            ],
-          ),
-          const SizedBox(height: ThemeConstants.spacing4),
-          Text('Learn. Engage. Grow.', style: textTheme.bodySmall),
+          _buildUserAvatar(controller),
+          const SizedBox(width: ThemeConstants.spacing12),
+          _buildGreeting(textTheme, controller),
+          ..._buildActionButtons(),
         ],
       ),
     );
   }
 
+  /// Builds user avatar with fallback
+  Widget _buildUserAvatar(HomeController controller) {
+    return CircleAvatar(
+      radius: 24,
+      backgroundImage: controller.user?.avatar != null
+          ? NetworkImage(controller.user!.avatar!)
+          : null,
+      backgroundColor: Colors.grey.shade300,
+      child: controller.user?.avatar == null
+          ? const Icon(Icons.person, size: 28)
+          : null,
+    );
+  }
+
+  /// Builds greeting text
+  Widget _buildGreeting(TextTheme textTheme, HomeController controller) {
+    return Expanded(
+      child: Text(
+        'Hi, ${controller.user?.name ?? 'User'}!',
+        style: textTheme.titleLarge,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+      ),
+    );
+  }
+
+  /// Builds action buttons
+  List<Widget> _buildActionButtons() {
+    return [
+      _buildActionButton(
+        icon: Icons.search,
+        label: 'Search programs',
+        onPressed: () {
+          // TODO: Implement search functionality
+        },
+      ),
+      _buildActionButton(
+        icon: Icons.notifications_outlined,
+        label: 'View notifications',
+        onPressed: () {
+          // TODO: Implement notifications
+        },
+      ),
+      _buildActionButton(
+        icon: Icons.settings_outlined,
+        label: 'Open settings',
+        onPressed: () {
+          // TODO: Implement settings
+        },
+      ),
+    ];
+  }
+
+  /// Builds individual action button with semantics
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return Semantics(
+      label: label,
+      child: IconButton(onPressed: onPressed, icon: Icon(icon)),
+    );
+  }
+
+  /// Builds the achievements card displaying user statistics
+  ///
+  /// Shows enrolled programs, completed programs, and badges earned
+  /// with proper styling and layout.
+  Widget _buildAchievementsCard(
+    BuildContext context,
+    AchievementsModel achievements,
+  ) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(ThemeConstants.spacing16),
+      decoration: BoxDecoration(
+        color: ThemeConstants.surfaceColor,
+        borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildAchievementsTitle(),
+          const SizedBox(height: ThemeConstants.spacing16),
+          _buildStatisticsRow(achievements),
+        ],
+      ),
+    );
+  }
+
+  /// Builds the achievements section title
+  Widget _buildAchievementsTitle() {
+    return Text(
+      "You've Achieved",
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: ThemeConstants.primaryColor,
+      ),
+    );
+  }
+
+  /// Builds the statistics row with achievements data
+  Widget _buildStatisticsRow(AchievementsModel achievements) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _buildStatColumn(achievements.enrolled.toString(), 'Enrolled'),
+        _buildStatColumn(achievements.completed.toString(), 'Completed'),
+        _buildStatColumn(achievements.badges.toString(), 'Badges'),
+      ],
+    );
+  }
+
+  /// Builds individual statistic column with value and label
+  Widget _buildStatColumn(String value, String label) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: ThemeConstants.primaryColor,
+          ),
+        ),
+        const SizedBox(height: ThemeConstants.spacing4),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Builds the logo section with branding
+  ///
+  /// Displays the Xcelerate logo with gradient text,
+  /// decorative dashes, and tagline.
+  Widget _buildLogo(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(ThemeConstants.spacing16),
+      decoration: BoxDecoration(
+        color: ThemeConstants.surfaceColor,
+        borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
+      ),
+      child: Center(
+        child: Column(
+          children: [
+            _buildLogoRow(textTheme),
+            const SizedBox(height: ThemeConstants.spacing4),
+            _buildTagline(textTheme),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Builds the main logo row with dashes and text
+  Widget _buildLogoRow(TextTheme textTheme) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _buildDashColumn(),
+        const SizedBox(width: 1),
+        _buildGradientText('Xcelerate', textTheme),
+      ],
+    );
+  }
+
+  /// Builds the column of decorative dashes
+  Widget _buildDashColumn() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        _buildDash(),
+        const SizedBox(height: 4),
+        _buildDash(),
+        const SizedBox(height: 4),
+        _buildDash(),
+      ],
+    );
+  }
+
+  /// Builds gradient text for the logo
+  Widget _buildGradientText(String text, TextTheme textTheme) {
+    return ShaderMask(
+      blendMode: BlendMode.srcIn,
+      shaderCallback: (bounds) => const LinearGradient(
+        colors: [ThemeConstants.tertiaryColor, ThemeConstants.errorColor],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+      ).createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
+      child: Text(text, style: textTheme.displaySmall),
+    );
+  }
+
+  /// Builds the tagline text
+  Widget _buildTagline(TextTheme textTheme) {
+    return Text('Learn. Engage. Grow.', style: textTheme.bodySmall);
+  }
+
+  /// Builds individual decorative dash
   Widget _buildDash() {
     return Container(
       height: 6,
@@ -283,39 +353,58 @@ class HomeContent extends StatelessWidget {
     );
   }
 
+  /// Builds a program carousel section with title and horizontal list
+  ///
+  /// Creates a titled section containing a horizontal scrollable list
+  /// of program cards for easy browsing.
   Widget _buildProgramCarousel({
     required BuildContext context,
     required String title,
     required List<ProgramModel> programs,
   }) {
     final textTheme = Theme.of(context).textTheme;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: textTheme.titleLarge?.copyWith(
-            color: ThemeConstants.errorColor,
-          ),
-        ),
-        const SizedBox(height: ThemeConstants.spacing8),
-        SizedBox(
-          height: 200,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: programs.length,
-            itemBuilder: (context, index) {
-              final program = programs[index];
-              return ProgramCard(
-                program: program,
-                onTap: () {
-                  AppRoutes.toProgramDetail(context, program.id);
-                },
-              );
-            },
-          ),
-        ),
-      ],
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(ThemeConstants.spacing16),
+      decoration: BoxDecoration(
+        color: ThemeConstants.surfaceColor,
+        borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildCarouselTitle(title, textTheme),
+          const SizedBox(height: ThemeConstants.spacing8),
+          _buildHorizontalProgramList(programs),
+        ],
+      ),
+    );
+  }
+
+  /// Builds the carousel title with styled text
+  Widget _buildCarouselTitle(String title, TextTheme textTheme) {
+    return Text(
+      title,
+      style: textTheme.titleLarge?.copyWith(color: ThemeConstants.errorColor),
+    );
+  }
+
+  /// Builds the horizontal scrollable program list
+  Widget _buildHorizontalProgramList(List<ProgramModel> programs) {
+    return SizedBox(
+      height: 80, // Optimized height for row layout
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: programs.length,
+        itemBuilder: (context, index) {
+          final program = programs[index];
+          return ProgramCard(
+            program: program,
+            onTap: () => AppRoutes.toProgramDetail(context, program.id),
+          );
+        },
+      ),
     );
   }
 }

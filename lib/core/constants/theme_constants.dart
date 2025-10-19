@@ -15,7 +15,12 @@ class ThemeConstants {
   static const Color accentColor = Color(0xFFF76169); // Red accent color
 
   // Neutral Colors
-  static const Color backgroundColor = Color(0xFFF8F9FA);
+  static const Color backgroundColor = Color(
+    0xFFD9D9D9,
+  ); // General app background
+  static const Color appBackgroundColor = Color(
+    0xFFD9D9D9,
+  ); // General app background
   static const Color surfaceColor = Color(0xFFFFFFFF);
   static const Color surfaceVariantColor = Color(0xFFF1F3F4);
   static const Color outlineColor = Color(0xFFE0E0E0);
