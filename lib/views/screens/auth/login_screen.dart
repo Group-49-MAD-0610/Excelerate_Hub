@@ -144,13 +144,13 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 _buildDash(),
-                const SizedBox(height: 5),
+                const SizedBox(height: 4),
                 _buildDash(),
-                const SizedBox(height: 5),
+                const SizedBox(height: 4),
                 _buildDash(),
               ],
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 3.2),
             ShaderMask(
               blendMode: BlendMode.srcIn,
               shaderCallback: (bounds) => const LinearGradient(
@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ).createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
               child: Text(
                 'xcelerate',
-                style: textTheme.displaySmall?.copyWith(fontSize: 38),
+                style: textTheme.displaySmall?.copyWith(fontSize: 30.4),
               ),
             ),
           ],
@@ -190,11 +190,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildDash() {
     return Container(
-      height: 15, // Increased from 5 to 15 (*3)
-      width: 120, // Increased from 40 to 120 (*3)
+      height: 12, // Expanded from 6 to 12 (*2)
+      width: 96, // Expanded from 48 to 96 (*2)
       decoration: BoxDecoration(
         color: ThemeConstants.tertiaryColor,
-        borderRadius: BorderRadius.circular(6), // Increased from 2 to 6 (*3)
+        borderRadius: BorderRadius.circular(
+          4.8,
+        ), // Expanded from 2.4 to 4.8 (*2)
       ),
     );
   }

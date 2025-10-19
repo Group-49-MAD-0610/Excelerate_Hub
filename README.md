@@ -1,6 +1,78 @@
-#  Excelerate Hub - Flutter Application
+# Excelerate Hub - Flutter Application
 
 > **A comprehensive Flutter application for program management and user engagement, built with MVC architecture and modern development practices.**
+
+---
+
+## 📱 **Application Screenshots**
+
+### **Login Screen**
+<img src="assets/screenshots/login_screen.png" alt="Login Screen" width="300"/>
+
+*Elegant authentication interface featuring the Excelerate logo with gradient bars, "Learn. Engage. Grow." tagline, and streamlined email/password login with accent-colored Sign In button.*
+
+### **Home Dashboard** 
+<img src="assets/screenshots/home_screen.png" alt="Home Dashboard" width="300"/>
+
+*Personalized dashboard greeting "Hi, Sarah!" with achievement stats (10 Enrolled, 6 Completed, 4 Badges), user experiences section showcasing Machine Learning and Project Management, favorites, and upcoming programs.*
+
+### **Programs Listing**
+<img src="assets/screenshots/programs_screen.png" alt="Programs Screen" width="300"/>
+
+*Organized program browsing with Enrolled/Upcoming/Favorites tabs. Features Machine Learning Fundamentals from St. Louis University with Program Benefits including Certificate, $1,000 Scholarship, Collaboration, and Creative Thinking skills.*
+
+### **Program Details**
+<img src="assets/screenshots/program_detail_screen.png" alt="Program Details" width="300"/>
+
+*Comprehensive Machine Learning program page showing 4-week duration, St. Louis University partnership, detailed internship description, and "What You'll Learn" section with project management and real-world application focus.*
+
+---
+
+## 🚀 **App Features Demonstrated**
+
+### **✅ Core Functionality**
+- **User Authentication**: Secure login with form validation
+- **Navigation Flow**: Seamless navigation between all screens
+- **Bottom Navigation**: Consistent navigation bar across main screens
+- **Interactive UI**: Responsive buttons, tabs, and card interactions
+- **Program Management**: Browse, filter, and view detailed program information
+
+### **✅ Design Implementation**
+- **Material Design 3**: Modern UI patterns and components
+- **Consistent Branding**: Excelerate color scheme (#F76169) throughout
+- **Responsive Layout**: Optimized for mobile devices
+- **Typography**: Poppins font family for enhanced readability
+- **Icon Integration**: Intuitive iconography for better UX
+
+### **✅ Navigation System**
+- **Login → Home**: Direct authentication flow
+- **Bottom Tabs**: Programs, Home, Profile navigation
+- **Program Details**: Deep navigation with back functionality
+- **Search & Filter**: Program discovery capabilities
+
+---
+
+## 📋 **Week 2 Deliverables - UI Prototype**
+
+### **Functional Screens Implemented**
+1. **Login Screen** - Complete authentication UI with Excelerate branding
+2. **Home Screen** - Interactive dashboard with user achievements and quick access
+3. **Program Listing Screen** - Tab-based organization with search functionality  
+4. **Program Details Screen** - Comprehensive program information and application flow
+
+### **Technical Implementation**
+- ✅ **Navigation System**: Full routing between all screens with AppRoutes
+- ✅ **State Management**: Proper state handling across components
+- ✅ **UI Consistency**: Material Design 3 with consistent theming
+- ✅ **Interactive Elements**: Working buttons, tabs, and navigation
+- ✅ **Responsive Design**: Optimized for mobile screen sizes
+
+### **User Journey Flow**
+```
+Login Screen → Sign In → Home Dashboard → Programs Tab → Program Details → Apply
+     ↓              ↓           ↓             ↓              ↓           ↓
+Authentication → Dashboard → Program Browse → Details View → Action Flow
+```
 
 ---
 
@@ -112,6 +184,47 @@ lib/
 
 - **Figma Wireframes:** [Design System](https://www.figma.com/design/UKKfcLktEPkRaWalkxqzOs/Wireframe-Designs_Xcelerate-Hub)
 - **Documentation:** [Coding Standards](docs/CODING_STANDARDS.md)
+
+---
+
+## 📸 **Adding Screenshots to README**
+
+To complete the documentation with your app screenshots:
+
+1. **Save Screenshots**: Take screenshots of all 4 screens from your device/emulator
+2. **File Naming**: Save them as:
+   - `login_screen.png`
+   - `home_screen.png` 
+   - `programs_screen.png`
+   - `program_detail_screen.png`
+3. **Directory**: Place all screenshots in `assets/screenshots/` folder
+4. **Commit**: Add, commit, and push the images to GitHub
+
+```bash
+# Add screenshots to the project
+git add assets/screenshots/
+git commit -m "docs: Add app screenshots for README documentation"
+git push origin main
+```
+
+---
+
+## 🎯 **Week 2 Submission Checklist**
+
+### **Completed ✅**
+- [x] **Login Screen** - Functional with navigation
+- [x] **Home Screen** - Dashboard with quick access
+- [x] **Program Listing** - Tab organization with search
+- [x] **Program Details** - Comprehensive information display
+- [x] **Navigation System** - Complete routing between screens
+- [x] **UI Consistency** - Material Design 3 theming
+- [x] **README Documentation** - Project overview and features
+
+### **Next Steps 📋**
+- [ ] Add actual screenshots to `assets/screenshots/` directory
+- [ ] Final commit and push to GitHub
+- [ ] Optional: Record demo video (2-3 minutes)
+- [ ] Submit GitHub repository link
 
 ---
 

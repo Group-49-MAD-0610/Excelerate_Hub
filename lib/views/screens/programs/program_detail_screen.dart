@@ -28,11 +28,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
   // Constants
   static const Color _primaryAccentColor = Color(0xFFF76169);
   static const double _iconSize = 18.0;
-  static const double _containerPadding = 8.0;
-  static const double _borderRadius = 12.0;
   static const double _cardElevation = 4.0;
-  static const double _shadowBlurRadius = 8.0;
-  static const Offset _shadowOffset = Offset(0, 2);
   static const double _titleVerticalMargin = 12.0;
 
   // State variables
@@ -148,7 +144,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
   /// - Centered program title  /// Builds the custom app bar with navigation and action buttons
   ///
   /// Features:
-  /// - Back navigation button with shadow
+  /// - Back navigation button with black icons
   /// - Centered program title
   /// - Like/Unlike functionality button
   /// - White background with proper elevation
@@ -163,9 +159,10 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
       toolbarHeight: kToolbarHeight,
       leading: Center(
         child: IconButton(
-          icon: _buildIconContainer(
-            icon: Icons.arrow_back_ios_new,
-            color: _primaryAccentColor,
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.black,
+            size: _iconSize,
           ),
           onPressed: () => _handleBackNavigation(context),
         ),
@@ -188,9 +185,10 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
       actions: [
         Center(
           child: IconButton(
-            icon: _buildIconContainer(
-              icon: _isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
-              color: _primaryAccentColor,
+            icon: Icon(
+              _isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+              color: Colors.black,
+              size: _iconSize,
             ),
             onPressed: () {
               setState(() {
@@ -871,25 +869,6 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
   // ═══════════════════════════════════════════════════════════════════════════════
   // HELPER METHODS
   // ═══════════════════════════════════════════════════════════════════════════════
-
-  /// Creates a styled container for app bar icons with shadow and rounded corners
-  Widget _buildIconContainer({required IconData icon, required Color color}) {
-    return Container(
-      padding: const EdgeInsets.all(_containerPadding),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(_borderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: _shadowBlurRadius,
-            offset: _shadowOffset,
-          ),
-        ],
-      ),
-      child: Icon(icon, color: color, size: _iconSize),
-    );
-  }
 
   /// Creates standardized text style for general content
   TextStyle _buildContentTextStyle({
