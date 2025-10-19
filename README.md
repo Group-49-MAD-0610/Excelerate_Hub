@@ -7,22 +7,22 @@
 ## 📱 **Application Screenshots**
 
 ### **Login Screen**
-<img src="assets/screenshots/login_screen.png" alt="Login Screen" width="300"/>
+<img src="./assets/screenshots/login_screen.png" alt="Login Screen" width="300"/>
 
 *Elegant authentication interface featuring the Excelerate logo with gradient bars, "Learn. Engage. Grow." tagline, and streamlined email/password login with accent-colored Sign In button.*
 
 ### **Home Dashboard** 
-<img src="assets/screenshots/home_screen.png" alt="Home Dashboard" width="300"/>
+<img src="./assets/screenshots/home_screen.png" alt="Home Dashboard" width="300"/>
 
 *Personalized dashboard greeting "Hi, Sarah!" with achievement stats (10 Enrolled, 6 Completed, 4 Badges), user experiences section showcasing Machine Learning and Project Management, favorites, and upcoming programs.*
 
 ### **Programs Listing**
-<img src="assets/screenshots/programs_screen.png" alt="Programs Screen" width="300"/>
+<img src="./assets/screenshots/programs_screen.png" alt="Programs Screen" width="300"/>
 
 *Organized program browsing with Enrolled/Upcoming/Favorites tabs. Features Machine Learning Fundamentals from St. Louis University with Program Benefits including Certificate, $1,000 Scholarship, Collaboration, and Creative Thinking skills.*
 
 ### **Program Details**
-<img src="assets/screenshots/program_detail_screen.png" alt="Program Details" width="300"/>
+<img src="./assets/screenshots/program_detail_screen.png" alt="Program Details" width="300"/>
 
 *Comprehensive Machine Learning program page showing 4-week duration, St. Louis University partnership, detailed internship description, and "What You'll Learn" section with project management and real-world application focus.*
 
