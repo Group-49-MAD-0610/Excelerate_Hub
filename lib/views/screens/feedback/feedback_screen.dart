@@ -33,8 +33,21 @@ class _FeedbackScreenState extends State<FeedbackScreen>
 
   // State variables
   int _selectedRating = 0;
+  String? _selectedCategory;
   bool _isSubmitting = false;
   final int _maxCharacters = 500;
+  final int _minCharacters = 20;
+
+  // Feedback categories
+  final List<String> _feedbackCategories = [
+    'Course Content',
+    'Instructor Quality',
+    'Learning Materials',
+    'Platform Usability',
+    'Technical Issues',
+    'Suggestions',
+    'Other',
+  ];
 
   @override
   void initState() {
@@ -119,6 +132,8 @@ class _FeedbackScreenState extends State<FeedbackScreen>
             _buildProgramInfo(theme),
             const SizedBox(height: ThemeConstants.spacing32),
             _buildRatingSection(theme),
+            const SizedBox(height: ThemeConstants.spacing24),
+            _buildCategorySection(theme),
             const SizedBox(height: ThemeConstants.spacing32),
             _buildFeedbackSection(theme),
             const SizedBox(height: ThemeConstants.spacing32),
@@ -271,6 +286,102 @@ class _FeedbackScreenState extends State<FeedbackScreen>
     }
   }
 
+  /// Build feedback category dropdown section
+  Widget _buildCategorySection(ThemeData theme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Feedback Category',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            fontFamily: ThemeConstants.primaryFontFamily,
+          ),
+        ),
+        const SizedBox(height: ThemeConstants.spacing8),
+        Text(
+          'Select the area you want to provide feedback about',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurface.withOpacity(0.6),
+          ),
+        ),
+        const SizedBox(height: ThemeConstants.spacing16),
+        DropdownButtonFormField<String>(
+          value: _selectedCategory,
+          decoration: InputDecoration(
+            hintText: 'Choose a category',
+            hintStyle: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withOpacity(0.4),
+            ),
+            filled: true,
+            fillColor: theme.cardTheme.color,
+            prefixIcon: Icon(
+              Icons.category_outlined,
+              color: ThemeConstants.brandOrangeColor.withOpacity(0.7),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(
+                ThemeConstants.borderRadiusMedium,
+              ),
+              borderSide: BorderSide(
+                color: theme.colorScheme.outline.withOpacity(0.3),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(
+                ThemeConstants.borderRadiusMedium,
+              ),
+              borderSide: BorderSide(
+                color: theme.colorScheme.outline.withOpacity(0.3),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(
+                ThemeConstants.borderRadiusMedium,
+              ),
+              borderSide: BorderSide(
+                color: ThemeConstants.brandOrangeColor,
+                width: 2,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(
+                ThemeConstants.borderRadiusMedium,
+              ),
+              borderSide: BorderSide(color: ThemeConstants.errorColor),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(
+                ThemeConstants.borderRadiusMedium,
+              ),
+              borderSide: BorderSide(
+                color: ThemeConstants.errorColor,
+                width: 2,
+              ),
+            ),
+          ),
+          items: _feedbackCategories.map((String category) {
+            return DropdownMenuItem<String>(
+              value: category,
+              child: Text(category, style: theme.textTheme.bodyMedium),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              _selectedCategory = newValue;
+            });
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please select a feedback category';
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
   /// Build feedback text section
   Widget _buildFeedbackSection(ThemeData theme) {
     return Column(
@@ -333,12 +444,11 @@ class _FeedbackScreenState extends State<FeedbackScreen>
           ),
           style: theme.textTheme.bodyMedium,
           validator: (value) {
-            if (_selectedRating > 0 &&
-                (value == null || value.trim().isEmpty)) {
-              return 'Please provide some feedback about your rating';
+            if (value == null || value.trim().isEmpty) {
+              return 'Please provide your feedback';
             }
-            if (value != null && value.trim().length < 10) {
-              return 'Feedback should be at least 10 characters';
+            if (value.trim().length < _minCharacters) {
+              return 'Feedback should be at least $_minCharacters characters';
             }
             return null;
           },
@@ -400,7 +510,7 @@ class _FeedbackScreenState extends State<FeedbackScreen>
       _isSubmitting = true;
     });
 
-    // Simulate API call
+    // Simulate API call with loading spinner
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
@@ -409,13 +519,164 @@ class _FeedbackScreenState extends State<FeedbackScreen>
       _isSubmitting = false;
     });
 
-    // Show success message
+    // Show submitted data dialog
+    _showSubmittedDataDialog();
+
+    // Show success message after dialog
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (!mounted) return;
     _showSuccessMessage();
 
     // Navigate back after a delay
-    await Future.delayed(const Duration(milliseconds: 1500));
+    await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
     Navigator.of(context).pop();
+  }
+
+  /// Show dialog with submitted data
+  void _showSubmittedDataDialog() {
+    final theme = Theme.of(context);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              ThemeConstants.borderRadiusMedium,
+            ),
+          ),
+          title: Row(
+            children: [
+              Icon(
+                Icons.check_circle,
+                color: ThemeConstants.successColor,
+                size: ThemeConstants.iconSizeLarge,
+              ),
+              const SizedBox(width: ThemeConstants.spacing12),
+              Text(
+                'Feedback Submitted',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Your feedback has been recorded:',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                ),
+                const SizedBox(height: ThemeConstants.spacing16),
+                _buildDataItem(
+                  theme,
+                  'Program',
+                  widget.programTitle ?? 'Program',
+                  Icons.school,
+                ),
+                const SizedBox(height: ThemeConstants.spacing12),
+                _buildDataItem(
+                  theme,
+                  'Rating',
+                  '$_selectedRating ${_selectedRating == 1 ? 'star' : 'stars'} - ${_getRatingLabel(_selectedRating)}',
+                  Icons.star,
+                ),
+                const SizedBox(height: ThemeConstants.spacing12),
+                _buildDataItem(
+                  theme,
+                  'Category',
+                  _selectedCategory ?? 'Not specified',
+                  Icons.category,
+                ),
+                const SizedBox(height: ThemeConstants.spacing12),
+                _buildDataItem(
+                  theme,
+                  'Feedback',
+                  _feedbackController.text.trim(),
+                  Icons.comment,
+                  isMultiline: true,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Close',
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: ThemeConstants.brandOrangeColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// Build a data item for the dialog
+  Widget _buildDataItem(
+    ThemeData theme,
+    String label,
+    String value,
+    IconData icon, {
+    bool isMultiline = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(ThemeConstants.spacing12),
+      decoration: BoxDecoration(
+        color: theme.cardTheme.color,
+        borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusSmall),
+        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
+      ),
+      child: Row(
+        crossAxisAlignment: isMultiline
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: ThemeConstants.iconSizeMedium,
+            color: ThemeConstants.brandOrangeColor.withOpacity(0.7),
+          ),
+          const SizedBox(width: ThemeConstants.spacing12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: ThemeConstants.spacing4),
+                Text(
+                  value,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: isMultiline ? null : 2,
+                  overflow: isMultiline ? null : TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   /// Show error message
@@ -447,7 +708,7 @@ class _FeedbackScreenState extends State<FeedbackScreen>
             const SizedBox(width: ThemeConstants.spacing12),
             Expanded(
               child: Text(
-                'Thank you for your feedback!',
+                'Thank you! Feedback submitted.',
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(color: Colors.white),
