@@ -792,7 +792,11 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
               // Feedback Button
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () => _navigateToFeedback(context, program.id),
+                  onPressed: () => _navigateToFeedback(
+                    context,
+                    program.id,
+                    programTitle: program.title,
+                  ),
                   icon: Icon(
                     Icons.rate_review_outlined,
                     size: 16,
@@ -995,8 +999,12 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
   /// Features:
   /// - Opens program feedback form
   /// - Allows users to submit reviews
-  void _navigateToFeedback(BuildContext context, String programId) {
-    AppRoutes.toFeedback(context, programId);
+  void _navigateToFeedback(
+    BuildContext context,
+    String programId, {
+    String? programTitle,
+  }) {
+    AppRoutes.toFeedback(context, programId, programTitle: programTitle);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════════
