@@ -1,3 +1,4 @@
+import 'package:excelerate/controllers/feedback_controller.dart';
 import 'package:excelerate/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,7 @@ class ExcelerateApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => FeedbackController()),
         ChangeNotifierProvider(create: (_) => HomeController()),
         ChangeNotifierProvider(
           create: (_) => AuthController(
