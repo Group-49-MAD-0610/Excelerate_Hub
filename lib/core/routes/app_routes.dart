@@ -88,9 +88,20 @@ class AppRoutes {
         );
 
       case feedback:
-        final String programId = settings.arguments as String? ?? '';
+        final args = settings.arguments;
+        String programId = '';
+        String? programTitle;
+
+        if (args is String) {
+          programId = args;
+        } else if (args is Map<String, dynamic>) {
+          programId = args['programId'] as String? ?? '';
+          programTitle = args['programTitle'] as String?;
+        }
+
         return MaterialPageRoute(
-          builder: (_) => FeedbackScreen(programId: programId),
+          builder: (_) =>
+              FeedbackScreen(programId: programId, programTitle: programTitle),
           settings: settings,
         );
 
@@ -173,8 +184,17 @@ class AppRoutes {
   }
 
   /// Navigate to feedback screen
-  static void toFeedback(BuildContext context, String programId) {
-    Navigator.of(context).pushNamed(feedback, arguments: programId);
+  static void toFeedback(
+    BuildContext context,
+    String programId, {
+    String? programTitle,
+  }) {
+    Navigator.of(context).pushNamed(
+      feedback,
+      arguments: programTitle != null
+          ? {'programId': programId, 'programTitle': programTitle}
+          : programId,
+    );
   }
 
   /// Pop current route
