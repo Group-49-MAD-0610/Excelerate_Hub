@@ -18,7 +18,7 @@ class ProgramCurriculum extends StatelessWidget {
           borderRadius: BorderRadius.circular(
             ThemeConstants.borderRadiusMedium,
           ),
-          border: Border.all(color: Colors.grey.withOpacity(0.3)),
+          border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
         ),
         child: const Center(
           child: Text(
@@ -36,7 +36,7 @@ class ProgramCurriculum extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
-        border: Border.all(color: Colors.grey.withOpacity(0.3)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +45,7 @@ class ProgramCurriculum extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(ThemeConstants.spacing16),
             decoration: BoxDecoration(
-              color: ThemeConstants.primaryColor.withOpacity(0.1),
+              color: ThemeConstants.primaryColor.withValues(alpha: 0.1),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(ThemeConstants.borderRadiusMedium),
                 topRight: Radius.circular(ThemeConstants.borderRadiusMedium),
@@ -107,13 +107,13 @@ class ProgramCurriculum extends StatelessWidget {
       padding: const EdgeInsets.all(ThemeConstants.spacing16),
       decoration: BoxDecoration(
         color: week.isCompleted
-            ? Colors.green.withOpacity(0.1)
-            : Colors.grey.withOpacity(0.05),
+            ? Colors.green.withValues(alpha: 0.1)
+            : Colors.grey.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusSmall),
         border: Border.all(
           color: week.isCompleted
-              ? Colors.green.withOpacity(0.3)
-              : Colors.grey.withOpacity(0.3),
+              ? Colors.green.withValues(alpha: 0.3)
+              : Colors.grey.withValues(alpha: 0.3),
         ),
       ),
       child: Column(
@@ -235,9 +235,9 @@ class ProgramCurriculum extends StatelessWidget {
         vertical: ThemeConstants.spacing4,
       ),
       decoration: BoxDecoration(
-        color: ThemeConstants.primaryColor.withOpacity(0.1),
+        color: ThemeConstants.primaryColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusSmall),
-        border: Border.all(color: ThemeConstants.primaryColor.withOpacity(0.3)),
+        border: Border.all(color: ThemeConstants.primaryColor.withValues(alpha: 0.3)),
       ),
       child: Text(
         topic,

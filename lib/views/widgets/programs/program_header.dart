@@ -26,7 +26,7 @@ class ProgramHeader extends StatelessWidget {
         borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -253,9 +253,9 @@ class ProgramHeader extends StatelessWidget {
         vertical: ThemeConstants.spacing4,
       ),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusSmall),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

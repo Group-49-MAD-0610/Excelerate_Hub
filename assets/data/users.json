@@ -1,0 +1,9 @@
+    [ {
+        "id": "user-001",
+        "name": "Sarah",
+        "email": "sarah.j@example.com",
+        "avatar": "https://i.pravatar.cc/150?u=sarah",
+        "role": "student",
+        "createdAt": "DateTime.now()",
+        "updatedAt": "DateTime.now()"
+    }]
