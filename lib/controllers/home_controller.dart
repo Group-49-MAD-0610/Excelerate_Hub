@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import '../models/entities/user_model.dart';
 import '../models/entities/program_model.dart';
 import '../models/entities/achievements_model.dart';
 import './base_controller.dart';
+import 'package:flutter/services.dart';
+import 'dart:convert';
 
 class HomeController extends BaseController {
   UserModel? _user;
@@ -19,84 +22,72 @@ class HomeController extends BaseController {
   HomeController() {
     fetchHomePageData();
   }
+
+  
   Future<void> fetchHomePageData() async {
-    await handleAsync(() async {
+    try {
+      // Simulate delay (optional)
       await Future.delayed(const Duration(seconds: 1));
-
-      _user = UserModel(
-        id: 'user-001',
-        name: 'Sarah',
-        email: 'sarah.j@example.com',
-        avatar: 'https://i.pravatar.cc/150?u=sarah',
-        role: 'student',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+       print('\n Fetching home page data...');
+      // Load user from JSON
+      final userJson = await rootBundle.loadString('assets/data/users.json');
+      final List<dynamic> userList = json.decode(userJson);
+      print('Total users found: ${userList.length}');
+      _user = UserModel.fromJson(
+        userList.firstWhere(
+          (user) => user['id'] == 'user-001',
+          orElse: () => userList.first,
+        ),
       );
+      print(' Logged-in User: ${_user!.name}');
 
+      // Load achievements (can be static for now)
       _achievements = const AchievementsModel(
         enrolled: 10,
         completed: 6,
         badges: 4,
       );
 
-      // --- Original Dummy Programs ---
-      final program1 = ProgramModel(
-        id: 'prog-101',
-        title: 'Machine Learning',
-        description: '',
-        category: 'Data Science',
-        duration: '12 Weeks',
-        level: 'Intermediate',
-        instructorId: 'inst-201',
-        instructorName: 'St. Louis University',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+      // Load program list
+      print('Loading programs data from assets/data/programs.json...');
+      final programJson = await rootBundle.loadString(
+        'assets/data/programs.json',
       );
-
-      final program2 = ProgramModel(
-        id: 'prog-202',
-        title: 'Project Manage..',
-        description: '',
-        category: 'Business',
-        duration: '8 Weeks',
-        level: 'Beginner',
-        instructorId: 'inst-202',
-        instructorName: 'St. Louis University',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
-      // --- New Dummy Programs ---
-      final program3 = ProgramModel(
-        id: 'prog-303',
-        title: 'App Development',
-        description: '',
-        category: 'Mobile',
-        duration: '10 Weeks',
-        level: 'Beginner',
-        instructorId: 'inst-303',
-        instructorName: 'Excelerate Inst.',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
-      final program4 = ProgramModel(
-        id: 'prog-404',
-        title: 'Graphic Design',
-        description: '',
-        category: 'Design',
-        duration: '6 Weeks',
-        level: 'Intermediate',
-        instructorId: 'inst-404',
-        instructorName: 'Design School',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
+      final programList = json.decode(programJson) as List<dynamic>;
+      List<ProgramModel> programs = programList
+          .map((e) => ProgramModel.fromJson(e))
+          .toList();
+    // Print each program’s details
+    for (var program in programs) {
+      print(' Program ID: ${program.id}');
+      print('   Title: ${program.title}');
+      print('   Category: ${program.category}');
+      print('   Level: ${program.level}');
+      print('   Duration: ${program.duration}');
+      print('   Rating: ${program.rating}');
+      print('   Instructor: ${program.instructorName}');
+      print('---------------------------------------------');
+    }
       // --- Updated Lists with More Data ---
-      _experiences = [program1, program2, program3, program4];
-      _favorites = [program4, program2, program1, program3];
-      _upcoming = [program3, program1, program4, program2];
-    });
+      if (programs.length >= 4) {
+        final program1 = programs[0];
+        final program2 = programs[1];
+        final program3 = programs[2];
+        final program4 = programs[3];
+
+        _experiences = [program1, program2, program3, program4];
+        _favorites = [program4, program2, program1, program3];
+        _upcoming = [program3, program1, program4, program2];
+      } else {
+        _experiences = programs;
+        _favorites = programs;
+        _upcoming = programs;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching home data: $e');
+      }
+      rethrow;
+    }
   }
 }
