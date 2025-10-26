@@ -30,7 +30,7 @@
           "Types of machine learning",
           "Setting up Python environment"
         ],
-        "isCompleted": false
+        "isCompleted": true
       },
       {
         "week": 2,
@@ -44,6 +44,32 @@
         "isCompleted": false
       }
     ],
+    "benefits": [
+      {
+        "title": "Certificate",
+        "subtitle": "Global Recognition",
+        "icon": "workspace_premium_rounded",
+        "color": "#007BFF"
+      },
+      {
+        "title": "Scholarship",
+        "subtitle": "$1,000",
+        "icon": "card_giftcard_rounded",
+        "color": "#28A745"
+      },
+      {
+        "title": "Skills",
+        "subtitle": "Collaboration",
+        "icon": "lightbulb_outline_rounded",
+        "color": "#FFC107"
+      },
+      {
+        "title": "Duration",
+        "subtitle": "Flexible",
+        "icon": "schedule_outlined",
+        "color": "#17A2B8"
+      }
+    ],
     "enrollmentCount": 1250,
     "rating": 4.8,
     "reviewCount": 86,
@@ -54,7 +80,11 @@
     "isActive": true,
     "price": 0,
     "isFree": true,
-    "tags": ["machine learning", "ai", "python"]
+    "tags": [
+      "machine learning",
+      "ai",
+      "python"
+    ]
   },
   {
     "id": "prog-002",
@@ -81,15 +111,49 @@
         "week": 1,
         "title": "Design Thinking",
         "description": "Learn empathy-driven design processes.",
-        "topics": ["Empathize", "Define", "Ideate"],
+        "topics": [
+          "Empathize",
+          "Define",
+          "Ideate"
+        ],
         "isCompleted": false
       },
       {
         "week": 2,
         "title": "Wireframing and Prototyping",
         "description": "Practical Figma wireframing exercises.",
-        "topics": ["Low-fidelity", "High-fidelity", "Usability testing"],
+        "topics": [
+          "Low-fidelity",
+          "High-fidelity",
+          "Usability testing"
+        ],
         "isCompleted": false
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Certificate",
+        "subtitle": "Professional Badge",
+        "icon": "workspace_premium_rounded",
+        "color": "#6C63FF"
+      },
+      {
+        "title": "Scholarship",
+        "subtitle": "$500",
+        "icon": "card_giftcard_rounded",
+        "color": "#28A745"
+      },
+      {
+        "title": "Skills",
+        "subtitle": "Creativity",
+        "icon": "lightbulb_outline_rounded",
+        "color": "#FFC107"
+      },
+      {
+        "title": "Duration",
+        "subtitle": "Flexible",
+        "icon": "schedule_outlined",
+        "color": "#17A2B8"
       }
     ],
     "enrollmentCount": 980,
@@ -102,7 +166,11 @@
     "isActive": true,
     "price": 49.99,
     "isFree": false,
-    "tags": ["design", "figma", "ux"]
+    "tags": [
+      "design",
+      "figma",
+      "ux"
+    ]
   },
   {
     "id": "prog-003",
@@ -129,22 +197,60 @@
         "week": 1,
         "title": "HTML & CSS Fundamentals",
         "description": "Learn structure and styling.",
-        "topics": ["HTML5", "Flexbox", "CSS Grid"],
+        "topics": [
+          "HTML5",
+          "Flexbox",
+          "CSS Grid"
+        ],
         "isCompleted": false
       },
       {
         "week": 2,
         "title": "JavaScript and DOM Manipulation",
         "description": "Learn to make web pages interactive.",
-        "topics": ["Variables", "Loops", "DOM Events"],
+        "topics": [
+          "Variables",
+          "Loops",
+          "DOM Events"
+        ],
         "isCompleted": false
       },
       {
         "week": 3,
         "title": "Backend with Node.js",
         "description": "Server-side programming with Node.js.",
-        "topics": ["Express.js", "Routing", "API Creation"],
+        "topics": [
+          "Express.js",
+          "Routing",
+          "API Creation"
+        ],
         "isCompleted": false
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Certificate",
+        "subtitle": "Industry-Recognized",
+        "icon": "workspace_premium_rounded",
+        "color": "#007BFF"
+      },
+      {
+        "title": "Scholarship",
+        "subtitle": "$750",
+        "icon": "card_giftcard_rounded",
+        "color": "#28A745"
+      },
+      {
+        "title": "Skills",
+        "subtitle": "Full Stack",
+        "icon": "lightbulb_outline_rounded",
+        "color": "#FFC107"
+      },
+      {
+        "title": "Duration",
+        "subtitle": "Flexible",
+        "icon": "schedule_outlined",
+        "color": "#17A2B8"
       }
     ],
     "enrollmentCount": 2100,
@@ -157,6 +263,10 @@
     "isActive": true,
     "price": 99.99,
     "isFree": false,
-    "tags": ["web", "javascript", "nodejs"]
+    "tags": [
+      "web",
+      "javascript",
+      "nodejs"
+    ]
   }
 ]
