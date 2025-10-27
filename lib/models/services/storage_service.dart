@@ -8,7 +8,23 @@ class StorageService {
   static SharedPreferences? _preferences;
 
   StorageService._();
+  /// Save data to local storage
+  Future<void> saveData(String key, String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(key, value);
+  }
 
+  /// Retrieve data from local storage
+  Future<String?> getData(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(key);
+  }
+
+  /// Remove data
+  Future<void> removeData(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(key);
+  }
   /// Singleton instance
   static Future<StorageService> getInstance() async {
     _instance ??= StorageService._();

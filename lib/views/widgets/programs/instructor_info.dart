@@ -21,7 +21,7 @@ class InstructorInfo extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
-        border: Border.all(color: Colors.grey.withOpacity(0.3)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +54,7 @@ class InstructorInfo extends StatelessWidget {
               // Avatar
               CircleAvatar(
                 radius: 32,
-                backgroundColor: ThemeConstants.primaryColor.withOpacity(0.1),
+                backgroundColor: ThemeConstants.primaryColor.withValues(alpha: 0.1),
                 backgroundImage: instructorAvatar != null
                     ? NetworkImage(instructorAvatar!)
                     : null,

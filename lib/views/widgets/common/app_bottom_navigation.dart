@@ -24,7 +24,7 @@ class AppBottomNavigation extends StatelessWidget {
           activeIcon: Container(
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: ThemeConstants.accentColor.withOpacity(0.1),
+              color: ThemeConstants.accentColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(Icons.school),
@@ -36,7 +36,7 @@ class AppBottomNavigation extends StatelessWidget {
           activeIcon: Container(
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: ThemeConstants.accentColor.withOpacity(0.1),
+              color: ThemeConstants.accentColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(Icons.home),
@@ -50,7 +50,7 @@ class AppBottomNavigation extends StatelessWidget {
           activeIcon: Container(
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: ThemeConstants.accentColor.withOpacity(0.1),
+              color: ThemeConstants.accentColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(Icons.person),

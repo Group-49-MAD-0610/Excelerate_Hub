@@ -103,7 +103,7 @@ class ProgramInfo extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
-        border: Border.all(color: Colors.grey.withOpacity(0.3)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,7 +112,7 @@ class ProgramInfo extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(ThemeConstants.spacing16),
             decoration: BoxDecoration(
-              color: ThemeConstants.primaryColor.withOpacity(0.1),
+              color: ThemeConstants.primaryColor.withValues(alpha: 0.1),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(ThemeConstants.borderRadiusMedium),
                 topRight: Radius.circular(ThemeConstants.borderRadiusMedium),
@@ -182,10 +182,10 @@ class ProgramInfo extends StatelessWidget {
         vertical: ThemeConstants.spacing8,
       ),
       decoration: BoxDecoration(
-        color: ThemeConstants.secondaryColor.withOpacity(0.1),
+        color: ThemeConstants.secondaryColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusSmall),
         border: Border.all(
-          color: ThemeConstants.secondaryColor.withOpacity(0.3),
+          color: ThemeConstants.secondaryColor.withValues(alpha: 0.3),
         ),
       ),
       child: Text(
