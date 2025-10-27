@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import '../models/entities/program_model.dart';
 import '../models/repositories/program_repository.dart';
 import 'base_controller.dart';
@@ -26,8 +29,20 @@ class ProgramController extends BaseController {
   /// Load a specific program by ID
   Future<bool> loadProgram(String programId) async {
     try {
-      setLoading(true);
-      clearError();
+      final jsonString = await rootBundle.loadString('assets/data/programs.json');
+      final List<dynamic> jsonData = json.decode(jsonString);
+
+      _programs = jsonData.map((e) => ProgramModel.fromJson(e)).toList();
+
+      // Debug print to terminal
+      if (kDebugMode) {
+        print("Loaded ${_programs.length} programs from programs.json");
+      }
+      for (var p in _programs) {
+        if (kDebugMode) {
+          print("${p.title} | ${p.category} | ${p.level} | Instructor: ${p.instructorName}");
+        }
+      }
 
       final program = await _programRepository.getProgramById(programId);
       if (program != null) {
@@ -248,4 +263,6 @@ class ProgramController extends BaseController {
     _searchQuery = null;
     super.dispose();
   }
+
+  Future loadProgramDetails(String programId) async {}
 }

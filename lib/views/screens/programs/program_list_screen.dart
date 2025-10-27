@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/theme_constants.dart';
 import '../../../models/entities/program_model.dart';
@@ -541,7 +544,7 @@ class _ProgramListScreenState extends State<ProgramListScreen> {
     // Simulate API call with dummy data
     await Future.delayed(const Duration(milliseconds: 800));
 
-    final dummyPrograms = _generateDummyPrograms();
+   final List<ProgramModel> dummyPrograms = await _generateDummyPrograms();
 
     if (mounted) {
       setState(() {
@@ -592,8 +595,34 @@ class _ProgramListScreenState extends State<ProgramListScreen> {
       _filteredPrograms = filtered;
     });
   }
+Future<List<ProgramModel>> _generateDummyPrograms() async {
+  try {
+    // Load JSON from assets
+    final String jsonString = await rootBundle.loadString('assets/data/programs.json');
+    final List<dynamic> jsonData = json.decode(jsonString);
 
-  List<ProgramModel> _generateDummyPrograms() {
+    // Map JSON to ProgramModel list
+    final programs = jsonData.map((e) => ProgramModel.fromJson(e)).toList();
+
+    // Print confirmation in terminal
+    if (kDebugMode) {
+      print(" Loaded ${programs.length} programs from JSON");
+    }
+    for (var program in programs) {
+      if (kDebugMode) {
+        print("${program.title} | ${program.category} | ${program.level} | ${program.instructorName}");
+      }
+    }
+
+    return programs;
+  } catch (e) {
+    if (kDebugMode) {
+      print("Error loading programs.json: $e");
+    }
+    return [];
+  }
+}
+  /*List<ProgramModel> _generateDummyPrograms() {
     final now = DateTime.now();
     return [
       // Enrolled Programs
@@ -698,7 +727,7 @@ class _ProgramListScreenState extends State<ProgramListScreen> {
         updatedAt: now,
       ),
     ];
-  }
+  }*/
 
   /// Builds program benefits section for each program card
   Widget _buildProgramBenefits() {

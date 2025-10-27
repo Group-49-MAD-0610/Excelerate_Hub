@@ -1,3 +1,8 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+
 import '../entities/program_model.dart';
 import '../services/api_service.dart';
 import '../services/storage_service.dart';
@@ -45,8 +50,8 @@ class ProgramRepository {
     }
   }
 
-  /// Get program by ID
-  Future<ProgramModel?> getProgramById(String programId) async {
+  /// Get program by ID API version
+  /*Future<ProgramModel?> getProgramById(String programId) async {
     try {
       final response = await _apiService.get('/programs/$programId');
       if (response != null && response['success'] == true) {
@@ -55,6 +60,62 @@ class ProgramRepository {
       return null;
     } catch (e) {
       throw Exception('Failed to get program: $e');
+    }
+  }*/
+  /// Get program by ID (from local JSON instead of API)
+  Future<ProgramModel?> getProgramById(String programId) async {
+    try {
+      // Load local JSON from assets
+      final jsonString = await rootBundle.loadString(
+        'assets/data/programs.json',
+      );
+      final List<dynamic> jsonData = json.decode(jsonString);
+
+      // Map JSON to list of models
+      final programs = jsonData.map((e) => ProgramModel.fromJson(e)).toList();
+
+      // Debug output
+      if (kDebugMode) {
+        print("Searching JSON for ID: $programId");
+        for (var p in programs) {
+          print(" ${p.id} – ${p.title}");
+        }
+      }
+
+      // Find matching program
+      final match = programs.firstWhere(
+        (p) => p.id == programId,
+        orElse: () => ProgramModel(
+          id: '',
+          title: 'Program Not Found',
+          description: '',
+          category: '',
+          level: '',
+          duration: '',
+          instructorId: '',
+          instructorName: '',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
+
+      // Return null if not found
+      if (match.id.isEmpty) {
+        if (kDebugMode) {
+          print("No program found with ID: $programId");
+        }
+        return null;
+      }
+
+      if (kDebugMode) {
+        print("Found Program: ${match.title}");
+      }
+      return match;
+    } catch (e) {
+      if (kDebugMode) {
+        print("Failed to load program from JSON: $e");
+      }
+      return null;
     }
   }
 

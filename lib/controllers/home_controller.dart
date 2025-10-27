@@ -28,18 +28,24 @@ class HomeController extends BaseController {
     try {
       // Simulate delay (optional)
       await Future.delayed(const Duration(seconds: 1));
-       print('\n Fetching home page data...');
+       if (kDebugMode) {
+         print('\n Fetching home page data...');
+       }
       // Load user from JSON
       final userJson = await rootBundle.loadString('assets/data/users.json');
       final List<dynamic> userList = json.decode(userJson);
-      print('Total users found: ${userList.length}');
+      if (kDebugMode) {
+        print('Total users found: ${userList.length}');
+      }
       _user = UserModel.fromJson(
         userList.firstWhere(
           (user) => user['id'] == 'user-001',
           orElse: () => userList.first,
         ),
       );
-      print(' Logged-in User: ${_user!.name}');
+      if (kDebugMode) {
+        print(' Logged-in User: ${_user!.name}');
+      }
 
       // Load achievements (can be static for now)
       _achievements = const AchievementsModel(
@@ -49,7 +55,9 @@ class HomeController extends BaseController {
       );
 
       // Load program list
-      print('Loading programs data from assets/data/programs.json...');
+      if (kDebugMode) {
+        print('Loading programs data from assets/data/programs.json...');
+      }
       final programJson = await rootBundle.loadString(
         'assets/data/programs.json',
       );
@@ -59,14 +67,30 @@ class HomeController extends BaseController {
           .toList();
     // Print each program’s details
     for (var program in programs) {
-      print(' Program ID: ${program.id}');
-      print('   Title: ${program.title}');
-      print('   Category: ${program.category}');
-      print('   Level: ${program.level}');
-      print('   Duration: ${program.duration}');
-      print('   Rating: ${program.rating}');
-      print('   Instructor: ${program.instructorName}');
-      print('---------------------------------------------');
+      if (kDebugMode) {
+        print(' Program ID: ${program.id}');
+      }
+      if (kDebugMode) {
+        print('   Title: ${program.title}');
+      }
+      if (kDebugMode) {
+        print('   Category: ${program.category}');
+      }
+      if (kDebugMode) {
+        print('   Level: ${program.level}');
+      }
+      if (kDebugMode) {
+        print('   Duration: ${program.duration}');
+      }
+      if (kDebugMode) {
+        print('   Rating: ${program.rating}');
+      }
+      if (kDebugMode) {
+        print('   Instructor: ${program.instructorName}');
+      }
+      if (kDebugMode) {
+        print('---------------------------------------------');
+      }
     }
       // --- Updated Lists with More Data ---
       if (programs.length >= 4) {

@@ -24,6 +24,7 @@ class ProgramModel {
   final double? price;
   final bool isFree;
   final List<String> tags;
+  final List<Benefit>? benefits;
 
   const ProgramModel({
     required this.id,
@@ -50,6 +51,7 @@ class ProgramModel {
     this.price,
     this.isFree = true,
     this.tags = const [],
+    this.benefits = const [],
   });
 
   /// Create ProgramModel from JSON
@@ -103,6 +105,10 @@ class ProgramModel {
       tags:
           (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
           const [],
+      benefits: (json['benefits'] as List<dynamic>?)
+              ?.map((e) => Benefit.fromJson(e))
+              .toList() ??
+          [],     
     );
   }
 
@@ -133,6 +139,7 @@ class ProgramModel {
       'price': price,
       'isFree': isFree,
       'tags': tags,
+      'benefits': benefits,
     };
   }
 
@@ -162,6 +169,7 @@ class ProgramModel {
     double? price,
     bool? isFree,
     List<String>? tags,
+    List<Benefit>? benefits,
   }) {
     return ProgramModel(
       id: id ?? this.id,
@@ -188,6 +196,7 @@ class ProgramModel {
       price: price ?? this.price,
       isFree: isFree ?? this.isFree,
       tags: tags ?? this.tags,
+      benefits: benefits ?? this.benefits,
     );
   }
 
@@ -260,6 +269,31 @@ class ProgramModel {
   String toString() {
     return 'ProgramModel(id: $id, title: $title, category: $category, level: $level)';
   }
+}
+class Benefit {
+  final String title;
+  final String subtitle;
+  final String color;
+
+  Benefit({
+    required this.title,
+    required this.subtitle,
+    required this.color,
+  });
+
+  factory Benefit.fromJson(Map<String, dynamic> json) {
+    return Benefit(
+      title: json['title'] ?? '',
+      subtitle: json['subtitle'] ?? '',
+      color: json['color'] ?? '#27AE60',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'subtitle': subtitle,
+        'color': color,
+      };
 }
 
 /// Curriculum week model
