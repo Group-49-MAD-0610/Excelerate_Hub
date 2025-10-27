@@ -173,7 +173,7 @@ class AppRoutes {
   }
 
   /// Navigate to feedback screen
-  static void toFeedback(BuildContext context, String programId) {
+  static void toFeedback(BuildContext context, String programId, {String? programTitle}) {
     Navigator.of(context).pushNamed(feedback, arguments: programId);
   }
 

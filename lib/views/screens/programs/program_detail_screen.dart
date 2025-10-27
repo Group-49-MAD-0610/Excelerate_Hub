@@ -187,7 +187,6 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
       ),
     );
   }
-  
 
   Widget _buildProgramHeader(ProgramModel program) {
     return Padding(
@@ -245,6 +244,14 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
     );
   }
 
+  void _navigateToFeedback(
+    BuildContext context,
+    String programId, {
+    String? programTitle,
+  }) {
+    AppRoutes.toFeedback(context, programId, programTitle: programTitle);
+  }
+
   Widget _buildDescription(ProgramModel program) {
     return _buildContentSection(
       child: Column(
@@ -257,7 +264,8 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
           const SizedBox(height: 12),
           Text(program.description),
         ],
-      ), width: double.infinity,
+      ),
+      width: double.infinity,
     );
   }
 
@@ -279,7 +287,8 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
             ),
           ),
         ],
-      ), width: double.infinity,
+      ),
+      width: double.infinity,
     );
   }
 
@@ -297,7 +306,8 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
           Text("Regular Application: March 15, 2024"),
           Text("Final Application: April 1, 2024"),
         ],
-      ), width: double.infinity,
+      ),
+      width: double.infinity,
     );
   }
 
@@ -321,6 +331,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
     );
   }
 
+  /*
   Widget _buildEnrollmentSection(BuildContext context, ProgramModel program) {
     return _buildContentSection(
       child: Column(
@@ -341,6 +352,114 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
           ),
         ],
       ), width: double.infinity,
+    );
+  } */
+  Widget _buildEnrollmentSection(BuildContext context, ProgramModel program) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: ThemeConstants.spacing20),
+      padding: const EdgeInsets.all(ThemeConstants.spacing24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Price and enrollment info
+
+          // Apply Button
+          SizedBox(
+            height: 56,
+            child: ElevatedButton(
+              onPressed: _isEnrollmentLoading
+                  ? null
+                  : () => _handleApplyNavigation(context, program),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _primaryAccentColor,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    ThemeConstants.borderRadiusMedium,
+                  ),
+                ),
+              ),
+              child: _isEnrollmentLoading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                  : Text(
+                      program.isEnrolled
+                          ? 'Continue Internship'
+                          : 'Apply for Internship',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+            ),
+          ),
+
+          const SizedBox(height: ThemeConstants.spacing16),
+
+          // Additional Action Buttons Row
+          Row(
+            children: [
+              // Feedback Button
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => _navigateToFeedback(
+                    context,
+                    program.id,
+                    programTitle: program.title,
+                  ),
+                  icon: Icon(
+                    Icons.rate_review_outlined,
+                    size: 16,
+                    color: _primaryAccentColor,
+                  ),
+                  label: Text(
+                    'Feedback',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                      color: _primaryAccentColor,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: _primaryAccentColor.withValues(alpha: 0.3),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: ThemeConstants.spacing12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        ThemeConstants.borderRadiusMedium,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

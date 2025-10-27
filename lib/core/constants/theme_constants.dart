@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 
 /// Theme-related constants
 class ThemeConstants {
+  static const Color errorColor = Color(0xFFFF5757);
+  static const Color infoColor = Color(0xFF74B9FF);
+  static const Color accentColor = Color(0xFFF76169); // Red accent color
+  static const Color brandOrangeColor = Color(0xFFFF6B6B); // Brand orange color
+
+  // Neutral Colors
   // Color Palette - Educational Theme
   static const Color primaryColor = Color(0xFF6C5CE7); // Purple
   static const Color secondaryColor = Color(0xFF00D2D3); // Teal
@@ -10,9 +16,6 @@ class ThemeConstants {
   // Semantic Colors
   static const Color successColor = Color(0xFF00C896);
   static const Color warningColor = Color(0xFFFFAB00);
-  static const Color errorColor = Color(0xFFFF5757);
-  static const Color infoColor = Color(0xFF74B9FF);
-  static const Color accentColor = Color(0xFFF76169); // Red accent color
 
   // Neutral Colors
   static const Color backgroundColor = Color(
