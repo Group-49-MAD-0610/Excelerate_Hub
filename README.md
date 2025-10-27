@@ -209,9 +209,9 @@ git push origin main
 
 ---
 
-## 🎯 **Week 2 Submission Checklist**
+## **Week 2 Submission Checklist**
 
-### **Completed ✅**
+### **Completed **
 - [x] **Login Screen** - Functional with navigation
 - [x] **Home Screen** - Dashboard with quick access
 - [x] **Program Listing** - Tab organization with search
@@ -220,7 +220,7 @@ git push origin main
 - [x] **UI Consistency** - Material Design 3 theming
 - [x] **README Documentation** - Project overview and features
 
-### **Next Steps 📋**
+### **Next Steps**
 - [ ] Add actual screenshots to `assets/screenshots/` directory
 - [ ] Final commit and push to GitHub
 - [ ] Optional: Record demo video (2-3 minutes)
@@ -230,7 +230,7 @@ git push origin main
 
 <div align="center">
 
-Made with ❤️ by **Group 49 – MA&D 0610**
+Made with by **Group 49 – MA&D 0610**
 </div>  
 
 ---
