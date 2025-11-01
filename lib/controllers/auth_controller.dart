@@ -1,118 +1,93 @@
-import '../models/entities/user_model.dart';
-import '../models/services/auth_service.dart';
-import 'base_controller.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
+import '../../models/entities/user_model.dart';
 
-/// Controller for authentication operations
-class AuthController extends BaseController {
-  final AuthService _authService;
+/// Local auth service that reads users from assets/data/users.json for login.
+/// Note: assets/data/users.json must be declared in pubspec.yaml.
+class AuthService {
   UserModel? _currentUser;
 
-  AuthController({required AuthService authService})
-    : _authService = authService;
+  Future<UserModel?> getCurrentUser() async => _currentUser;
 
-  /// Current authenticated user
-  UserModel? get currentUser => _currentUser;
+  Future<UserModel?> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final jsonStr = await rootBundle.loadString('assets/data/users.json');
+      final List<dynamic> list = json.decode(jsonStr) as List<dynamic>;
+      final users = list.cast<Map<String, dynamic>>();
 
-  /// Check if user is authenticated
-  bool get isAuthenticated => _currentUser != null;
+      final match = users.firstWhere(
+        (u) => (u['email'] as String).toLowerCase() == email.toLowerCase(),
+        orElse: () => null,
+      );
 
-  /// Initialize auth state
-  Future<void> initialize() async {
-    await handleAsync(() async {
-      _currentUser = await _authService.getCurrentUser();
-      return _currentUser;
-    });
-  }
+      if (match == null) return null;
 
-  /// Login user
-  Future<bool> login({required String email, required String password}) async {
-    final user = await handleAsync(() async {
-      return await _authService.login(email: email, password: password);
-    });
+      // If JSON provides a password field, validate it. Otherwise accept any non-empty password.
+      if (match.containsKey('password')) {
+        final expected = (match['password'] ?? '') as String;
+        if (password != expected) return null;
+      } else {
+        if (password.isEmpty) return null;
+      }
 
-    if (user != null) {
+      final user = UserModel.fromJson(match);
       _currentUser = user;
-      return true;
+      return user;
+    } catch (_) {
+      return null;
     }
-    return false;
   }
 
-  /// Register new user
-  Future<bool> register({
+  Future<UserModel?> register({
     required String name,
     required String email,
     required String password,
   }) async {
-    final user = await handleAsync(() async {
-      return await _authService.register(
-        name: name,
-        email: email,
-        password: password,
-      );
-    });
-
-    if (user != null) {
-      _currentUser = user;
-      return true;
-    }
-    return false;
+    // Can't write back to assets; create an in-memory user for the prototype.
+    final now = DateTime.now().toUtc();
+    final user = UserModel(
+      id: 'user-${now.millisecondsSinceEpoch}',
+      name: name,
+      email: email,
+      avatar: null,
+      role: 'student',
+      createdAt: now,
+      updatedAt: now,
+    );
+    _currentUser = user;
+    return user;
   }
 
-  /// Logout user
   Future<bool> logout() async {
-    final success = await handleAsync(() async {
-      return await _authService.logout();
-    });
-
-    if (success == true) {
-      _currentUser = null;
-      return true;
-    }
-    return false;
+    _currentUser = null;
+    return true;
   }
 
-  /// Refresh current user data
-  Future<void> refreshUser() async {
-    await handleAsync(() async {
-      _currentUser = await _authService.getCurrentUser();
-      return _currentUser;
-    });
-  }
-
-  /// Send forgot password request
   Future<bool> forgotPassword(String email) async {
-    final success = await handleAsync(() async {
-      return await _authService.forgotPassword(email);
-    });
-
-    return success == true;
+    try {
+      final jsonStr = await rootBundle.loadString('assets/data/users.json');
+      final List<dynamic> list = json.decode(jsonStr) as List<dynamic>;
+      final exists = list.cast<Map<String, dynamic>>().any(
+            (u) => (u['email'] as String).toLowerCase() == email.toLowerCase(),
+          );
+      return exists;
+    } catch (_) {
+      return false;
+    }
   }
 
-  /// Reset password
   Future<bool> resetPassword({
     required String token,
     required String newPassword,
   }) async {
-    final success = await handleAsync(() async {
-      return await _authService.resetPassword(
-        token: token,
-        newPassword: newPassword,
-      );
-    });
-
-    return success == true;
+    // No persistence in prototype — always succeed.
+    return true;
   }
 
-  /// Validate current session
   Future<bool> validateSession() async {
-    final isValid = await handleAsync(() async {
-      return await _authService.validateSession();
-    });
-
-    if (isValid != true) {
-      _currentUser = null;
-    }
-
-    return isValid == true;
+    return _currentUser != null;
   }
 }

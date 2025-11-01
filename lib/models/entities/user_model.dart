@@ -28,22 +28,42 @@ class UserModel {
 
   /// Create UserModel from JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    DateTime _parseDate(dynamic value) {
+      if (value == null) return DateTime.now().toUtc();
+      if (value is String) {
+        try {
+          return DateTime.parse(value).toUtc();
+        } catch (_) {
+          return DateTime.now().toUtc();
+        }
+      }
+      if (value is int) {
+        return DateTime.fromMillisecondsSinceEpoch(value, isUtc: true);
+      }
+      return DateTime.now().toUtc();
+    }
+
+    List<String> _parseEnrolled(dynamic v) {
+      if (v is List) {
+        return v.where((e) => e != null).map((e) => e.toString()).toList();
+      }
+      return const [];
+    }
+
     return UserModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      email: json['email'] as String,
-      avatar: json['avatar'] as String?,
-      role: json['role'] as String? ?? 'student',
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
-      isActive: json['isActive'] as bool? ?? true,
-      phoneNumber: json['phoneNumber'] as String?,
-      bio: json['bio'] as String?,
-      enrolledPrograms:
-          (json['enrolledPrograms'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
+      id: (json['id'] ?? '').toString(),
+      name: (json['name'] ?? '').toString(),
+      email: (json['email'] ?? '').toString(),
+      avatar: json['avatar']?.toString(),
+      role: (json['role'] ?? 'student').toString(),
+      createdAt: _parseDate(json['createdAt']),
+      updatedAt: _parseDate(json['updatedAt']),
+      isActive: json.containsKey('isActive')
+          ? (json['isActive'] == true || json['isActive'] == 1)
+          : true,
+      phoneNumber: json['phoneNumber']?.toString(),
+      bio: json['bio']?.toString(),
+      enrolledPrograms: _parseEnrolled(json['enrolledPrograms']),
     );
   }
 
@@ -53,13 +73,13 @@ class UserModel {
       'id': id,
       'name': name,
       'email': email,
-      'avatar': avatar,
+      if (avatar != null) 'avatar': avatar,
       'role': role,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'createdAt': createdAt.toUtc().toIso8601String(),
+      'updatedAt': updatedAt.toUtc().toIso8601String(),
       'isActive': isActive,
-      'phoneNumber': phoneNumber,
-      'bio': bio,
+      if (phoneNumber != null) 'phoneNumber': phoneNumber,
+      if (bio != null) 'bio': bio,
       'enrolledPrograms': enrolledPrograms,
     };
   }
@@ -104,16 +124,19 @@ class UserModel {
 
   /// Get user initials
   String get initials {
-    final words = name.trim().split(' ');
-    if (words.isEmpty) return '';
-    if (words.length == 1) return words[0][0].toUpperCase();
-    return '${words[0][0]}${words[1][0]}'.toUpperCase();
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) {
+      final parts = email.split('@');
+      final local = parts.isNotEmpty ? parts.first : '';
+      return local.isEmpty ? '' : local[0].toUpperCase();
+    }
+    final parts = trimmed.split(RegExp(r'\s+'));
+    if (parts.length == 1) return parts.first.substring(0, 1).toUpperCase();
+    return (parts.first.substring(0, 1) + parts.last.substring(0, 1)).toUpperCase();
   }
 
   /// Get display name
-  String get displayName {
-    return name.isNotEmpty ? name : email.split('@')[0];
-  }
+  String get displayName => name.isNotEmpty ? name : email.split('@').first;
 
   @override
   bool operator ==(Object other) {
