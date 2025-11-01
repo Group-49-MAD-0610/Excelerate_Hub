@@ -1,0 +1,702 @@
+[
+  {
+    "id": "prog-001",
+    "title": "Machine Learning Fundamentals",
+    "description": "Learn the fundamentals of Machine Learning — from data preprocessing to model evaluation using Python and scikit-learn.",
+    "category": "Data Science",
+    "duration": "8 Weeks",
+    "level": "Beginner",
+    "instructorId": "inst-001",
+    "instructorName": "St Louis University",
+    "instructorAvatar": "https://i.pravatar.cc/150?img=10",
+    "imageUrl": "https://cdn.pixabay.com/photo/2015/05/26/09/05/artificial-intelligence-784338_1280.jpg",
+    "requirements": [
+      "Basic programming knowledge",
+      "Familiarity with Python",
+      "Understanding of algebra and statistics"
+    ],
+    "outcomes": [
+      "Understand supervised vs unsupervised learning",
+      "Build linear and logistic regression models",
+      "Evaluate models with accuracy and cross-validation"
+    ],
+    "curriculum": [
+      {
+        "week": 1,
+        "title": "Introduction to Machine Learning",
+        "description": "Understand ML basics and setup environment.",
+        "topics": [
+          "Definition and applications",
+          "Types of machine learning",
+          "Setting up Python environment"
+        ],
+        "isCompleted": true
+      },
+      {
+        "week": 2,
+        "title": "Data Preprocessing and Cleaning",
+        "description": "Learn how to prepare and clean data.",
+        "topics": [
+          "Handling missing values",
+          "Feature scaling and encoding",
+          "Data splitting"
+        ],
+        "isCompleted": false
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Certificate",
+        "subtitle": "Global Recognition",
+        "icon": "workspace_premium_rounded",
+        "color": "#007BFF"
+      },
+      {
+        "title": "Scholarship",
+        "subtitle": "$1,000",
+        "icon": "card_giftcard_rounded",
+        "color": "#28A745"
+      },
+      {
+        "title": "Skills",
+        "subtitle": "Collaboration",
+        "icon": "lightbulb_outline_rounded",
+        "color": "#FFC107"
+      },
+      {
+        "title": "Duration",
+        "subtitle": "Flexible",
+        "icon": "schedule_outlined",
+        "color": "#17A2B8"
+      }
+    ],
+    "enrollmentCount": 1250,
+    "rating": 4.8,
+    "reviewCount": 86,
+    "progress": 65.0,
+    "isEnrolled": true,
+    "createdAt": "2024-09-10T12:00:00Z",
+    "updatedAt": "2024-10-05T12:00:00Z",
+    "isActive": true,
+    "price": 0,
+    "isFree": true,
+    "tags": [
+      "machine learning",
+      "ai",
+      "python"
+    ]
+  },
+  {
+    "id": "prog-002",
+    "title": "UI/UX Design Bootcamp",
+    "description": "Master the art of designing user-centered digital experiences with Figma and design thinking principles.",
+    "category": "Design",
+    "duration": "6 Weeks",
+    "level": "Intermediate",
+    "instructorId": "inst-002",
+    "instructorName": "St Louis University",
+    "instructorAvatar": "https://i.pravatar.cc/150?img=5",
+    "imageUrl": "https://cdn.pixabay.com/photo/2017/01/10/22/19/ux-1969517_1280.jpg",
+    "requirements": [
+      "Basic knowledge of digital design tools",
+      "Creativity and willingness to learn"
+    ],
+    "outcomes": [
+      "Understand UX research and user flows",
+      "Create wireframes and prototypes",
+      "Build a professional portfolio project"
+    ],
+    "curriculum": [
+      {
+        "week": 1,
+        "title": "Design Thinking",
+        "description": "Learn empathy-driven design processes.",
+        "topics": [
+          "Empathize",
+          "Define",
+          "Ideate"
+        ],
+        "isCompleted": false
+      },
+      {
+        "week": 2,
+        "title": "Wireframing and Prototyping",
+        "description": "Practical Figma wireframing exercises.",
+        "topics": [
+          "Low-fidelity",
+          "High-fidelity",
+          "Usability testing"
+        ],
+        "isCompleted": false
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Certificate",
+        "subtitle": "Professional Badge",
+        "icon": "workspace_premium_rounded",
+        "color": "#6C63FF"
+      },
+      {
+        "title": "Scholarship",
+        "subtitle": "$500",
+        "icon": "card_giftcard_rounded",
+        "color": "#28A745"
+      },
+      {
+        "title": "Skills",
+        "subtitle": "Creativity",
+        "icon": "lightbulb_outline_rounded",
+        "color": "#FFC107"
+      },
+      {
+        "title": "Duration",
+        "subtitle": "Flexible",
+        "icon": "schedule_outlined",
+        "color": "#17A2B8"
+      }
+    ],
+    "enrollmentCount": 980,
+    "rating": 4.7,
+    "reviewCount": 72,
+    "progress": 0.0,
+    "isEnrolled": false,
+    "createdAt": "2024-10-01T09:00:00Z",
+    "updatedAt": "2024-10-10T09:00:00Z",
+    "isActive": true,
+    "price": 49.99,
+    "isFree": false,
+    "tags": [
+      "design",
+      "figma",
+      "ux"
+    ]
+  },
+  {
+    "id": "prog-003",
+    "title": "Full-Stack Web Development",
+    "description": "Become a full-stack developer using HTML, CSS, JavaScript, Node.js, and MongoDB.",
+    "category": "Web Development",
+    "duration": "12 Weeks",
+    "level": "Advanced",
+    "instructorId": "inst-003",
+    "instructorName": "Code Academy",
+    "instructorAvatar": "https://i.pravatar.cc/150?img=8",
+    "imageUrl": "https://cdn.pixabay.com/photo/2016/11/29/09/08/computer-1869306_1280.jpg",
+    "requirements": [
+      "Basic understanding of web concepts",
+      "Knowledge of any programming language"
+    ],
+    "outcomes": [
+      "Build responsive websites",
+      "Develop REST APIs with Node.js",
+      "Integrate MongoDB and deploy apps"
+    ],
+    "curriculum": [
+      {
+        "week": 1,
+        "title": "HTML & CSS Fundamentals",
+        "description": "Learn structure and styling.",
+        "topics": [
+          "HTML5",
+          "Flexbox",
+          "CSS Grid"
+        ],
+        "isCompleted": false
+      },
+      {
+        "week": 2,
+        "title": "JavaScript and DOM Manipulation",
+        "description": "Learn to make web pages interactive.",
+        "topics": [
+          "Variables",
+          "Loops",
+          "DOM Events"
+        ],
+        "isCompleted": false
+      },
+      {
+        "week": 3,
+        "title": "Backend with Node.js",
+        "description": "Server-side programming with Node.js.",
+        "topics": [
+          "Express.js",
+          "Routing",
+          "API Creation"
+        ],
+        "isCompleted": false
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Certificate",
+        "subtitle": "Industry-Recognized",
+        "icon": "workspace_premium_rounded",
+        "color": "#007BFF"
+      },
+      {
+        "title": "Scholarship",
+        "subtitle": "$750",
+        "icon": "card_giftcard_rounded",
+        "color": "#28A745"
+      },
+      {
+        "title": "Skills",
+        "subtitle": "Full Stack",
+        "icon": "lightbulb_outline_rounded",
+        "color": "#FFC107"
+      },
+      {
+        "title": "Duration",
+        "subtitle": "Flexible",
+        "icon": "schedule_outlined",
+        "color": "#17A2B8"
+      }
+    ],
+    "enrollmentCount": 2100,
+    "rating": 4.9,
+    "reviewCount": 193,
+    "progress": 0.0,
+    "isEnrolled": false,
+    "createdAt": "2024-09-20T09:00:00Z",
+    "updatedAt": "2024-10-15T09:00:00Z",
+    "isActive": true,
+    "price": 99.99,
+    "isFree": false,
+    "tags": [
+      "web",
+      "javascript",
+      "nodejs"
+    ]
+  },
+  {
+    "id": "prog-004",
+    "title": "Data Science with Python",
+    "description": "Learn to analyze data, build predictive models, and visualize insights using Python libraries like Pandas and Matplotlib.",
+    "category": "Data Science",
+    "duration": "10 Weeks",
+    "level": "Intermediate",
+    "instructorId": "inst-004",
+    "instructorName": "MIT OpenCourseWare",
+    "instructorAvatar": "https://i.pravatar.cc/150?img=12",
+    "imageUrl": "https://cdn.pixabay.com/photo/2015/12/08/00/32/analytics-1085843_1280.jpg",
+    "requirements": [
+      "Basic knowledge of Python",
+      "Understanding of statistics"
+    ],
+    "outcomes": [
+      "Perform data cleaning and visualization",
+      "Train regression and classification models",
+      "Deploy models with Flask"
+    ],
+    "curriculum": [
+      {
+        "week": 1,
+        "title": "Data Analysis Basics",
+        "description": "Intro to NumPy and Pandas.",
+        "topics": [
+          "Pandas",
+          "NumPy",
+          "DataFrames"
+        ],
+        "isCompleted": false
+      },
+      {
+        "week": 2,
+        "title": "Visualization with Matplotlib",
+        "description": "Learn to tell stories with data.",
+        "topics": [
+          "Charts",
+          "Dashboards",
+          "Storytelling"
+        ],
+        "isCompleted": false
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Certificate",
+        "subtitle": "MIT Digital Badge",
+        "icon": "workspace_premium_rounded",
+        "color": "#007BFF"
+      },
+      {
+        "title": "Scholarship",
+        "subtitle": "$900",
+        "icon": "card_giftcard_rounded",
+        "color": "#28A745"
+      },
+      {
+        "title": "Skills",
+        "subtitle": "Analytics",
+        "icon": "lightbulb_outline_rounded",
+        "color": "#FFC107"
+      },
+      {
+        "title": "Duration",
+        "subtitle": "Self-Paced",
+        "icon": "schedule_outlined",
+        "color": "#17A2B8"
+      }
+    ],
+    "enrollmentCount": 1600,
+    "rating": 4.8,
+    "reviewCount": 140,
+    "progress": 0.0,
+    "isEnrolled": false,
+    "createdAt": "2024-10-05T09:00:00Z",
+    "updatedAt": "2024-10-20T09:00:00Z",
+    "isActive": true,
+    "price": 79.99,
+    "isFree": false,
+    "tags": [
+      "python",
+      "data",
+      "visualization"
+    ]
+  },
+  {
+    "id": "prog-005",
+    "title": "Digital Marketing Strategy",
+    "description": "Develop modern digital marketing skills including SEO, SEM, and social media campaigns.",
+    "category": "Marketing",
+    "duration": "8 Weeks",
+    "level": "Beginner",
+    "instructorId": "inst-005",
+    "instructorName": "Google Digital Academy",
+    "instructorAvatar": "https://i.pravatar.cc/150?img=7",
+    "imageUrl": "https://cdn.pixabay.com/photo/2016/11/29/09/08/marketing-1869306_1280.jpg",
+    "requirements": [
+      "Interest in online marketing",
+      "Familiarity with social media platforms"
+    ],
+    "outcomes": [
+      "Run effective ad campaigns",
+      "Optimize SEO and SEM strategies",
+      "Analyze campaign performance"
+    ],
+    "curriculum": [
+      {
+        "week": 1,
+        "title": "SEO & SEM Basics",
+        "description": "Learn Google Ads and organic SEO.",
+        "topics": [
+          "Keywords",
+          "Backlinks",
+          "Analytics"
+        ],
+        "isCompleted": false
+      },
+      {
+        "week": 2,
+        "title": "Social Media Marketing",
+        "description": "Create campaigns for Facebook, Instagram, and TikTok.",
+        "topics": [
+          "Content Strategy",
+          "Engagement",
+          "Analytics"
+        ],
+        "isCompleted": false
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Certificate",
+        "subtitle": "Google Certified",
+        "icon": "workspace_premium_rounded",
+        "color": "#007BFF"
+      },
+      {
+        "title": "Scholarship",
+        "subtitle": "$400",
+        "icon": "card_giftcard_rounded",
+        "color": "#28A745"
+      },
+      {
+        "title": "Skills",
+        "subtitle": "Marketing Analytics",
+        "icon": "lightbulb_outline_rounded",
+        "color": "#FFC107"
+      },
+      {
+        "title": "Duration",
+        "subtitle": "Flexible",
+        "icon": "schedule_outlined",
+        "color": "#17A2B8"
+      }
+    ],
+    "enrollmentCount": 1300,
+    "rating": 4.6,
+    "reviewCount": 190,
+    "progress": 0.0,
+    "isEnrolled": false,
+    "createdAt": "2024-09-25T09:00:00Z",
+    "updatedAt": "2024-10-15T09:00:00Z",
+    "isActive": true,
+    "price": 59.99,
+    "isFree": false,
+    "tags": [
+      "marketing",
+      "seo",
+      "social media"
+    ]
+  },
+  {
+    "id": "prog-006",
+    "title": "Cybersecurity Essentials",
+    "description": "Understand fundamental cybersecurity principles, threats, and defensive mechanisms.",
+    "category": "Cybersecurity",
+    "duration": "6 Weeks",
+    "level": "Beginner",
+    "instructorId": "inst-006",
+    "instructorName": "Stanford Cyber Academy",
+    "instructorAvatar": "https://i.pravatar.cc/150?img=9",
+    "imageUrl": "https://cdn.pixabay.com/photo/2016/10/04/13/48/security-1712325_1280.jpg",
+    "requirements": [
+      "Basic IT knowledge",
+      "Interest in security and networking"
+    ],
+    "outcomes": [
+      "Identify cyber threats",
+      "Understand encryption basics",
+      "Implement security controls"
+    ],
+    "curriculum": [
+      {
+        "week": 1,
+        "title": "Cyber Threat Landscape",
+        "description": "Understand common cyber attacks.",
+        "topics": [
+          "Phishing",
+          "Malware",
+          "Ransomware"
+        ],
+        "isCompleted": false
+      },
+      {
+        "week": 2,
+        "title": "Network Defense",
+        "description": "Intro to firewalls and intrusion detection.",
+        "topics": [
+          "IDS/IPS",
+          "VPNs",
+          "Firewalls"
+        ],
+        "isCompleted": false
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Certificate",
+        "subtitle": "Stanford Credential",
+        "icon": "workspace_premium_rounded",
+        "color": "#007BFF"
+      },
+      {
+        "title": "Scholarship",
+        "subtitle": "$800",
+        "icon": "card_giftcard_rounded",
+        "color": "#28A745"
+      },
+      {
+        "title": "Skills",
+        "subtitle": "Ethical Hacking",
+        "icon": "lightbulb_outline_rounded",
+        "color": "#FFC107"
+      },
+      {
+        "title": "Duration",
+        "subtitle": "Flexible",
+        "icon": "schedule_outlined",
+        "color": "#17A2B8"
+      }
+    ],
+    "enrollmentCount": 1450,
+    "rating": 4.8,
+    "reviewCount": 110,
+    "progress": 0.0,
+    "isEnrolled": false,
+    "createdAt": "2024-09-18T09:00:00Z",
+    "updatedAt": "2024-10-12T09:00:00Z",
+    "isActive": true,
+    "price": 89.99,
+    "isFree": false,
+    "tags": [
+      "security",
+      "networking",
+      "encryption"
+    ]
+  },
+  {
+    "id": "prog-007",
+    "title": "Mobile App Development with Flutter",
+    "description": "Build beautiful cross-platform apps using Flutter and Dart, covering layouts, navigation, and Firebase integration.",
+    "category": "Mobile Development",
+    "duration": "10 Weeks",
+    "level": "Intermediate",
+    "instructorId": "inst-007",
+    "instructorName": "Flutter Academy",
+    "instructorAvatar": "https://i.pravatar.cc/150?img=14",
+    "imageUrl": "https://cdn.pixabay.com/photo/2017/01/06/19/15/mobile-1950890_1280.jpg",
+    "requirements": [
+      "Basic programming knowledge",
+      "Familiarity with OOP"
+    ],
+    "outcomes": [
+      "Create Flutter UIs",
+      "Connect apps with Firebase",
+      "Publish apps on Google Play"
+    ],
+    "curriculum": [
+      {
+        "week": 1,
+        "title": "Flutter Basics",
+        "description": "Widgets, layouts, and navigation.",
+        "topics": [
+          "Widgets",
+          "Navigation",
+          "Hot Reload"
+        ],
+        "isCompleted": false
+      },
+      {
+        "week": 2,
+        "title": "Firebase Integration",
+        "description": "Authentication and real-time data.",
+        "topics": [
+          "Auth",
+          "Firestore",
+          "Cloud Storage"
+        ],
+        "isCompleted": false
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Certificate",
+        "subtitle": "Google Credential",
+        "icon": "workspace_premium_rounded",
+        "color": "#007BFF"
+      },
+      {
+        "title": "Scholarship",
+        "subtitle": "$600",
+        "icon": "card_giftcard_rounded",
+        "color": "#28A745"
+      },
+      {
+        "title": "Skills",
+        "subtitle": "App Design",
+        "icon": "lightbulb_outline_rounded",
+        "color": "#FFC107"
+      },
+      {
+        "title": "Duration",
+        "subtitle": "Flexible",
+        "icon": "schedule_outlined",
+        "color": "#17A2B8"
+      }
+    ],
+    "enrollmentCount": 1720,
+    "rating": 4.9,
+    "reviewCount": 210,
+    "progress": 0.0,
+    "isEnrolled": false,
+    "createdAt": "2024-09-10T09:00:00Z",
+    "updatedAt": "2024-10-18T09:00:00Z",
+    "isActive": true,
+    "price": 99.99,
+    "isFree": false,
+    "tags": [
+      "flutter",
+      "mobile",
+      "firebase"
+    ]
+  },
+  {
+    "id": "prog-008",
+    "title": "AI Ethics and Governance",
+    "description": "Explore responsible AI development, ethics, transparency, and global policy frameworks.",
+    "category": "Artificial Intelligence",
+    "duration": "5 Weeks",
+    "level": "Advanced",
+    "instructorId": "inst-008",
+    "instructorName": "St Louis University",
+    "instructorAvatar": "https://i.pravatar.cc/150?img=20",
+    "imageUrl": "https://cdn.pixabay.com/photo/2018/03/06/21/51/robot-3202769_1280.jpg",
+    "requirements": [
+      "Interest in AI and technology ethics",
+      "Basic understanding of algorithms"
+    ],
+    "outcomes": [
+      "Understand global AI ethics principles",
+      "Assess algorithmic fairness",
+      "Design responsible AI systems"
+    ],
+    "curriculum": [
+      {
+        "week": 1,
+        "title": "Ethics Foundations",
+        "description": "AI and societal implications.",
+        "topics": [
+          "Bias",
+          "Fairness",
+          "Transparency"
+        ],
+        "isCompleted": false
+      },
+      {
+        "week": 2,
+        "title": "Policy and Governance",
+        "description": "Explore global AI regulation.",
+        "topics": [
+          "GDPR",
+          "AI Act",
+          "ISO Standards"
+        ],
+        "isCompleted": false
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Certificate",
+        "subtitle": "Global Credential",
+        "icon": "workspace_premium_rounded",
+        "color": "#007BFF"
+      },
+      {
+        "title": "Scholarship",
+        "subtitle": "$1,200",
+        "icon": "card_giftcard_rounded",
+        "color": "#28A745"
+      },
+      {
+        "title": "Skills",
+        "subtitle": "Ethical Design",
+        "icon": "lightbulb_outline_rounded",
+        "color": "#FFC107"
+      },
+      {
+        "title": "Duration",
+        "subtitle": "Flexible",
+        "icon": "schedule_outlined",
+        "color": "#17A2B8"
+      }
+    ],
+    "enrollmentCount": 890,
+    "rating": 4.7,
+    "reviewCount": 150,
+    "progress": 0.0,
+    "isEnrolled": false,
+    "createdAt": "2024-10-01T09:00:00Z",
+    "updatedAt": "2024-10-22T09:00:00Z",
+    "isActive": true,
+    "price": 119.99,
+    "isFree": false,
+    "tags": [
+      "ethics",
+      "ai",
+      "governance"
+    ]
+  }
+]
