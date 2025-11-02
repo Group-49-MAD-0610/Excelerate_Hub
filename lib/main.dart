@@ -51,7 +51,6 @@ class ExcelerateApp extends StatelessWidget {
           create: (_) => FeedbackController(
             feedbackRepository: FeedbackRepository(
               apiService: ApiService(storageService: storageService),
-              storageService: storageService,
             ),
           ),
         ),

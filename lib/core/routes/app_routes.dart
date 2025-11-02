@@ -31,9 +31,9 @@ class AppRoutes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case splash:
-        // FOR TESTING: Go directly to Main App with bottom navigation
+        // Redirect to login screen for proper authentication flow
         return MaterialPageRoute(
-          builder: (_) => const MainAppScaffold(initialIndex: 1),
+          builder: (_) => const LoginScreen(),
           settings: settings,
         );
 
@@ -88,9 +88,21 @@ class AppRoutes {
         );
 
       case feedback:
-        final String programId = settings.arguments as String? ?? '';
+        // Accept either String (programId only) or Map (programId + programTitle)
+        final arguments = settings.arguments;
+        String programId = '';
+        String? programTitle;
+
+        if (arguments is String) {
+          programId = arguments;
+        } else if (arguments is Map<String, dynamic>) {
+          programId = arguments['programId'] as String? ?? '';
+          programTitle = arguments['programTitle'] as String?;
+        }
+
         return MaterialPageRoute(
-          builder: (_) => FeedbackScreen(programId: programId),
+          builder: (_) =>
+              FeedbackScreen(programId: programId, programTitle: programTitle),
           settings: settings,
         );
 
@@ -173,8 +185,17 @@ class AppRoutes {
   }
 
   /// Navigate to feedback screen
-  static void toFeedback(BuildContext context, String programId, {String? programTitle}) {
-    Navigator.of(context).pushNamed(feedback, arguments: programId);
+  static void toFeedback(
+    BuildContext context,
+    String programId, {
+    String? programTitle,
+  }) {
+    Navigator.of(context).pushNamed(
+      feedback,
+      arguments: programTitle != null
+          ? {'programId': programId, 'programTitle': programTitle}
+          : programId,
+    );
   }
 
   /// Pop current route

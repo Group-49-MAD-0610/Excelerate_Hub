@@ -24,10 +24,14 @@ class _ProgramFeedbackListScreenState extends State<ProgramFeedbackListScreen> {
   @override
   void initState() {
     super.initState();
-    _loadFeedback();
+    // Schedule the feedback loading after the first frame is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadFeedback();
+    });
   }
 
   Future<void> _loadFeedback() async {
+    if (!mounted) return;
     final feedbackController = Provider.of<FeedbackController>(
       context,
       listen: false,

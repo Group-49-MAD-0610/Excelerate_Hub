@@ -90,79 +90,75 @@ class _FeedbackScreenState extends State<FeedbackScreen>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
-      backgroundColor: ThemeConstants.appBackgroundColor,
-      appBar: _buildAppBar(theme),
+      backgroundColor: const Color(0xFF1A1A1A),
+      appBar: _buildAppBar(),
       body: FadeTransition(
         opacity: _fadeAnimation,
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: _buildBody(theme),
-        ),
+        child: SlideTransition(position: _slideAnimation, child: _buildBody()),
       ),
     );
   }
 
   /// Build app bar with title
-  PreferredSizeWidget _buildAppBar(ThemeData theme) {
+  PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      title: Text(
+      title: const Text(
         'Write a Review',
-        style: theme.textTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.bold,
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
         ),
       ),
       centerTitle: true,
       elevation: 0,
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: const Color(0xFF1A1A1A),
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () => Navigator.of(context).pop(),
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.list_alt),
+          icon: const Icon(Icons.rate_review, color: Colors.white),
           tooltip: 'View All Reviews',
-          onPressed: () => _navigateToFeedbackList(),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ProgramFeedbackListScreen(
+                  programId: widget.programId,
+                  programTitle: widget.programTitle,
+                ),
+              ),
+            );
+          },
         ),
       ],
     );
   }
 
-  /// Navigate to feedback list screen
-  void _navigateToFeedbackList() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProgramFeedbackListScreen(
-          programId: widget.programId,
-          programTitle: widget.programTitle,
-        ),
-      ),
-    );
-  }
-
   /// Build main body content
-  Widget _buildBody(ThemeData theme) {
+  Widget _buildBody() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(ThemeConstants.spacing24),
+      padding: const EdgeInsets.all(20),
       child: Form(
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildProgramInfo(theme),
-            const SizedBox(height: ThemeConstants.spacing32),
-            _buildRatingSection(theme),
-            const SizedBox(height: ThemeConstants.spacing24),
-            _buildCategorySection(theme),
-            const SizedBox(height: ThemeConstants.spacing32),
-            _buildFeedbackSection(theme),
-            const SizedBox(height: ThemeConstants.spacing32),
-            _buildSubmitButton(theme),
-            const SizedBox(height: ThemeConstants.spacing24),
+            // Always show program info card
+            _buildProgramInfo(),
+            const SizedBox(height: 32),
+            _buildRatingSection(),
+            const SizedBox(height: 32),
+            if (_selectedRating > 0) ...[
+              _buildCategorySection(),
+              const SizedBox(height: 32),
+            ],
+            _buildFeedbackSection(),
+            const SizedBox(height: 32),
+            _buildSubmitButton(),
+            const SizedBox(height: 24),
           ],
         ),
       ),
@@ -170,53 +166,44 @@ class _FeedbackScreenState extends State<FeedbackScreen>
   }
 
   /// Build program information card
-  Widget _buildProgramInfo(ThemeData theme) {
+  Widget _buildProgramInfo() {
     return Container(
-      padding: const EdgeInsets.all(ThemeConstants.spacing16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.cardTheme.color,
-        borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusMedium),
-        boxShadow: [
-          BoxShadow(
-            color: theme.shadowColor.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: const Color(0xFF2A2A2A),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(ThemeConstants.spacing12),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: ThemeConstants.brandOrangeColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(
-                ThemeConstants.borderRadiusSmall,
-              ),
+              color: ThemeConstants.brandOrangeColor.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(
-              Icons.school,
-              color: ThemeConstants.brandOrangeColor,
-              size: ThemeConstants.iconSizeLarge,
-            ),
+            child: const Icon(Icons.school, color: Color(0xFFFF6B6B), size: 24),
           ),
-          const SizedBox(width: ThemeConstants.spacing16),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Program Review',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  style: TextStyle(
+                    color: Color(0xFF999999),
+                    fontSize: 12,
                     letterSpacing: 0.5,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                const SizedBox(height: ThemeConstants.spacing4),
+                const SizedBox(height: 4),
                 Text(
                   widget.programTitle ?? 'Program',
-                  style: theme.textTheme.titleMedium?.copyWith(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 16,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -230,26 +217,30 @@ class _FeedbackScreenState extends State<FeedbackScreen>
   }
 
   /// Build rating section with animated stars
-  Widget _buildRatingSection(ThemeData theme) {
+  Widget _buildRatingSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'How would you rate this program?',
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            fontFamily: ThemeConstants.primaryFontFamily,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
         ),
-        const SizedBox(height: ThemeConstants.spacing16),
-        Center(child: _buildStarRating(theme)),
-        const SizedBox(height: ThemeConstants.spacing12),
+        const SizedBox(height: 20),
+        Center(child: _buildStarRating()),
+        const SizedBox(height: 16),
         Center(
           child: Text(
             _getRatingLabel(_selectedRating),
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: ThemeConstants.brandOrangeColor,
+            style: TextStyle(
+              color: _selectedRating > 0
+                  ? const Color(0xFFFF6B6B)
+                  : const Color(0xFF666666),
               fontWeight: FontWeight.w600,
+              fontSize: 16,
             ),
           ),
         ),
@@ -258,7 +249,7 @@ class _FeedbackScreenState extends State<FeedbackScreen>
   }
 
   /// Build interactive star rating
-  Widget _buildStarRating(ThemeData theme) {
+  Widget _buildStarRating() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(5, (index) {
@@ -274,16 +265,16 @@ class _FeedbackScreenState extends State<FeedbackScreen>
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
-            padding: const EdgeInsets.all(ThemeConstants.spacing8),
+            padding: const EdgeInsets.symmetric(horizontal: 6),
             child: AnimatedScale(
               duration: const Duration(milliseconds: 200),
               scale: isSelected ? 1.1 : 1.0,
               child: Icon(
                 isSelected ? Icons.star : Icons.star_border,
                 color: isSelected
-                    ? ThemeConstants.brandOrangeColor
-                    : theme.colorScheme.onSurface.withOpacity(0.3),
-                size: 40,
+                    ? const Color(0xFFFF6B6B)
+                    : const Color(0xFF4A4A4A),
+                size: 48,
               ),
             ),
           ),
@@ -311,83 +302,66 @@ class _FeedbackScreenState extends State<FeedbackScreen>
   }
 
   /// Build feedback category dropdown section
-  Widget _buildCategorySection(ThemeData theme) {
+  Widget _buildCategorySection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Feedback Category',
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            fontFamily: ThemeConstants.primaryFontFamily,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
         ),
-        const SizedBox(height: ThemeConstants.spacing8),
-        Text(
+        const SizedBox(height: 8),
+        const Text(
           'Select the area you want to provide feedback about',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
-          ),
+          style: TextStyle(fontSize: 13, color: Color(0xFF999999)),
         ),
-        const SizedBox(height: ThemeConstants.spacing16),
+        const SizedBox(height: 16),
         DropdownButtonFormField<String>(
           value: _selectedCategory,
+          dropdownColor: const Color(0xFF2A2A2A),
+          style: const TextStyle(color: Colors.white, fontSize: 15),
           decoration: InputDecoration(
             hintText: 'Choose a category',
-            hintStyle: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.4),
-            ),
+            hintStyle: const TextStyle(color: Color(0xFF666666), fontSize: 15),
             filled: true,
-            fillColor: theme.cardTheme.color,
-            prefixIcon: Icon(
+            fillColor: const Color(0xFF2A2A2A),
+            prefixIcon: const Icon(
               Icons.category_outlined,
-              color: ThemeConstants.brandOrangeColor.withOpacity(0.7),
+              color: Color(0xFFFF6B6B),
+              size: 20,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                ThemeConstants.borderRadiusMedium,
-              ),
-              borderSide: BorderSide(
-                color: theme.colorScheme.outline.withOpacity(0.3),
-              ),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                ThemeConstants.borderRadiusMedium,
-              ),
-              borderSide: BorderSide(
-                color: theme.colorScheme.outline.withOpacity(0.3),
-              ),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                ThemeConstants.borderRadiusMedium,
-              ),
-              borderSide: BorderSide(
-                color: ThemeConstants.brandOrangeColor,
-                width: 2,
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(
+                color: Color(0xFFFF6B6B),
+                width: 1.5,
               ),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                ThemeConstants.borderRadiusMedium,
-              ),
-              borderSide: BorderSide(color: ThemeConstants.errorColor),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red),
             ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                ThemeConstants.borderRadiusMedium,
-              ),
-              borderSide: BorderSide(
-                color: ThemeConstants.errorColor,
-                width: 2,
-              ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
             ),
           ),
           items: _feedbackCategories.map((String category) {
             return DropdownMenuItem<String>(
               value: category,
-              child: Text(category, style: theme.textTheme.bodyMedium),
+              child: Text(category),
             );
           }).toList(),
           onChanged: (String? newValue) {
@@ -395,78 +369,65 @@ class _FeedbackScreenState extends State<FeedbackScreen>
               _selectedCategory = newValue;
             });
           },
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please select a feedback category';
-            }
-            return null;
-          },
+          // Category is optional, so no validator needed
         ),
       ],
     );
   }
 
   /// Build feedback text section
-  Widget _buildFeedbackSection(ThemeData theme) {
+  Widget _buildFeedbackSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Share your experience',
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            fontFamily: ThemeConstants.primaryFontFamily,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
         ),
-        const SizedBox(height: ThemeConstants.spacing8),
-        Text(
+        const SizedBox(height: 8),
+        const Text(
           'Tell us what you liked or what could be improved',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
-          ),
+          style: TextStyle(fontSize: 13, color: Color(0xFF999999)),
         ),
-        const SizedBox(height: ThemeConstants.spacing16),
+        const SizedBox(height: 16),
         TextFormField(
           controller: _feedbackController,
-          maxLines: 8,
+          maxLines: 6,
           maxLength: _maxCharacters,
           decoration: InputDecoration(
             hintText: 'Write your feedback here...',
-            hintStyle: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.4),
-            ),
+            hintStyle: const TextStyle(color: Color(0xFF666666), fontSize: 14),
             filled: true,
-            fillColor: theme.cardTheme.color,
+            fillColor: const Color(0xFF2A2A2A),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                ThemeConstants.borderRadiusMedium,
-              ),
-              borderSide: BorderSide(
-                color: theme.colorScheme.outline.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(
+                color: Color(0xFFFF6B6B),
+                width: 1.5,
               ),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                ThemeConstants.borderRadiusMedium,
-              ),
-              borderSide: BorderSide(
-                color: theme.colorScheme.outline.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(
+                color: Color(0xFFFF6B6B),
+                width: 1.5,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                ThemeConstants.borderRadiusMedium,
-              ),
-              borderSide: BorderSide(
-                color: ThemeConstants.brandOrangeColor,
-                width: 2,
-              ),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFFF6B6B), width: 2),
             ),
-            counterStyle: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
+            counterStyle: const TextStyle(
+              color: Color(0xFF999999),
+              fontSize: 12,
             ),
+            contentPadding: const EdgeInsets.all(16),
           ),
-          style: theme.textTheme.bodyMedium,
+          style: const TextStyle(color: Colors.white, fontSize: 14),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return 'Please provide your feedback';
@@ -482,36 +443,32 @@ class _FeedbackScreenState extends State<FeedbackScreen>
   }
 
   /// Build submit button
-  Widget _buildSubmitButton(ThemeData theme) {
+  Widget _buildSubmitButton() {
     return ElevatedButton(
       onPressed: _isSubmitting ? null : _handleSubmit,
       style: ElevatedButton.styleFrom(
-        backgroundColor: ThemeConstants.brandOrangeColor,
+        backgroundColor: const Color(0xFFFF6B6B),
         foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: ThemeConstants.spacing16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-            ThemeConstants.borderRadiusMedium,
-          ),
-        ),
-        elevation: 2,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 0,
+        disabledBackgroundColor: const Color(0xFF4A4A4A),
       ),
       child: _isSubmitting
-          ? SizedBox(
+          ? const SizedBox(
               height: 20,
               width: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  theme.colorScheme.onPrimary,
-                ),
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             )
-          : Text(
+          : const Text(
               'Submit Review',
-              style: theme.textTheme.labelLarge?.copyWith(
+              style: TextStyle(
                 color: Colors.white,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
               ),
             ),
     );
@@ -530,87 +487,99 @@ class _FeedbackScreenState extends State<FeedbackScreen>
       return;
     }
 
-    // Get controllers
-    final authController = Provider.of<AuthController>(context, listen: false);
-    final feedbackController = Provider.of<FeedbackController>(
-      context,
-      listen: false,
-    );
-
-    // Get current user
-    final currentUser = authController.currentUser;
-    if (currentUser == null) {
-      _showErrorMessage('Please login to submit feedback');
-      return;
-    }
-
     setState(() {
       _isSubmitting = true;
     });
 
-    // Submit feedback
-    final success = await feedbackController.submitFeedback(
-      userId: currentUser.id,
-      userName: currentUser.name,
-      userAvatar: currentUser.avatar,
-      programId: widget.programId,
-      programTitle: widget.programTitle ?? 'Program',
-      rating: _selectedRating,
-      comment: _feedbackController.text.trim(),
-    );
+    try {
+      // Get controllers
+      final authController = Provider.of<AuthController>(
+        context,
+        listen: false,
+      );
+      final feedbackController = Provider.of<FeedbackController>(
+        context,
+        listen: false,
+      );
 
-    if (!mounted) return;
+      // Check if user is authenticated
+      if (!authController.isAuthenticated ||
+          authController.currentUser == null) {
+        _showErrorMessage('You must be logged in to submit feedback');
+        setState(() {
+          _isSubmitting = false;
+        });
+        return;
+      }
 
-    setState(() {
-      _isSubmitting = false;
-    });
+      final currentUser = authController.currentUser!;
 
-    if (success) {
-      // Show submitted data dialog
-      _showSubmittedDataDialog();
+      // Submit feedback through controller
+      final success = await feedbackController.submitFeedback(
+        userId: currentUser.id,
+        userName: currentUser.name,
+        userAvatar: currentUser.avatar,
+        programId: widget.programId,
+        programTitle: widget.programTitle ?? 'Program',
+        rating: _selectedRating,
+        comment: _feedbackController.text.trim(),
+      );
 
-      // Show success message after dialog
-      await Future.delayed(const Duration(milliseconds: 500));
       if (!mounted) return;
-      _showSuccessMessage();
 
-      // Navigate back after a delay
-      await Future.delayed(const Duration(seconds: 2));
+      setState(() {
+        _isSubmitting = false;
+      });
+
+      if (success) {
+        // Show submitted data dialog
+        _showSubmittedDataDialog();
+
+        // Show success message after dialog
+        await Future.delayed(const Duration(milliseconds: 500));
+        if (!mounted) return;
+        _showSuccessMessage();
+
+        // Navigate back after a delay
+        await Future.delayed(const Duration(seconds: 2));
+        if (!mounted) return;
+        Navigator.of(context).pop();
+      } else {
+        // Show error from controller
+        _showErrorMessage(
+          feedbackController.error ?? 'Failed to submit feedback',
+        );
+      }
+    } catch (e) {
       if (!mounted) return;
-      Navigator.of(context).pop(true); // Return true to indicate success
-    } else {
-      // Show error message
-      final error = feedbackController.error ?? 'Failed to submit feedback';
-      _showErrorMessage(error);
+      setState(() {
+        _isSubmitting = false;
+      });
+      _showErrorMessage('An error occurred: ${e.toString()}');
     }
   }
 
   /// Show dialog with submitted data
   void _showSubmittedDataDialog() {
-    final theme = Theme.of(context);
-
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: const Color(0xFF2A2A2A),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              ThemeConstants.borderRadiusMedium,
-            ),
+            borderRadius: BorderRadius.circular(16),
           ),
-          title: Row(
+          title: const Row(
             children: [
-              Icon(
-                Icons.check_circle,
-                color: ThemeConstants.successColor,
-                size: ThemeConstants.iconSizeLarge,
-              ),
-              const SizedBox(width: ThemeConstants.spacing12),
+              Icon(Icons.check_circle, color: Color(0xFF00C896), size: 28),
+              SizedBox(width: 12),
               Text(
                 'Feedback Submitted',
-                style: theme.textTheme.titleLarge?.copyWith(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 18,
                 ),
               ),
             ],
@@ -620,36 +589,30 @@ class _FeedbackScreenState extends State<FeedbackScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
+                const Text(
                   'Your feedback has been recorded:',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.7),
-                  ),
+                  style: TextStyle(color: Color(0xFF999999), fontSize: 14),
                 ),
-                const SizedBox(height: ThemeConstants.spacing16),
+                const SizedBox(height: 16),
                 _buildDataItem(
-                  theme,
                   'Program',
                   widget.programTitle ?? 'Program',
                   Icons.school,
                 ),
-                const SizedBox(height: ThemeConstants.spacing12),
+                const SizedBox(height: 12),
                 _buildDataItem(
-                  theme,
                   'Rating',
                   '$_selectedRating ${_selectedRating == 1 ? 'star' : 'stars'} - ${_getRatingLabel(_selectedRating)}',
                   Icons.star,
                 ),
-                const SizedBox(height: ThemeConstants.spacing12),
+                const SizedBox(height: 12),
                 _buildDataItem(
-                  theme,
                   'Category',
                   _selectedCategory ?? 'Not specified',
                   Icons.category,
                 ),
-                const SizedBox(height: ThemeConstants.spacing12),
+                const SizedBox(height: 12),
                 _buildDataItem(
-                  theme,
                   'Feedback',
                   _feedbackController.text.trim(),
                   Icons.comment,
@@ -663,11 +626,12 @@ class _FeedbackScreenState extends State<FeedbackScreen>
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(
+              child: const Text(
                 'Close',
-                style: theme.textTheme.labelLarge?.copyWith(
-                  color: ThemeConstants.brandOrangeColor,
+                style: TextStyle(
+                  color: Color(0xFFFF6B6B),
                   fontWeight: FontWeight.bold,
+                  fontSize: 15,
                 ),
               ),
             ),
@@ -679,46 +643,44 @@ class _FeedbackScreenState extends State<FeedbackScreen>
 
   /// Build a data item for the dialog
   Widget _buildDataItem(
-    ThemeData theme,
     String label,
     String value,
     IconData icon, {
     bool isMultiline = false,
   }) {
     return Container(
-      padding: const EdgeInsets.all(ThemeConstants.spacing12),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: theme.cardTheme.color,
-        borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusSmall),
-        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
+        color: const Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFF3A3A3A)),
       ),
       child: Row(
         crossAxisAlignment: isMultiline
             ? CrossAxisAlignment.start
             : CrossAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: ThemeConstants.iconSizeMedium,
-            color: ThemeConstants.brandOrangeColor.withOpacity(0.7),
-          ),
-          const SizedBox(width: ThemeConstants.spacing12),
+          Icon(icon, size: 20, color: const Color(0xFFFF6B6B)),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   label,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  style: const TextStyle(
+                    color: Color(0xFF999999),
                     fontWeight: FontWeight.w600,
+                    fontSize: 12,
                   ),
                 ),
-                const SizedBox(height: ThemeConstants.spacing4),
+                const SizedBox(height: 4),
                 Text(
                   value,
-                  style: theme.textTheme.bodyMedium?.copyWith(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                    fontSize: 14,
                   ),
                   maxLines: isMultiline ? null : 2,
                   overflow: isMultiline ? null : TextOverflow.ellipsis,
@@ -735,17 +697,10 @@ class _FeedbackScreenState extends State<FeedbackScreen>
   void _showErrorMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          message,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(color: Colors.white),
-        ),
-        backgroundColor: ThemeConstants.errorColor,
+        content: Text(message, style: const TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFFFF5757),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusSmall),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
   }
@@ -753,26 +708,21 @@ class _FeedbackScreenState extends State<FeedbackScreen>
   /// Show success message
   void _showSuccessMessage() {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: Colors.white),
-            const SizedBox(width: ThemeConstants.spacing12),
+            Icon(Icons.check_circle, color: Colors.white),
+            SizedBox(width: 12),
             Expanded(
               child: Text(
                 'Thank you! Feedback submitted.',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
         ),
-        backgroundColor: ThemeConstants.successColor,
+        backgroundColor: Color(0xFF00C896),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(ThemeConstants.borderRadiusSmall),
-        ),
       ),
     );
   }

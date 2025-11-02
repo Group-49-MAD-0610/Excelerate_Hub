@@ -1,36 +1,40 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import '../entities/feedback_model.dart';
 import '../services/api_service.dart';
-import '../services/storage_service.dart';
 
 /// Repository for feedback-related data operations
 class FeedbackRepository {
-  final ApiService _apiService;
-  final StorageService _storageService;
-
   // In-memory storage for feedback (simulating persistent storage)
   static List<FeedbackModel> _feedbackCache = [];
   static bool _cacheInitialized = false;
 
-  FeedbackRepository({
-    required ApiService apiService,
-    required StorageService storageService,
-  }) : _apiService = apiService,
-       _storageService = storageService;
+  // File name for feedback data storage
+  static const String _feedbackFileName = 'feedback.json';
 
-  /// Initialize feedback cache from storage or JSON file
+  FeedbackRepository({required ApiService apiService});
+
+  /// Initialize feedback cache from JSON file or assets
   Future<void> _initializeCache() async {
     if (_cacheInitialized) return;
 
     try {
-      // First, try to load from SharedPreferences (persistent storage)
+      if (kDebugMode) {
+        print('🔄 Initializing feedback cache...');
+      }
+
+      // Try to load from persistent storage first
       await _loadFeedbackFromStorage();
 
-      // If no data in storage, try loading from JSON file
+      // If no data in persistent storage, load from assets as initial seed data
       if (_feedbackCache.isEmpty) {
         try {
+          if (kDebugMode) {
+            print('📦 No existing feedback data, loading from assets...');
+          }
           final jsonString = await rootBundle.loadString(
             'assets/data/feedback.json',
           );
@@ -40,13 +44,19 @@ class FeedbackRepository {
                 .map((e) => FeedbackModel.fromJson(e))
                 .toList();
 
+            // Save the initial data to persistent storage for future use
+            await _saveFeedbackToStorage();
+
             if (kDebugMode) {
-              print('Loaded ${_feedbackCache.length} feedback items from JSON');
+              print(
+                '✅ Loaded ${_feedbackCache.length} feedback items from assets and saved to storage',
+              );
             }
           }
         } catch (e) {
           if (kDebugMode) {
-            print('No JSON feedback file or empty: $e');
+            print('⚠️  No asset feedback file or empty: $e');
+            print('ℹ️  Starting with empty feedback list');
           }
         }
       }
@@ -54,14 +64,16 @@ class FeedbackRepository {
       _cacheInitialized = true;
 
       if (kDebugMode) {
-        print('Feedback cache initialized with ${_feedbackCache.length} items');
+        print(
+          '✅ Feedback cache initialized with ${_feedbackCache.length} items',
+        );
       }
     } catch (e) {
       _feedbackCache = [];
       _cacheInitialized = true;
 
       if (kDebugMode) {
-        print('Failed to initialize feedback cache: $e');
+        print('❌ Failed to initialize feedback cache: $e');
       }
     }
   }
@@ -391,44 +403,77 @@ class FeedbackRepository {
     }
   }
 
-  /// Save feedback to persistent storage
+  /// Get the path to the feedback JSON file in the app's documents directory
+  Future<String> _getFeedbackFilePath() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return '${directory.path}/$_feedbackFileName';
+  }
+
+  /// Save feedback to JSON file in app documents directory
   Future<void> _saveFeedbackToStorage() async {
     try {
       final feedbackJson = _feedbackCache.map((f) => f.toJson()).toList();
-      final jsonString = json.encode(feedbackJson);
+      final jsonString = const JsonEncoder.withIndent(
+        '  ',
+      ).convert(feedbackJson);
 
-      // Save to shared preferences for persistence
-      await _storageService.saveData('feedback_cache', jsonString);
+      // Save to app documents directory (primary storage)
+      final filePath = await _getFeedbackFilePath();
+      final file = File(filePath);
+
+      // Create parent directories if they don't exist
+      await file.parent.create(recursive: true);
+
+      // Write the JSON string to the file
+      await file.writeAsString(jsonString);
 
       if (kDebugMode) {
-        print('Saved ${_feedbackCache.length} feedback items to storage');
+        print('✅ Saved ${_feedbackCache.length} feedback items to $filePath');
+        print('📍 File location: $filePath');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Failed to save feedback to storage: $e');
+        print('❌ Failed to save feedback to file: $e');
       }
       // Don't throw error, as this is a background operation
     }
   }
 
-  /// Load feedback from persistent storage
+  /// Load feedback from JSON file in app documents directory
   Future<void> _loadFeedbackFromStorage() async {
     try {
-      final jsonString = await _storageService.getData('feedback_cache');
+      final filePath = await _getFeedbackFilePath();
+      final file = File(filePath);
 
-      if (jsonString != null && jsonString.isNotEmpty) {
-        final List<dynamic> jsonData = json.decode(jsonString);
-        _feedbackCache = jsonData
-            .map((e) => FeedbackModel.fromJson(e))
-            .toList();
+      if (kDebugMode) {
+        print('🔍 Looking for feedback file at: $filePath');
+      }
 
+      // Check if file exists
+      if (await file.exists()) {
+        final jsonString = await file.readAsString();
+
+        if (jsonString.isNotEmpty) {
+          final List<dynamic> jsonData = json.decode(jsonString);
+          _feedbackCache = jsonData
+              .map((e) => FeedbackModel.fromJson(e))
+              .toList();
+
+          if (kDebugMode) {
+            print(
+              '✅ Loaded ${_feedbackCache.length} feedback items from persistent storage',
+            );
+          }
+        }
+      } else {
         if (kDebugMode) {
-          print('Loaded ${_feedbackCache.length} feedback items from storage');
+          print('ℹ️  Feedback file does not exist yet at: $filePath');
+          print('ℹ️  Will be created when first feedback is submitted');
         }
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Failed to load feedback from storage: $e');
+        print('❌ Failed to load feedback from file: $e');
       }
       // Continue with empty cache
     }

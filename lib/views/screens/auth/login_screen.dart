@@ -32,156 +32,159 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(ThemeConstants.spacing24),
-            child: Consumer<AuthController>(
-              builder: (context, authController, child) {
-                return Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildLogoWithTagline(context),
-                      const SizedBox(height: ThemeConstants.spacing16),
+    return PopScope(
+      canPop: false, // Prevent back navigation from login screen
+      child: Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(ThemeConstants.spacing24),
+              child: Consumer<AuthController>(
+                builder: (context, authController, child) {
+                  return Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildLogoWithTagline(context),
+                        const SizedBox(height: ThemeConstants.spacing16),
 
-                      Text(
-                        'Welcome Back!',
-                        style: textTheme.headlineMedium?.copyWith(
-                          color: ThemeConstants.accentColor,
+                        Text(
+                          'Welcome Back!',
+                          style: textTheme.headlineMedium?.copyWith(
+                            color: ThemeConstants.accentColor,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: ThemeConstants.spacing48),
+                        const SizedBox(height: ThemeConstants.spacing48),
 
-                      // Show error message if any
-                      if (authController.error != null)
-                        Container(
-                          padding: const EdgeInsets.all(
-                            ThemeConstants.spacing12,
-                          ),
-                          margin: const EdgeInsets.only(
-                            bottom: ThemeConstants.spacing16,
-                          ),
-                          decoration: BoxDecoration(
-                            color: ThemeConstants.errorColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(
-                              ThemeConstants.borderRadiusSmall,
+                        // Show error message if any
+                        if (authController.error != null)
+                          Container(
+                            padding: const EdgeInsets.all(
+                              ThemeConstants.spacing12,
                             ),
-                            border: Border.all(
-                              color: ThemeConstants.errorColor,
-                              width: 1,
+                            margin: const EdgeInsets.only(
+                              bottom: ThemeConstants.spacing16,
                             ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.error_outline,
-                                color: ThemeConstants.errorColor,
-                                size: ThemeConstants.iconSizeMedium,
+                            decoration: BoxDecoration(
+                              color: ThemeConstants.errorColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(
+                                ThemeConstants.borderRadiusSmall,
                               ),
-                              const SizedBox(width: ThemeConstants.spacing8),
-                              Expanded(
-                                child: Text(
-                                  authController.error!,
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: ThemeConstants.errorColor,
+                              border: Border.all(
+                                color: ThemeConstants.errorColor,
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.error_outline,
+                                  color: ThemeConstants.errorColor,
+                                  size: ThemeConstants.iconSizeMedium,
+                                ),
+                                const SizedBox(width: ThemeConstants.spacing8),
+                                Expanded(
+                                  child: Text(
+                                    authController.error!,
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      color: ThemeConstants.errorColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                      // Email Field
-                      CustomTextField(
-                        controller: _emailController,
-                        label: 'Email',
-                        hint: 'Enter your email',
-                        keyboardType: TextInputType.emailAddress,
-                        prefixIcon: Icons.email_outlined,
-                        enabled: !authController.isLoading,
-                      ),
-                      const SizedBox(height: ThemeConstants.spacing16),
-
-                      // Password Field
-                      CustomTextField(
-                        controller: _passwordController,
-                        label: 'Password',
-                        hint: 'Enter your password',
-                        obscureText: _obscurePassword,
-                        prefixIcon: Icons.lock_outlined,
-                        enabled: !authController.isLoading,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscurePassword = !_obscurePassword;
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: ThemeConstants.spacing24),
-
-                      // Sign In Button
-                      CustomButton(
-                        text: authController.isLoading
-                            ? 'Signing In...'
-                            : 'Sign In',
-                        onPressed: authController.isLoading
-                            ? null
-                            : () => _handleLogin(context, authController),
-                        isFullWidth: true,
-                        backgroundColor: ThemeConstants.accentColor,
-                      ),
-                      const SizedBox(height: ThemeConstants.spacing24),
-
-                      // Register Link
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Don't have an account? ",
-                            style: textTheme.bodyMedium,
-                          ),
-                          GestureDetector(
-                            onTap: authController.isLoading
-                                ? null
-                                : () => Navigator.pushNamed(
-                                    context,
-                                    AppRoutes.register,
-                                  ),
-                            child: Text(
-                              'Sign Up',
-                              style: textTheme.bodyMedium?.copyWith(
-                                color: authController.isLoading
-                                    ? ThemeConstants.accentColor.withOpacity(
-                                        0.5,
-                                      )
-                                    : ThemeConstants.accentColor,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+
+                        // Email Field
+                        CustomTextField(
+                          controller: _emailController,
+                          label: 'Email',
+                          hint: 'Enter your email',
+                          keyboardType: TextInputType.emailAddress,
+                          prefixIcon: Icons.email_outlined,
+                          enabled: !authController.isLoading,
+                        ),
+                        const SizedBox(height: ThemeConstants.spacing16),
+
+                        // Password Field
+                        CustomTextField(
+                          controller: _passwordController,
+                          label: 'Password',
+                          hint: 'Enter your password',
+                          obscureText: _obscurePassword,
+                          prefixIcon: Icons.lock_outlined,
+                          enabled: !authController.isLoading,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: ThemeConstants.spacing24),
+
+                        // Sign In Button
+                        CustomButton(
+                          text: authController.isLoading
+                              ? 'Signing In...'
+                              : 'Sign In',
+                          onPressed: authController.isLoading
+                              ? null
+                              : () => _handleLogin(context, authController),
+                          isFullWidth: true,
+                          backgroundColor: ThemeConstants.accentColor,
+                        ),
+                        const SizedBox(height: ThemeConstants.spacing24),
+
+                        // Register Link
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Don't have an account? ",
+                              style: textTheme.bodyMedium,
+                            ),
+                            GestureDetector(
+                              onTap: authController.isLoading
+                                  ? null
+                                  : () => Navigator.pushNamed(
+                                      context,
+                                      AppRoutes.register,
+                                    ),
+                              child: Text(
+                                'Sign Up',
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: authController.isLoading
+                                      ? ThemeConstants.accentColor.withOpacity(
+                                          0.5,
+                                        )
+                                      : ThemeConstants.accentColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ), // Consumer
+            ), // SingleChildScrollView
+          ), // Center
+        ), // SafeArea
+      ), // Scaffold
+    ); // PopScope
+  } // Widget build
 
   /// Handle login button press
   Future<void> _handleLogin(
