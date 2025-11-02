@@ -70,6 +70,7 @@ flutter:
   assets:
     - assets/data/programs.json
     - assets/data/users.json
+    - assets/data/feedback.json
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

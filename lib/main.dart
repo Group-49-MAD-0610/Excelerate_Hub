@@ -5,10 +5,12 @@ import 'core/routes/app_routes.dart';
 import 'core/themes/app_theme.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/program_controller.dart';
+import 'controllers/feedback_controller.dart';
 import 'models/services/auth_service.dart';
 import 'models/services/api_service.dart';
 import 'models/services/storage_service.dart';
 import 'models/repositories/program_repository.dart';
+import 'models/repositories/feedback_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +42,14 @@ class ExcelerateApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => ProgramController(
             programRepository: ProgramRepository(
+              apiService: ApiService(storageService: storageService),
+              storageService: storageService,
+            ),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FeedbackController(
+            feedbackRepository: FeedbackRepository(
               apiService: ApiService(storageService: storageService),
               storageService: storageService,
             ),

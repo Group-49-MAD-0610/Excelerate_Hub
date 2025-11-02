@@ -1,12 +1,15 @@
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 import '../entities/user_model.dart';
 import '../services/api_service.dart';
 import '../services/storage_service.dart';
-import '../../core/constants/api_constants.dart';
 
 /// Service for handling authentication operations
+/// Uses local JSON file for authentication (prototype mode)
 class AuthService {
   final ApiService _apiService;
   final StorageService _storageService;
+  UserModel? _currentUser;
 
   AuthService({
     required ApiService apiService,
@@ -14,62 +17,75 @@ class AuthService {
   }) : _apiService = apiService,
        _storageService = storageService;
 
-  /// Login user
+  /// Login user with local JSON authentication
   Future<UserModel?> login({
     required String email,
     required String password,
   }) async {
     try {
-      final response = await _apiService.post(ApiConstants.loginEndpoint, {
-        'email': email,
-        'password': password,
-      });
+      // Load users from local JSON file
+      final jsonStr = await rootBundle.loadString('assets/data/users.json');
+      final List<dynamic> list = json.decode(jsonStr) as List<dynamic>;
+      final users = list.cast<Map<String, dynamic>>();
 
-      if (response != null && response['success'] == true) {
-        final userData = response['data'];
-        final user = UserModel.fromJson(userData['user']);
-        final token = userData['token'] as String;
+      // Find user by email (case-insensitive)
+      final match = users.firstWhere(
+        (u) => (u['email'] as String).toLowerCase() == email.toLowerCase(),
+        orElse: () => <String, dynamic>{},
+      );
 
-        // Save token and user data
-        await _storageService.saveToken(token);
-        await _storageService.saveUserData(userData['user']);
+      if (match.isEmpty) return null;
 
-        return user;
+      // Validate password
+      if (match.containsKey('password')) {
+        final expected = (match['password'] ?? '') as String;
+        if (password != expected) return null;
+      } else {
+        if (password.isEmpty) return null;
       }
 
-      return null;
+      // Create user model
+      final user = UserModel.fromJson(match);
+      _currentUser = user;
+
+      // Generate a mock token and save user data
+      final token =
+          'mock_token_${user.id}_${DateTime.now().millisecondsSinceEpoch}';
+      await _storageService.saveToken(token);
+      await _storageService.saveUserData(match);
+
+      return user;
     } catch (e) {
       throw Exception('Login failed: $e');
     }
   }
 
-  /// Register new user
+  /// Register new user (in-memory only for prototype)
   Future<UserModel?> register({
     required String name,
     required String email,
     required String password,
   }) async {
     try {
-      final response = await _apiService.post(ApiConstants.registerEndpoint, {
-        'name': name,
-        'email': email,
-        'password': password,
-        'confirmPassword': password,
-      });
+      // Create in-memory user for prototype
+      final now = DateTime.now().toUtc();
+      final user = UserModel(
+        id: 'user-${now.millisecondsSinceEpoch}',
+        name: name,
+        email: email,
+        avatar: null,
+        role: 'student',
+        createdAt: now,
+        updatedAt: now,
+      );
+      _currentUser = user;
 
-      if (response != null && response['success'] == true) {
-        final userData = response['data'];
-        final user = UserModel.fromJson(userData['user']);
-        final token = userData['token'] as String;
+      // Generate mock token and save user data
+      final token = 'mock_token_${user.id}_${now.millisecondsSinceEpoch}';
+      await _storageService.saveToken(token);
+      await _storageService.saveUserData(user.toJson());
 
-        // Save token and user data
-        await _storageService.saveToken(token);
-        await _storageService.saveUserData(userData['user']);
-
-        return user;
-      }
-
-      return null;
+      return user;
     } catch (e) {
       throw Exception('Registration failed: $e');
     }
@@ -78,18 +94,13 @@ class AuthService {
   /// Logout user
   Future<bool> logout() async {
     try {
-      // Try to logout from server
-      await _apiService.post(ApiConstants.logoutEndpoint, {});
-
-      // Clear local data regardless of server response
+      _currentUser = null;
       await _storageService.removeToken();
       await _storageService.removeUserData();
-
       return true;
     } catch (e) {
-      // Even if server logout fails, clear local data
-      await _storageService.removeToken();
-      await _storageService.removeUserData();
+      // Clear current user even if storage fails
+      _currentUser = null;
       return true;
     }
   }
@@ -104,12 +115,17 @@ class AuthService {
     }
   }
 
-  /// Get current user from storage
+  /// Get current user
   Future<UserModel?> getCurrentUser() async {
     try {
+      // Return cached user if available
+      if (_currentUser != null) return _currentUser;
+
+      // Try to load from storage
       final userData = await _storageService.getUserData();
       if (userData != null) {
-        return UserModel.fromJson(userData);
+        _currentUser = UserModel.fromJson(userData);
+        return _currentUser;
       }
       return null;
     } catch (e) {
@@ -117,58 +133,44 @@ class AuthService {
     }
   }
 
-  /// Refresh authentication token
+  /// Refresh authentication token (mock for prototype)
   Future<bool> refreshToken() async {
     try {
-      final response = await _apiService.post(
-        ApiConstants.refreshTokenEndpoint,
-        {},
-      );
-
-      if (response != null && response['success'] == true) {
-        final token = response['data']['token'] as String;
-        await _storageService.saveToken(token);
+      final token = await _storageService.getToken();
+      if (token != null) {
+        // Token is still valid in prototype mode
         return true;
       }
-
       return false;
     } catch (e) {
-      throw Exception('Token refresh failed: $e');
+      return false;
     }
   }
 
-  /// Send forgot password request
+  /// Send forgot password request (validates email exists)
   Future<bool> forgotPassword(String email) async {
     try {
-      final response = await _apiService.post(
-        ApiConstants.forgotPasswordEndpoint,
-        {'email': email},
+      final jsonStr = await rootBundle.loadString('assets/data/users.json');
+      final List<dynamic> list = json.decode(jsonStr) as List<dynamic>;
+      final exists = list.cast<Map<String, dynamic>>().any(
+        (u) => (u['email'] as String).toLowerCase() == email.toLowerCase(),
       );
-
-      return response != null && response['success'] == true;
+      return exists;
     } catch (e) {
-      throw Exception('Forgot password request failed: $e');
+      return false;
     }
   }
 
-  /// Reset password with token
+  /// Reset password with token (mock for prototype)
   Future<bool> resetPassword({
     required String token,
     required String newPassword,
   }) async {
     try {
-      final response = await _apiService.post(
-        ApiConstants.resetPasswordEndpoint,
-        {
-          'token': token,
-          'password': newPassword,
-          'confirmPassword': newPassword,
-        },
-      );
-
-      return response != null && response['success'] == true;
+      // In prototype mode, always succeed
+      return true;
     } catch (e) {
-      throw Exception('Password reset failed: $e');
+      return false;
     }
   }
 
@@ -178,9 +180,14 @@ class AuthService {
       final token = await _storageService.getToken();
       if (token == null) return false;
 
-      // Try to fetch user profile to validate token
-      final response = await _apiService.get(ApiConstants.userProfileEndpoint);
-      return response != null && response['success'] == true;
+      // Check if we have user data
+      final userData = await _storageService.getUserData();
+      if (userData != null) {
+        _currentUser = UserModel.fromJson(userData);
+        return true;
+      }
+
+      return false;
     } catch (e) {
       return false;
     }

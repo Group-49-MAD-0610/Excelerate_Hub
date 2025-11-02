@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../core/constants/theme_constants.dart';
+import '../../../controllers/auth_controller.dart';
+import '../../../controllers/feedback_controller.dart';
 
 /// Feedback and Review Screen for Programs
 ///
@@ -506,12 +509,34 @@ class _FeedbackScreenState extends State<FeedbackScreen>
       return;
     }
 
+    // Get controllers
+    final authController = Provider.of<AuthController>(context, listen: false);
+    final feedbackController = Provider.of<FeedbackController>(
+      context,
+      listen: false,
+    );
+
+    // Get current user
+    final currentUser = authController.currentUser;
+    if (currentUser == null) {
+      _showErrorMessage('Please login to submit feedback');
+      return;
+    }
+
     setState(() {
       _isSubmitting = true;
     });
 
-    // Simulate API call with loading spinner
-    await Future.delayed(const Duration(seconds: 2));
+    // Submit feedback
+    final success = await feedbackController.submitFeedback(
+      userId: currentUser.id,
+      userName: currentUser.name,
+      userAvatar: currentUser.avatar,
+      programId: widget.programId,
+      programTitle: widget.programTitle ?? 'Program',
+      rating: _selectedRating,
+      comment: _feedbackController.text.trim(),
+    );
 
     if (!mounted) return;
 
@@ -519,18 +544,24 @@ class _FeedbackScreenState extends State<FeedbackScreen>
       _isSubmitting = false;
     });
 
-    // Show submitted data dialog
-    _showSubmittedDataDialog();
+    if (success) {
+      // Show submitted data dialog
+      _showSubmittedDataDialog();
 
-    // Show success message after dialog
-    await Future.delayed(const Duration(milliseconds: 500));
-    if (!mounted) return;
-    _showSuccessMessage();
+      // Show success message after dialog
+      await Future.delayed(const Duration(milliseconds: 500));
+      if (!mounted) return;
+      _showSuccessMessage();
 
-    // Navigate back after a delay
-    await Future.delayed(const Duration(seconds: 2));
-    if (!mounted) return;
-    Navigator.of(context).pop();
+      // Navigate back after a delay
+      await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
+      Navigator.of(context).pop(true); // Return true to indicate success
+    } else {
+      // Show error message
+      final error = feedbackController.error ?? 'Failed to submit feedback';
+      _showErrorMessage(error);
+    }
   }
 
   /// Show dialog with submitted data
