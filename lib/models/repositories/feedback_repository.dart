@@ -20,29 +20,48 @@ class FeedbackRepository {
   }) : _apiService = apiService,
        _storageService = storageService;
 
-  /// Initialize feedback cache from JSON file
+  /// Initialize feedback cache from storage or JSON file
   Future<void> _initializeCache() async {
     if (_cacheInitialized) return;
 
     try {
-      // Try to load from local JSON file
-      final jsonString = await rootBundle.loadString(
-        'assets/data/feedback.json',
-      );
-      final List<dynamic> jsonData = json.decode(jsonString);
-      _feedbackCache = jsonData.map((e) => FeedbackModel.fromJson(e)).toList();
+      // First, try to load from SharedPreferences (persistent storage)
+      await _loadFeedbackFromStorage();
+
+      // If no data in storage, try loading from JSON file
+      if (_feedbackCache.isEmpty) {
+        try {
+          final jsonString = await rootBundle.loadString(
+            'assets/data/feedback.json',
+          );
+          if (jsonString.isNotEmpty) {
+            final List<dynamic> jsonData = json.decode(jsonString);
+            _feedbackCache = jsonData
+                .map((e) => FeedbackModel.fromJson(e))
+                .toList();
+
+            if (kDebugMode) {
+              print('Loaded ${_feedbackCache.length} feedback items from JSON');
+            }
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            print('No JSON feedback file or empty: $e');
+          }
+        }
+      }
+
       _cacheInitialized = true;
 
       if (kDebugMode) {
-        print('Loaded ${_feedbackCache.length} feedback items from JSON');
+        print('Feedback cache initialized with ${_feedbackCache.length} items');
       }
     } catch (e) {
-      // If file doesn't exist or is empty, initialize with empty list
       _feedbackCache = [];
       _cacheInitialized = true;
 
       if (kDebugMode) {
-        print('Initialized empty feedback cache: $e');
+        print('Failed to initialize feedback cache: $e');
       }
     }
   }

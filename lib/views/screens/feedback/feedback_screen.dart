@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/theme_constants.dart';
 import '../../../controllers/auth_controller.dart';
 import '../../../controllers/feedback_controller.dart';
+import 'program_feedback_list_screen.dart';
 
 /// Feedback and Review Screen for Programs
 ///
@@ -119,6 +120,26 @@ class _FeedbackScreenState extends State<FeedbackScreen>
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () => Navigator.of(context).pop(),
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.list_alt),
+          tooltip: 'View All Reviews',
+          onPressed: () => _navigateToFeedbackList(),
+        ),
+      ],
+    );
+  }
+
+  /// Navigate to feedback list screen
+  void _navigateToFeedbackList() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProgramFeedbackListScreen(
+          programId: widget.programId,
+          programTitle: widget.programTitle,
+        ),
       ),
     );
   }
