@@ -1,115 +1,148 @@
+// Import Firebase Auth
+import 'package:firebase_auth/firebase_auth.dart';
 import '../entities/user_model.dart';
-import '../services/api_service.dart';
-import '../services/storage_service.dart';
-import '../../core/constants/api_constants.dart';
+import '../services/api_service.dart'; // Keep this import
+import '../services/storage_service.dart'; // Keep this import
+import '../../core/constants/api_constants.dart'; // Keep this import
 
-/// Service for handling authentication operations
+/// Service for handling authentication operations using Firebase.
 class AuthService {
+  // We keep these dependencies for completeness and other non-auth API calls.
   final ApiService _apiService;
   final StorageService _storageService;
+  // This is our new "engine" for authentication
+  final FirebaseAuth _firebaseAuth;
 
   AuthService({
     required ApiService apiService,
     required StorageService storageService,
   }) : _apiService = apiService,
-       _storageService = storageService;
+       _storageService = storageService,
+       // Initialize the Firebase Auth instance
+       _firebaseAuth = FirebaseAuth.instance;
 
-  /// Login user
+  /// Helper to convert a Firebase User to our app's UserModel
+  UserModel _userModelFromFirebase(User fbUser) {
+    return UserModel(
+      id: fbUser.uid, // Use the Firebase UID as our user ID
+      name: fbUser.displayName ?? fbUser.email ?? 'No Name',
+      email: fbUser.email ?? 'no-email@example.com',
+      avatar: fbUser.photoURL,
+      role: 'student', // Default role for new sign-ups
+      createdAt: fbUser.metadata.creationTime ?? DateTime.now(),
+      updatedAt: fbUser.metadata.lastSignInTime ?? DateTime.now(),
+    );
+  }
+
+  /// Login user with Firebase
   Future<UserModel?> login({
     required String email,
     required String password,
   }) async {
     try {
-      final response = await _apiService.post(ApiConstants.loginEndpoint, {
-        'email': email,
-        'password': password,
-      });
+      // 1. Sign in with Firebase instead of our old API
+      final credential = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-      if (response != null && response['success'] == true) {
-        final userData = response['data'];
-        final user = UserModel.fromJson(userData['user']);
-        final token = userData['token'] as String;
+      if (credential.user != null) {
+        // 2. Convert the Firebase User to our app's UserModel
+        final userModel = _userModelFromFirebase(credential.user!);
 
-        // Save token and user data
-        await _storageService.saveToken(token);
-        await _storageService.saveUserData(userData['user']);
+        // 3. Save our UserModel to local storage
+        // Note: The token saving is now handled implicitly by Firebase
+        await _storageService.saveUserData(userModel.toJson());
 
-        return user;
+        return userModel;
       }
-
       return null;
+    } on FirebaseAuthException catch (e) {
+      // Throw a clean exception message for the AuthController to handle
+      throw Exception('Login failed: ${e.message}');
     } catch (e) {
       throw Exception('Login failed: $e');
     }
   }
 
-  /// Register new user
+  /// Register new user with Firebase
   Future<UserModel?> register({
     required String name,
     required String email,
     required String password,
   }) async {
     try {
-      final response = await _apiService.post(ApiConstants.registerEndpoint, {
-        'name': name,
-        'email': email,
-        'password': password,
-        'confirmPassword': password,
-      });
+      // 1. Create the user in Firebase Auth
+      final credential = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-      if (response != null && response['success'] == true) {
-        final userData = response['data'];
-        final user = UserModel.fromJson(userData['user']);
-        final token = userData['token'] as String;
+      if (credential.user != null) {
+        // 2. Update the new user's profile with their name
+        await credential.user!.updateDisplayName(name);
 
-        // Save token and user data
-        await _storageService.saveToken(token);
-        await _storageService.saveUserData(userData['user']);
+        // 3. Convert the Firebase User (now with a name) to our UserModel
+        final userModel = _userModelFromFirebase(credential.user!);
 
-        return user;
+        // 4. Save our UserModel to local storage
+        await _storageService.saveUserData(userModel.toJson());
+
+        return userModel;
       }
-
       return null;
+    } on FirebaseAuthException catch (e) {
+      // Throw a clean exception message for the AuthController to handle
+      throw Exception('Registration failed: ${e.message}');
     } catch (e) {
       throw Exception('Registration failed: $e');
     }
   }
 
-  /// Logout user
+  /// Logout user from Firebase
   Future<bool> logout() async {
     try {
-      // Try to logout from server
-      await _apiService.post(ApiConstants.logoutEndpoint, {});
+      // 1. Sign out from Firebase
+      await _firebaseAuth.signOut();
 
-      // Clear local data regardless of server response
+      // 2. Clear our local data
       await _storageService.removeToken();
       await _storageService.removeUserData();
 
       return true;
     } catch (e) {
-      // Even if server logout fails, clear local data
+      // Even if sign out fails, clear local data
       await _storageService.removeToken();
       await _storageService.removeUserData();
-      return true;
+      return true; // Still report success so the app logs out
     }
   }
 
   /// Check if user is logged in
   Future<bool> isLoggedIn() async {
     try {
-      final token = await _storageService.getToken();
-      return token != null && token.isNotEmpty;
+      // Check the current Firebase auth state
+      return _firebaseAuth.currentUser != null;
     } catch (e) {
       return false;
     }
   }
 
-  /// Get current user from storage
+  /// Get current user from storage or Firebase
   Future<UserModel?> getCurrentUser() async {
     try {
-      final userData = await _storageService.getUserData();
-      if (userData != null) {
-        return UserModel.fromJson(userData);
+      // 1. Check for a live Firebase user first (most accurate)
+      final fbUser = _firebaseAuth.currentUser;
+      if (fbUser != null) {
+        final userModel = _userModelFromFirebase(fbUser);
+        await _storageService.saveUserData(userModel.toJson());
+        return userModel;
+      } else {
+        // 2. If no live user, check if we have one saved in storage
+        final userData = await _storageService.getUserData();
+        if (userData != null) {
+          return UserModel.fromJson(userData);
+        }
       }
       return null;
     } catch (e) {
@@ -117,38 +150,25 @@ class AuthService {
     }
   }
 
-  /// Refresh authentication token
-  Future<bool> refreshToken() async {
-    try {
-      final response = await _apiService.post(
-        ApiConstants.refreshTokenEndpoint,
-        {},
-      );
-
-      if (response != null && response['success'] == true) {
-        final token = response['data']['token'] as String;
-        await _storageService.saveToken(token);
-        return true;
-      }
-
-      return false;
-    } catch (e) {
-      throw Exception('Token refresh failed: $e');
-    }
-  }
-
-  /// Send forgot password request
+  /// Send forgot password request via Firebase
   Future<bool> forgotPassword(String email) async {
     try {
-      final response = await _apiService.post(
-        ApiConstants.forgotPasswordEndpoint,
-        {'email': email},
-      );
-
-      return response != null && response['success'] == true;
+      // Use Firebase's built-in password reset
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      return true;
+    } on FirebaseAuthException catch (e) {
+      throw Exception('Forgot password request failed: ${e.message}');
     } catch (e) {
       throw Exception('Forgot password request failed: $e');
     }
+  }
+
+  // --- The methods below are kept to avoid breaking existing code, even if not fully functional ---
+
+  /// Refresh authentication token
+  Future<bool> refreshToken() async {
+    // Firebase handles this automatically. Assume success.
+    return true;
   }
 
   /// Reset password with token
@@ -156,33 +176,15 @@ class AuthService {
     required String token,
     required String newPassword,
   }) async {
-    try {
-      final response = await _apiService.post(
-        ApiConstants.resetPasswordEndpoint,
-        {
-          'token': token,
-          'password': newPassword,
-          'confirmPassword': newPassword,
-        },
-      );
-
-      return response != null && response['success'] == true;
-    } catch (e) {
-      throw Exception('Password reset failed: $e');
-    }
+    // This is not standard Firebase flow. Throw an error or return false.
+    throw Exception(
+      'Password reset via token is not supported. Use email link.',
+    );
   }
 
   /// Validate current session
   Future<bool> validateSession() async {
-    try {
-      final token = await _storageService.getToken();
-      if (token == null) return false;
-
-      // Try to fetch user profile to validate token
-      final response = await _apiService.get(ApiConstants.userProfileEndpoint);
-      return response != null && response['success'] == true;
-    } catch (e) {
-      return false;
-    }
+    // We validate by checking if the Firebase user is logged in.
+    return await isLoggedIn();
   }
 }
